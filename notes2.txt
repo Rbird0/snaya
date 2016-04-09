@@ -1,0 +1,23 @@
+snaya.root -> Fenêtre principale
+
+snaya.save -> Prise en main de la sauvegarde
+	.path -> Chemin de la sauvegarde
+	.window -> Fenêtre principale
+	.isFileSelected -> Indique si un fichier de save a été sélectionné
+	.integrity -> Indique si le fichier sélectionné est valide
+	.saveFile -> Liste de la sauvegarde "brute"
+	.save -> Liste de la sauvegarde un peu épurée
+
+snaya.paths -> Chemins des fichiers
+	.save -> Chemin de la sauvegarde
+	.resources -> Chemin du dossier ressources
+
+snaya.hs -> Highscores
+
+snaya.ach -> Achievements
+
+snaya.skins -> Skins
+
+snaya.param -> Paramètres
+
+snaya.compte -> Comptages

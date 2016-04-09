@@ -1,0 +1,74 @@
+###CHEMINS###
+
+/chemins_start
+
+resources path = "D:\Lycee\ISN\Projet2.0\resources"
+
+/chemins_end
+
+
+###HIGHSCORES###
+
+/highscores_start
+
+10200,"TES"
+9800,"BIT"
+8000,"III"
+7500,"WWW"
+6900,"TRY"
+6500,"RBI"
+6300,"CAM"
+6100,"RBI"
+6100,"EST"
+5900,"ZIZ"
+
+/highscores_end
+
+
+###ACHIEVEMENTS###
+
+/achievements_start
+
+achievement1 = True
+achievement2 = True
+achievement3 = True
+achievement4 = True
+achievement5 = True
+
+/achievements_end
+
+
+###SKINS###
+
+/skins_start
+
+jaune_vert = True
+bleu_jaune = False
+selected skin = "bleu_jaune"
+
+/skins_end
+
+
+###COMPTES###
+
+/comptes_start
+
+nombre pommes norm = "0"
+nombre pommes gold = "0"
+nombre pommes spec = "0"
+score total = "0"
+nombre parties = "0"
+
+/comptes_end
+
+
+###PARAMETRES###
+
+/parametres_start
+
+graph mode = "sprite"
+grille taille = "20,20"
+bonus = False
+vitesse = "2"
+
+/parametres_end
