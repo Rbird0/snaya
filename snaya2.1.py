@@ -267,7 +267,6 @@ class Snaya :
 		"""
 		"""
 
-		print("haut")
 		if self.menuMechanics["current menu"] == "title" or self.menuMechanics["current menu"] == "paramètres" :
 			self.menuMechanics["highlight"] -= 1
 		if self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == -1 :
@@ -291,27 +290,30 @@ class Snaya :
 		"""
 
 		if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 2 :
-			self.param.modifier("graph mode", 0)
+			self.param.switch_graph_mode()
 		elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 3 :
-			self.param.modifier("taille grille", [self.param.largeur + 1, self.param.hauteur])
+			self.param.plus_one_largeur()
 		elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 4 :
-			self.param.modifier("taille grille", [self.param.largeur, self.param.hauteur + 1])
+			self.param.plus_one_hauteur()
 		elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 5 :
-			self.param.modifier("bonus", 0)
+			self.param.switch_bonus()
 		elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 6 :
-			self.param.modifier("vitesse", self.param.vitesseAff + 1)
+			self.param.plus_one_vitesse()
 
 	def menu_gauche(self, event) :
 		"""
 		"""
 
+		if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 2 :
+			self.param.switch_graph_mode()
 		if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 3 :
-			self.param.modifier("taille grille", [self.param.largeur - 1, self.param.hauteur])
+			self.param.minus_one_largeur()
 		elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 4 :
-			self.param.modifier("taille grille", [self.param.largeur, self.param.hauteur - 1])
+			self.param.minus_one_hauteur()
+		elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 5 :
+			self.param.switch_bonus()
 		elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 6 :
-			if self.param.vitesseAff > 0 :
-				self.param.modifier("vitesse", self.param.vitesseAff - 1)
+			self.param.minus_one_vitesse()
 
 	def menu_suivant(self, event) :
 		"""
@@ -856,6 +858,72 @@ class Parametres :
 
 		self.param["largeur"] = self.param["taille grille"][0]
 		self.param["hauteur"] = self.param["taille grille"][1]
+
+	def switch_graph_mode(self) :
+		"""
+		"""
+
+		if self.param["graph mode"] == "sprite" :
+			self.param["graph mode"] = "simple"
+		else :
+			self.param["graph mode"] = "sprite"
+
+	def switch_bonus(self) :
+		"""
+		"""
+
+		if self.param["bonus"] == True :
+			self.param["bonus"] = False
+		else :
+			self.param["bonus"] = True
+
+	def plus_one_largeur(self) :
+		"""
+		"""
+
+		if self.param["largeur"] < 99 :
+			self.param["taille grille"] = [self.param["largeur"] + 1, self.param["hauteur"]]
+			self.largeur_hauteur()
+
+	def plus_one_hauteur(self) :
+		"""
+		"""
+
+		if self.param["hauteur"] < 99 :
+			self.param["taille grille"] = [self.param["largeur"], self.param["hauteur"] + 1]
+			self.largeur_hauteur()
+
+	def minus_one_largeur(self) :
+		"""
+		"""
+
+		if self.param["largeur"] > 10 :
+			self.param["taille grille"] = [self.param["largeur"] - 1, self.param["hauteur"]]
+			self.largeur_hauteur()
+
+	def minus_one_hauteur(self) :
+		"""
+		"""
+
+		if self.param["hauteur"] > 10 :
+			self.param["taille grille"] = [self.param["largeur"], self.param["hauteur"] - 1]
+			self.largeur_hauteur()
+
+	def plus_one_vitesse(self) :
+		"""
+		"""
+
+		if self.param["vitesse"] < 5 :
+			self.param["vitesse"] += 1
+			self.speed()
+
+	def minus_one_vitesse(self) :
+		"""
+		"""
+
+		if self.param["vitesse"] > 1 :
+			self.param["vitesse"] -= 1
+			self.speed()
 
 	def get_parametres(self) :
 		"""
