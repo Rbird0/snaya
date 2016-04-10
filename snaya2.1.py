@@ -226,7 +226,7 @@ class Snaya :
 			self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.menuCan.create_text(400, 30, anchor = N, text = "PARAMÈTRES", font = ("Mayan", 35), fill = "#f0cc00")]
 
 			self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.menuCan.create_text(200, 200, anchor = SW, text = "Dossier ressources", font = ("Mayan", 20), fill = "#f0cc00")]
-			self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.menuCan.create_text(200, 240, anchor = SW, text = "Fichier de sauvegarde", font = ("Mayan", 20), fill = "#f0cc00")]
+			self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.menuCan.create_text(200, 240, anchor = SW, text = "Sauvegarder", font = ("Mayan", 20), fill = "#f0cc00")]
 			self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.menuCan.create_text(200, 280, anchor = SW, text = "Mode graphique: " + parametres["graph mode"], font = ("Mayan", 20), fill = "#f0cc00")]
 			self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.menuCan.create_text(200, 320, anchor = SW, text = "Taille de la grille: " + str(parametres["largeur"]) + " x " + str(parametres["hauteur"]), font = ("Mayan", 20), fill = "#f0cc00")]
 			if parametres["bonus"] == True :
@@ -291,6 +291,8 @@ class Snaya :
 
 		if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 2 :
 			self.param.switch_graph_mode()
+			if self.param.get_parametres()["graph mode"] == "sprite" :
+				self.images = Images(self.root, self.paths.get_path("resources"), self.skins.get_skins()["selected skin"])
 		elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 3 :
 			self.param.plus_one_largeur()
 		elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 4 :
@@ -331,10 +333,16 @@ class Snaya :
 			self.menuMechanics["highlight"] = 0
 		elif self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == 4 :
 			self.quitter()
-
 		elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 0 :
-			#hhh
-			return 0
+			path = filedialog.askdirectory(title = "Choisir le dossier de ressources")
+			if path != "" :
+				self.paths.set_path("resources", path)
+				if self.param.get_parametres()["graph mode"] == "sprite" :
+					self.images.update(self.root, self.paths.get_path("resources"), self.skins.get_skins()["selected skin"])
+			else :
+				print("Vous n'avez sélectionné aucun dossier! Rien ne sera fait.")
+		elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 1 :
+			self.save.write_to_file()
 
 	def menu_precedent(self, event) :
 		"""
@@ -398,6 +406,8 @@ class Save :
 		for j in self.file :
 			self.saveFile.append(j.rstrip('\n'))
 
+		self.file.close()
+
 		for j in self.saveFile :
 			if j != "" and "#" not in j :
 				self.save.append(j)
@@ -450,7 +460,7 @@ class Save :
 
 		self.isFileSelected = False
 		self.integrity = True
-		self.save = ['###CHEMINS###', '', '/chemins_start', '', 'resourcesPath = ""', '', '/chemins_end', '', '', '###HIGHSCORES###', '', '/highscores_start', '', '0,"---"', '0,"---"', '0,"---"', '0,"---"', '0,"---"', '0,"---"', '0,"---"', '0,"---"', '0,"---"', '0,"---"', '', '/highscores_end', '', '', '###ACHIEVEMENTS###', '', '/achievements_start', '', 'achievement1 = False', 'achievement2 = False', 'achievement3 = False', 'achievement4 = False', 'achievement5 = False', '', '/achievements_end', '', '', '###SKINS###', '', '/skins_start', '', 'jaune_vert = True', 'bleu_jaune = False', 'selectedSkin = "jaune_vert"', '', '/skins_end', '', '', '###COMPTES###', '', '/comptes_start', '', 'nombrePommesNorm = "0"', 'nombrePommesGold = "0"', 'nombrePommesSpec = "0"', 'scoreTotal = "0"', 'nombreParties = "0"', '', '/comptes_end', '', '', '###PARAMETRES###', '', '/parametres_start', '', 'graphMode = "simple"', 'grilleTaille = "20,20"', 'bonus = True', 'vitesse = "2"', '', '/parametres_end']
+		self.save = ['###CHEMINS###', '', '/chemins_start', '', 'resources path = ""', '', '/chemins_end', '', '', '###HIGHSCORES###', '', '/highscores_start', '', '0,"---"', '0,"---"', '0,"---"', '0,"---"', '0,"---"', '0,"---"', '0,"---"', '0,"---"', '0,"---"', '0,"---"', '', '/highscores_end', '', '', '###ACHIEVEMENTS###', '', '/achievements_start', '', 'achievement1 = False', 'achievement2 = False', 'achievement3 = False', 'achievement4 = False', 'achievement5 = False', '', '/achievements_end', '', '', '###SKINS###', '', '/skins_start', '', 'jaune_vert = True', 'bleu_jaune = False', 'selected skin = "jaune_vert"', '', '/skins_end', '', '', '###COMPTES###', '', '/comptes_start', '', 'nombre pommes norm = "0"', 'nombre pommes gold = "0"', 'nombre pommes spec = "0"', 'score total = "0"', 'nombre parties = "0"', '', '/comptes_end', '', '', '###PARAMETRES###', '', '/parametres_start', '', 'graph mode = "simple"', 'grille taille = "20,20"', 'bonus = True', 'vitesse = "2"', '', '/parametres_end']
 		self.proceed()
 
 	def proceed(self) :
@@ -538,7 +548,7 @@ class Save :
 				parametresRead = parametresRead[0:j] + parametresRead[j+1:]
 
 		self.rawChemins = cheminsRead
-		self.rawHighscores = highscoresRead
+		self.rawHighscores = highscoresRead[1:]
 		self.rawAchievements = achievementsRead
 		self.rawSkins = skinsRead
 		self.rawComptes = comptesRead
@@ -708,6 +718,21 @@ class Save :
 				param["vitesse"] = int(texte)
 
 		self.parametres = param
+
+	def write_to_file(self, resourcesPath, highscores, achievements, skins, parametres) :
+		"""
+		"""
+
+		try :
+			self.file = open(self.path, 'w')
+		except Exception :
+			print("Erreur lors de l'ouverture du fichier.")
+			return 0
+
+		sequence = "###CHEMINS###\n\n/chemins_start\n\nresources path = " + '"' + resourcesPath + '"' + "\n\n/chemins_end\n\n\n###HIGHSCORES###\n\n/highscores_start\n\n" + highscoresFin + "\n\n/highscores_end\n\n\n###ACHIEVEMENTS###\n\n/achievements_start\n\n" + achievementsFin + "\n\n/achievements_end\n\n\n###SKINS###\n\n/skins_start\n\n" + skinsFin + "\n\n/skins_end\n\n\n###COMPTES###\n\n/comptes_start\n\n" + comptesFin + "\n\n/comptes_end\n\n\n###PARAMETRES###\n\n/parametres_start\n\n" + parametresFin + "\n\n/parametres_end"
+		self.file.write(sequence)
+
+		self.file.close()
 
 class Paths :
 	"""
@@ -936,6 +961,14 @@ class Images :
 	"""
 
 	def __init__(self, root, path, skin) :
+		"""
+		"""
+
+		self.chemins(path, skin)
+		self.window_icon(root)
+		self.dico()
+
+	def update(self, root, path, skin) :
 		"""
 		"""
 
