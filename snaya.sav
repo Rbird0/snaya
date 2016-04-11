@@ -43,7 +43,7 @@ achievement5 = True
 /skins_start
 
 jaune_vert = True
-bleu_jaune = False
+bleu_jaune = True
 selected skin = "bleu_jaune"
 
 /skins_end
