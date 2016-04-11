@@ -11,16 +11,16 @@ resources path = "D:\Lycee\ISN\Projet2.0\resources"
 
 /highscores_start
 
-10200,"TES"
-9800,"BIT"
-8000,"III"
-7500,"WWW"
-6900,"TRY"
-6500,"RBI"
-6300,"CAM"
-6100,"RBI"
-6100,"EST"
-5900,"ZIZ"
+0,"---"
+0,"---"
+0,"---"
+0,"---"
+0,"---"
+0,"---"
+0,"---"
+0,"---"
+0,"---"
+0,"---"
 
 /highscores_end
 
@@ -29,11 +29,11 @@ resources path = "D:\Lycee\ISN\Projet2.0\resources"
 
 /achievements_start
 
-achievement1 = True
-achievement2 = True
-achievement3 = True
-achievement4 = True
-achievement5 = True
+achievement1 = False
+achievement2 = False
+achievement3 = False
+achievement4 = False
+achievement5 = False
 
 /achievements_end
 
@@ -68,7 +68,7 @@ nombre parties = "0"
 
 graph mode = "sprite"
 grille taille = "20,20"
-bonus = False
+bonus = True
 vitesse = "2"
 
 /parametres_end
