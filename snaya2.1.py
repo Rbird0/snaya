@@ -136,6 +136,7 @@ class Snaya :
 			self.menuRender["sélection texts"] = self.menuRender["sélection texts"] + [self.menuCan.create_text(400, 375, anchor = S, text = self.playerName[1], font = ("Mayan", 75), fill = "#f0cc00")]
 			self.menuRender["sélection texts"] = self.menuRender["sélection texts"] + [self.menuCan.create_text(475, 375, anchor = SW, text = self.playerName[2], font = ("Mayan", 75), fill = "#f0cc00")]
 
+			self.menuRender["highlight line"] = [self.menuCan.create_line(273 + self.menuMechanics["highlight"]*102, 370, 323 + self.menuMechanics["highlight"]*102, 370, width = 2, fill = "#f0cc00")]
 
 		if self.menuMechanics["current menu"] == "highscores" :
 
