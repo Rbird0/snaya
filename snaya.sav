@@ -1,8 +1,17 @@
+###NOM###
+
+/name_start
+
+name = "RBI"
+
+/name_end
+
+
 ###CHEMINS###
 
 /chemins_start
 
-resources path = "D:\Lycee\ISN\Projet2.0\resources"
+resources path = "D:/Lycee/ISN/Projet2.0/resources"
 
 /chemins_end
 
