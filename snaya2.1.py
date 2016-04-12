@@ -438,6 +438,14 @@ class Snaya :
 		"""
 
 		self.score = 0
+		self.snake = Snake()
+		interdit = self.snake.get_coords()
+		self.pomme = Pomme(interdit, self.param.get_parametres["largeur"], self.param.get_parametres["hauteur"])
+		interdit = interdit + [self.pomme.get_coords()]
+		self.pommeGold = PommeRand(interdit, self.param.get_parametres["largeur"], self.param.get_parametres["hauteur"])
+		interdit = interdit + [self.pommeGold.get_coords()]
+		self.pommeSpec = PommeRand(interdit, self.param.get_parametres["largeur"], self.param.get_parametres["hauteur"])
+		self.pommes = {"pomme" : self.pomme.get_coords(), "pomme or" : self.pommeGold.get_coords(), "pomme spec" : self.pommeSpec.get_coords()}
 
 	def quitter(self) :
 		"""
@@ -1293,26 +1301,69 @@ class Snake :
 				if j == "pomme spec" :
 					self.specEat = True
 
+	def get_coords(self) :
+		"""
+		"""
 
-# class Pomme :
-	# """
-	# """
+		coords = []
+		for j in self.coords :
+			coords = coords.append(self.coords[j][0])
+		return coords
 
-	# def __init__(self) :
-		# """
-		# """
+	def get_coords_and_directions(self) :
+		"""
+		"""
 
-		
-# class PommeGold(Pomme) :
-	# """
-	# """
+		return self.coords
 
-	# def __init__(self) :
-		# """
-		# """
+class Pomme :
+	"""
+	"""
 
-		
+	def __init__(self, interdit, largeur, hauteur) :
+		"""
+		"""
 
+		self.spawn_pomme(interdit, largeur, hauteur)
+
+	def spawn_pomme(self, interdit, largeur, hauteur) :
+		"""
+		"""
+
+		grid = []
+		for i in range(0, largeur) :
+			for j in range(0, hauteur) :
+				if (i, j) not in interdit :
+					grid = grid + [(i, j)]
+		pos = random.randint(0, len(grid))
+		self.coords = grid[pos-1]
+
+	def get_coords(self) :
+		"""
+		"""
+
+		return self.coords
+
+class PommeRand(Pomme) :
+	"""
+	"""
+
+	def __init__(self, interdit, largeur, hauteur) :
+		"""
+		"""
+
+		self.choose(interdit, largeur, hauteur)
+
+	def choose(self, interdit, largeur, hauteur) :
+		"""
+		"""
+
+		if random.randint(0, 3) == 1 :
+			self.spawn_pomme()
+		else :
+			self.coords = ()
+
+#
 
 	#*************** IMPORTATION DES BIBLIOTHEQUES ***************#
 
