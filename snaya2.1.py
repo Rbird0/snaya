@@ -437,7 +437,7 @@ class Snaya :
 		"""
 		"""
 
-		return 0
+		self.score = 0
 
 	def quitter(self) :
 		"""
@@ -1172,6 +1172,146 @@ class Images :
 		"""
 
 		return self.images
+#
+
+	#*************** CLASSES DE JEU ***************#
+
+
+class Snake :
+	"""
+	"""
+
+	def __init__(self) :
+		"""
+		"""
+
+		self.coords = [((2, 0), "east"), ((1, 0), "east"), ((0, 0), "east")]
+
+	def go_north(self, pommes, largeur, hauteur) :
+		"""
+		"""
+
+		suppl = self.coords[-1]
+		body = self.coords[:-1]
+
+		self.eat = False
+		self.goldEat = False
+		self.specEat = False
+
+		tete = self.coords[0]
+		self.coords = [((tete[0][0], tete[0][1]-1), "north")] + body
+
+		tete = self.coords[0]
+
+		if tete[0][1] == -1 :
+			self.coords = [((tete[0][0], hauteur-1), tete[1])] + self.coords[1:]
+
+		tete = self.coords[0]
+
+		self.eating(tete, pommes, suppl)
+
+	def go_south(self, pommes, largeur, hauteur) :
+		"""
+		"""
+
+		suppl = self.coords[-1]
+		body = self.coords[:-1]
+
+		self.eat = False
+		self.goldEat = False
+		self.specEat = False
+
+		tete = self.coords[0]
+		self.coords = [((tete[0][0], tete[0][1]+1), "south")] + body
+
+		tete = self.coords[0]
+
+		if tete[0][1] == hauteur :
+			self.coords = [((tete[0][0], 0), tete[1])] + self.coords[1:]
+
+		tete = self.coords[0]
+
+		self.eating(tete, pommes, suppl)
+
+	def go_west(self, pommes, largeur, hauteur) :
+		"""
+		"""
+
+		suppl = self.coords[-1]
+		body = self.coords[:-1]
+
+		self.eat = False
+		self.goldEat = False
+		self.specEat = False
+
+		tete = self.coords[0]
+		self.coords = [((tete[0][0]-1, tete[0][1]), "west")] + body
+
+		tete = self.coords[0]
+
+		if tete[0][0] == -1 :
+			self.coords = [((largeur-1, tete[0][1]), tete[1])] + self.coords[1:]
+
+		tete = self.coords[0]
+
+		self.eating(tete, pommes, suppl)
+
+	def go_east(self, pommes, largeur, hauteur) :
+		"""
+		"""
+
+		suppl = self.coords[-1]
+		body = self.coords[:-1]
+
+		self.eat = False
+		self.goldEat = False
+		self.specEat = False
+
+		tete = self.coords[0]
+		self.coords = [((tete[0][0]+1, tete[0][1]), "east")] + body
+
+		tete = self.coords[0]
+
+		if tete[0][0] == largeur :
+			self.coords = [((0, tete[0][1]), tete[1])] + self.coords[1:]
+
+		tete = self.coords[0]
+
+		self.eating(tete, pommes, suppl)
+
+	def eating(self, tete, pommes, suppl) :
+		"""
+		"""
+
+		for j in pommes :
+			if tete[0] == pommes[j] :
+				self.coords = self.coords + suppl
+				if j == "pomme" :
+					self.eat = True
+				if j == "pomme or" :
+					self.goldEat = True
+				if j == "pomme spec" :
+					self.specEat = True
+
+
+# class Pomme :
+	# """
+	# """
+
+	# def __init__(self) :
+		# """
+		# """
+
+		
+# class PommeGold(Pomme) :
+	# """
+	# """
+
+	# def __init__(self) :
+		# """
+		# """
+
+		
 
 
 	#*************** IMPORTATION DES BIBLIOTHEQUES ***************#
