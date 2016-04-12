@@ -21,7 +21,7 @@ Highscores, Achievements, Bonus... Nous voulons pousser le projet jusqu'au bout.
 Ce projet nous permet également de nous familiariser un peu avec git et la gestion de version! :)
 
 ```python
-self.cafe = Cafe()
+cafe = Cafe()
 if cafe.vide :
 	cafe.remplir()
 else :
