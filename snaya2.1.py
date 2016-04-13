@@ -298,20 +298,20 @@ class Snaya :
 		"""
 		"""
 
-		self.can.bind_all('<Up>', self.menu_haut)
-		self.can.bind_all('z', self.menu_haut)
-		self.can.bind_all('<Down>', self.menu_bas)
-		self.can.bind_all('s', self.menu_bas)
-		self.can.bind_all('<Left>', self.menu_gauche)
-		self.can.bind_all('q', self.menu_gauche)
-		self.can.bind_all('<Right>', self.menu_droite)
-		self.can.bind_all('d', self.menu_droite)
-		self.can.bind_all('<Return>', self.menu_suivant)
-		self.can.bind_all('<space>', self.menu_suivant)
-		self.can.bind_all('<Escape>', self.menu_precedent)
-		self.can.bind_all('p', self.menu_precedent)
+		self.can.bind_all('<Up>', self.haut)
+		self.can.bind_all('z', self.haut)
+		self.can.bind_all('<Down>', self.bas)
+		self.can.bind_all('s', self.bas)
+		self.can.bind_all('<Left>', self.gauche)
+		self.can.bind_all('q', self.gauche)
+		self.can.bind_all('<Right>', self.droite)
+		self.can.bind_all('d', self.droite)
+		self.can.bind_all('<Return>', self.suivant)
+		self.can.bind_all('<space>', self.suivant)
+		self.can.bind_all('<Escape>', self.precedent)
+		self.can.bind_all('p', self.precedent)
 
-	def menu_haut(self, event) :
+	def haut(self, event) :
 		"""
 		"""
 
@@ -329,7 +329,7 @@ class Snaya :
 			if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == -1 :
 				self.menuMechanics["highlight"] = 6
 	
-	def menu_bas(self, event) :
+	def bas(self, event) :
 		"""
 		"""
 
@@ -347,7 +347,7 @@ class Snaya :
 			if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 7 :
 				self.menuMechanics["highlight"] = 0
 
-	def menu_droite(self, event) :
+	def droite(self, event) :
 		"""
 		"""
 
@@ -369,7 +369,7 @@ class Snaya :
 			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 6 :
 				self.param.plus_one_vitesse()
 
-	def menu_gauche(self, event) :
+	def gauche(self, event) :
 		"""
 		"""
 
@@ -391,7 +391,7 @@ class Snaya :
 			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 6 :
 				self.param.minus_one_vitesse()
 
-	def menu_suivant(self, event) :
+	def suivant(self, event) :
 		"""
 		"""
 
@@ -421,7 +421,7 @@ class Snaya :
 			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 1 :
 				self.save.write_to_file(self.playerName["name"], self.paths.get_path("resources"), self.hs.get_highscores(), self.ach.get_achievements(), self.skins.get_skins(), self.comptes.get_comptes(), self.param.get_parametres())
 
-	def menu_precedent(self, event) :
+	def precedent(self, event) :
 		"""
 		"""
 
@@ -484,6 +484,7 @@ class Snaya :
 		self.pommeSpec = PommeRand(interdit, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
 		self.pommes = {"pomme" : self.pomme.get_coords(), "pomme or" : self.pommeGold.get_coords(), "pomme spec" : self.pommeSpec.get_coords()}
 		self.can.delete(ALL)
+		self.can.config(width = 16*self.param.get_parametres()["largeur"]+32, height = 16*self.param.get_parametres()["hauteur"]+48, bg = "#050505")
 
 	def quitter(self) :
 		"""
