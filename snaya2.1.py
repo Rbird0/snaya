@@ -520,27 +520,52 @@ class Snaya :
 
 		self.nettoyer_aff()
 
+		self.gameRender["score"] = self.gameRender["score"] + [self.can.create_text(5, 0, text = "Score : " + str(self.score), font = ("Courier", 10), anchor = NW, fill = "#E0E0E0")]
+
 		if self.param.get_parametres()["graph mode"] == "sprite" :
 			self.afficher()
 		else :
 			self.afficher_simple()
+
+		self.pommes = {"pomme" : self.pomme.get_coords(), "pomme or" : self.pommeGold.get_coords(), "pomme spec" : self.pommeSpec.get_coords()}
+
+		if self.direction == "west" :
+			self.snake.go_west(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+		elif self.direction == "north" :
+			self.snake.go_north(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+		elif self.direction == "east" :
+			self.snake.go_east(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+		elif self.direction == "south" :
+			self.snake.go_south(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+
+		if self.snake.eat == True :
+			self.score = self.score + 100
+			self.pomme.spawn_pomme(self.snake.get_coords() + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+		if self.snake.goldEat == True :
+			self.score = self.score + 500
+			self.pommeGold.choose(self.snake.get_coords() + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+		if self.snake.specEat == True :
+			self.score = self.score + 100
+			self.pommeSpec.choose(self.snake.get_coords() + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+
+		self.root.after(self.param.get_parametres()["step"], self.move)
 
 	def nettoyer_aff(self) :
 		"""
 		"""
 
 		for j in self.gameRender["score"] :
-			can.delete(j)
+			self.can.delete(j)
 		for j in self.gameRender["tete"] :
-			can.delete(j)
+			self.can.delete(j)
 		for j in self.gameRender["snake"] :
-			can.delete(j)
+			self.can.delete(j)
 		for j in self.gameRender["pomme"] :
-			can.delete(j)
+			self.can.delete(j)
 		for j in self.gameRender["pomme or"] :
-			can.delete(j)
+			self.can.delete(j)
 		for j in self.gameRender["pomme spec"] :
-			can.delete(j)
+			self.can.delete(j)
 
 	def afficher(self) :
 		"""
@@ -549,7 +574,6 @@ class Snaya :
 		snake = self.snake.get_coords_and_directions()
 		images = self.images.get_images()
 
-		self.gameRender["score"] = self.gameRender["score"] + [self.can.create_text(5, 0, text = "Score : " + str(self.score), font = ("Courier", 10), anchor = NW, fill = "#E0E0E0")]
 
 		if snake[0][1] == "west" :
 			self.gameRender["tete"] = self.gameRender["tete"] + [self.can.create_image(snake[0][0][0]*16+18, snake[0][0][1]*16+30, anchor = N, image = images["snake head left"])]
@@ -586,6 +610,23 @@ class Snaya :
 			self.gameRender["pomme or"] = self.gameRender["pomme or"] + [self.can.create_image(self.pommeGold.get_coords()[0]*16+18, self.pommeGold.get_coords()[1]*16+30, anchor = NW, image = images["apple gold"])]
 		if self.pommeSpec.get_coords() != () :
 			self.gameRender["pomme spec"] = self.gameRender["pomme spec"] + [self.can.create_image(self.pommeSpec.get_coords()[0]*16+18, self.pommeSpec.get_coords()[1]*16+30, anchor = NW, image = images["apple spec"])]
+
+	def afficher_simple(self) :
+		"""
+		"""
+
+		snake = self.snake.get_coords_and_directions()
+
+		self.gameRender["tete"] = self.gameRender["tete"] + [self.can.create_rectangle(snake[0][0][0]*16+18, snake[0][0][1]*16+30, (snake[0][0][0]+1)*16+18, (snake[0][0][1]+1)*16+30, outline = "#E0E0E0", fill = "#FFAA00")]
+
+		for j in snake[1:] :
+			self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_rectangle(j[0][0]*16+18, j[0][1]*16+30, (j[0][0]+1)*16+18, (j[0][1]+1)*16+30, outline = "#E0E0E0", fill = "#FF7000")]
+
+		self.gameRender["pomme"] = self.gameRender["pomme"] + [self.can.create_rectangle(self.pomme.get_coords()[0]*16+18, self.pomme.get_coords()[1]*16+30, (self.pomme.get_coords()[0]+1)*16+18, (self.pomme.get_coords()[1]+1)*16+30, outline = "#E0E0E0", fill = "#FF0000")]
+		if self.pommeGold.get_coords() != () :
+			self.gameRender["pomme or"] = self.gameRender["pomme or"] + [self.can.create_rectangle(self.pommeGold.get_coords()[0]*16+18, self.pommeGold.get_coords()[1]*16+30, (self.pommeGold.get_coords()[0]+1)*16+18, (self.pommeGold.get_coords()[1]+1)*16+30, outline = "#E0E0E0", fill = "#FFE600")]
+		if self.pommeSpec.get_coords() != () :
+			self.gameRender["pomme spec"] = self.gameRender["pomme spec"] + [self.can.create_rectangle(self.pommeSpec.get_coords()[0]*16+18, self.pommeSpec.get_coords()[1]*16+30, (self.pommeSpec.get_coords()[0]+1)*16+18, (self.pommeSpec.get_coords()[1]+1)*16+30, outline = "#E0E0E0", fill = "#0000FF")]
 
 	def quitter(self) :
 		"""
@@ -1431,7 +1472,7 @@ class Snake :
 
 		for j in pommes :
 			if tete[0] == pommes[j] :
-				self.coords = self.coords + suppl
+				self.coords = self.coords + [suppl]
 				if j == "pomme" :
 					self.eat = True
 				if j == "pomme or" :
