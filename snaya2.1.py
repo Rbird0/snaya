@@ -1,6 +1,9 @@
 #CAMELET Alexandre et LECUTIEZ Simon 2015/2016, cours d'ISN - Lycée de la Plaine de l'Ain
 #Snaya, notre version du célèbre jeu Snake.
 #V2.1.0
+#Ce programme, aussi modeste qu'il soit, est proposé librement. Vous pouvez le redistribuer et/ou le modifier selon les termes de la GNU General Public License telle que publiée par la Free Software Foundation, en version 3 ou plus récente (à votre guise).
+#Vous pouvez trouver les termes de la GNU GPLv3 dans le fichier LICENSE fourni avec le programme, ou à l'adresse http://www.gnu.org/licenses/gpl.html .
+#Rejoignez nous su la page Github du projet! https://github.com/Rbird0/snaya/
 
 
 	#*************** CLASSE PRINCIPALE ***************#
