@@ -475,6 +475,7 @@ class Snaya :
 		"""
 
 		self.score = 0
+
 		self.snake = Snake()
 		interdit = self.snake.get_coords()
 		self.pomme = Pomme(interdit, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
@@ -483,8 +484,29 @@ class Snaya :
 		interdit = interdit + [self.pommeGold.get_coords()]
 		self.pommeSpec = PommeRand(interdit, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
 		self.pommes = {"pomme" : self.pomme.get_coords(), "pomme or" : self.pommeGold.get_coords(), "pomme spec" : self.pommeSpec.get_coords()}
+
 		self.can.delete(ALL)
 		self.can.config(width = 16*self.param.get_parametres()["largeur"]+32, height = 16*self.param.get_parametres()["hauteur"]+48, bg = "#050505")
+
+		self.gameRender = {"score" : [], "score line" : [], "grid" : [], "tete" : [], "snake" : [], "pomme" : [], "pomme or" : [], "pomme spec" : []}
+		self.afficher_init()
+		self.move()
+
+	def afficher_init(self) :
+		"""
+		"""
+
+		self.gameRender["score line"] = [self.can.create_line(0, 14, 16*self.param.get_parametres()["largeur"]+32, 14, fill = "#E0E0E0")]
+
+		for i in range(0, self.param.get_parametres()["largeur"]) :
+			for j in range(0, self.param.get_parametres()["hauteur"]) :
+				self.gameRender["grid"] = self.gameRender["grid"] + [self.can.create_rectangle(i*16+18, j*16+30, (i+1)*16+18, (j+1)*16+30, outline = "#404040", fill = "#1B1B1B")]
+
+	def move(self) :
+		"""
+		"""
+
+		return 0
 
 	def quitter(self) :
 		"""
