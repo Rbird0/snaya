@@ -546,7 +546,31 @@ class Snaya :
 		"""
 		"""
 
-		return 0
+		snake = self.snake.get_coords_and_directions()
+		images = self.images.get_images()
+
+		for j in snake[1:-1] :
+			directions = (snake[snake.index(j)+1][1], j[1])
+			if directions == ("north", "east") or directions == ("west", "south") :
+				self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body firstangle"])]
+			elif directions == ("east", "south") or directions == ("north", "east") :
+				self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body secangle"])]
+			elif directions == ("south", "west") or directions == ("east", "north") :
+				self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body thirdangle"])]
+			elif directions == ("west", "north") or directions == ("south", "east") :
+				self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body fthangle"])]
+			elif directions[0] == directions[1] :
+				if directions[0] == "east" or directions[0] == "west" :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body horizontal"])]
+				else :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body vertical"])]
+
+		if snake[-1][1] == "west" or snake[-1][1] == "east" :
+			self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(snake[-1][0][0]*16+18, snake[-1][0][1]*16+30, anchor = NW, image = images["snake body horizontal"])]
+		else :
+			self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(snake[-1][0][0]*16+18, snake[-1][0][1]*16+30, anchor = NW, image = images["snake body vertical"])]
+
+		
 
 	def quitter(self) :
 		"""
