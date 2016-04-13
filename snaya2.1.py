@@ -329,7 +329,7 @@ class Snaya :
 				self.name_plus_one(2)
 			if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == -1 :
 				self.menuMechanics["highlight"] = 6
-		elif self.dansJeu == True :
+		elif self.dansJeu == True and self.direction != "south" :
 			self.direction = "north"
 	
 	def bas(self, event) :
@@ -349,7 +349,7 @@ class Snaya :
 				self.name_minus_one(2)
 			if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 7 :
 				self.menuMechanics["highlight"] = 0
-		elif self.dansJeu == True :
+		elif self.dansJeu == True and self.direction != "north" :
 			self.direction = "south"
 
 	def droite(self, event) :
@@ -373,7 +373,7 @@ class Snaya :
 				self.param.switch_bonus()
 			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 6 :
 				self.param.plus_one_vitesse()
-		elif self.dansJeu == True :
+		elif self.dansJeu == True and self.direction != "west" :
 			self.direction = "east"
 
 	def gauche(self, event) :
@@ -397,7 +397,7 @@ class Snaya :
 				self.param.switch_bonus()
 			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 6 :
 				self.param.minus_one_vitesse()
-		elif self.dansJeu == True :
+		elif self.dansJeu == True and self.direction != "east" :
 			self.direction = "west"
 
 	def suivant(self, event) :
@@ -485,6 +485,7 @@ class Snaya :
 
 		self.score = 0
 		self.direction = "east"
+		self.oldDirection = "north"
 
 		self.dansJeu = True
 
@@ -529,14 +530,18 @@ class Snaya :
 
 		self.pommes = {"pomme" : self.pomme.get_coords(), "pomme or" : self.pommeGold.get_coords(), "pomme spec" : self.pommeSpec.get_coords()}
 
-		if self.direction == "west" :
+		if self.direction == "west" and self.oldDirection != "east" :
 			self.snake.go_west(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
-		elif self.direction == "north" :
+			self.oldDirection = "west"
+		elif self.direction == "north" and self.oldDirection != "south" :
 			self.snake.go_north(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
-		elif self.direction == "east" :
+			self.oldDirection = "north"
+		elif self.direction == "east" and self.oldDirection != "west" :
 			self.snake.go_east(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
-		elif self.direction == "south" :
+			self.oldDirection = "east"
+		elif self.direction == "south" and self.oldDirection != "north" :
 			self.snake.go_south(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.oldDirection = "south"
 
 		if self.snake.eat == True :
 			self.score = self.score + 100
@@ -584,26 +589,48 @@ class Snaya :
 		else :
 			self.gameRender["tete"] = self.gameRender["tete"] + [self.can.create_image(snake[0][0][0]*16+18, snake[0][0][1]*16+30, anchor = NW, image = images["snake head bot"])]
 
-		for j in snake[1:-1] :
-			directions = (snake[snake.index(j)+1][1], j[1])
-			if directions == ("north", "east") or directions == ("west", "south") :
-				self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body firstangle"])]
-			elif directions == ("east", "south") or directions == ("north", "east") :
-				self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body secangle"])]
-			elif directions == ("south", "west") or directions == ("east", "north") :
-				self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body thirdangle"])]
-			elif directions == ("west", "north") or directions == ("south", "east") :
-				self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body fthangle"])]
-			elif directions[0] == directions[1] :
-				if directions[0] == "east" or directions[0] == "west" :
-					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body horizontal"])]
+		tour = 0
+		for j in snake[1:] :
+			direction = j[1]
+			if snake[tour][1] == "east" :
+				if snake[tour+1][1] == "east" :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body horizontal"])] #on dessine le corps du serpent
+				elif snake[tour+1][1] == "north" :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body firstangle"])] #on dessine le corps du serpent
+				elif snake[tour+1][1] == "south" :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body thirdangle"])] #on dessine le corps du serpent
 				else :
-					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body vertical"])]
-
-		if snake[-1][1] == "west" or snake[-1][1] == "east" :
-			self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(snake[-1][0][0]*16+18, snake[-1][0][1]*16+30, anchor = NW, image = images["snake body horizontal"])]
-		else :
-			self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(snake[-1][0][0]*16+18, snake[-1][0][1]*16+30, anchor = NW, image = images["snake body vertical"])]
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body"])] #on dessine le corps du serpent
+			elif snake[tour][1] == "north" :
+				if snake[tour+1][1] == "east" :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body fthangle"])] #on dessine le corps du serpent
+				elif snake[tour+1][1] == "north" :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body vertical"])] #on dessine le corps du serpent
+				elif snake[tour+1][1] == "west" :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body thirdangle"])] #on dessine le corps du serpent
+				else :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body"])] #on dessine le corps du serpent
+			elif snake[tour][1] == "west" :
+				if snake[tour+1][1] == "south" :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body fthangle"])] #on dessine le corps du serpent
+				elif snake[tour+1][1] == "north" :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body secangle"])] #on dessine le corps du serpent
+				elif snake[tour+1][1] == "west" :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body horizontal"])] #on dessine le corps du serpent
+				else :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body"])] #on dessine le corps du serpent
+			elif snake[tour][1] == "south" :
+				if snake[tour+1][1] == "east" :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body secangle"])] #on dessine le corps du serpent
+				elif snake[tour+1][1] == "south" :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body vertical"])] #on dessine le corps du serpent
+				elif snake[tour+1][1] == "west" :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body firstangle"])] #on dessine le corps du serpent
+				else :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body"])] #on dessine le corps du serpent
+			else :
+				self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body"])] #on dessine le corps du serpent
+			tour = tour+1
 
 		self.gameRender["pomme"] = self.gameRender["pomme"] + [self.can.create_image(self.pomme.get_coords()[0]*16+18, self.pomme.get_coords()[1]*16+30, anchor = NW, image = images["apple"])]
 		if self.pommeGold.get_coords() != () :
