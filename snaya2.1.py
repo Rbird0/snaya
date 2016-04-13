@@ -25,6 +25,7 @@ class Snaya :
 		self.initialize()
 
 		self.dansMenu = True
+		self.dansJeu = False
 		self.menu_init()
 		self.menu()
 
@@ -328,6 +329,8 @@ class Snaya :
 				self.name_plus_one(2)
 			if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == -1 :
 				self.menuMechanics["highlight"] = 6
+		elif self.dansJeu == True :
+			self.direction = "north"
 	
 	def bas(self, event) :
 		"""
@@ -346,6 +349,8 @@ class Snaya :
 				self.name_minus_one(2)
 			if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 7 :
 				self.menuMechanics["highlight"] = 0
+		elif self.dansJeu == True :
+			self.direction = "south"
 
 	def droite(self, event) :
 		"""
@@ -368,6 +373,8 @@ class Snaya :
 				self.param.switch_bonus()
 			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 6 :
 				self.param.plus_one_vitesse()
+		elif self.dansJeu == True :
+			self.direction = "east"
 
 	def gauche(self, event) :
 		"""
@@ -390,6 +397,8 @@ class Snaya :
 				self.param.switch_bonus()
 			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 6 :
 				self.param.minus_one_vitesse()
+		elif self.dansJeu == True :
+			self.direction = "west"
 
 	def suivant(self, event) :
 		"""
@@ -475,6 +484,9 @@ class Snaya :
 		"""
 
 		self.score = 0
+		self.direction = "east"
+
+		self.dansJeu = True
 
 		self.snake = Snake()
 		interdit = self.snake.get_coords()
@@ -503,6 +515,34 @@ class Snaya :
 				self.gameRender["grid"] = self.gameRender["grid"] + [self.can.create_rectangle(i*16+18, j*16+30, (i+1)*16+18, (j+1)*16+30, outline = "#404040", fill = "#1B1B1B")]
 
 	def move(self) :
+		"""
+		"""
+
+		self.nettoyer_aff()
+
+		if self.param.get_parametres()["graph mode"] == "sprite" :
+			self.afficher()
+		else :
+			self.afficher_simple()
+
+	def nettoyer_aff(self) :
+		"""
+		"""
+
+		for j in self.gameRender["score"] :
+			can.delete(j)
+		for j in self.gameRender["tete"] :
+			can.delete(j)
+		for j in self.gameRender["snake"] :
+			can.delete(j)
+		for j in self.gameRender["pomme"] :
+			can.delete(j)
+		for j in self.gameRender["pomme or"] :
+			can.delete(j)
+		for j in self.gameRender["pomme spec"] :
+			can.delete(j)
+
+	def afficher(self) :
 		"""
 		"""
 
