@@ -549,6 +549,17 @@ class Snaya :
 		snake = self.snake.get_coords_and_directions()
 		images = self.images.get_images()
 
+		self.gameRender["score"] = self.gameRender["score"] + [self.can.create_text(5, 0, text = "Score : " + str(self.score), font = ("Courier", 10), anchor = NW, fill = "#E0E0E0")]
+
+		if snake[0][1] == "west" :
+			self.gameRender["tete"] = self.gameRender["tete"] + [self.can.create_image(snake[0][0][0]*16+18, snake[0][0][1]*16+30, anchor = N, image = images["snake head left"])]
+		elif snake[0][1] == "north" :
+			self.gameRender["tete"] = self.gameRender["tete"] + [self.can.create_image(snake[0][0][0]*16+18, snake[0][0][1]*16+30, anchor = W, image = images["snake head top"])]
+		elif snake[0][1] == "east" :
+			self.gameRender["tete"] = self.gameRender["tete"] + [self.can.create_image(snake[0][0][0]*16+18, snake[0][0][1]*16+30, anchor = NW, image = images["snake head right"])]
+		else :
+			self.gameRender["tete"] = self.gameRender["tete"] + [self.can.create_image(snake[0][0][0]*16+18, snake[0][0][1]*16+30, anchor = NW, image = images["snake head bot"])]
+
 		for j in snake[1:-1] :
 			directions = (snake[snake.index(j)+1][1], j[1])
 			if directions == ("north", "east") or directions == ("west", "south") :
@@ -570,7 +581,11 @@ class Snaya :
 		else :
 			self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(snake[-1][0][0]*16+18, snake[-1][0][1]*16+30, anchor = NW, image = images["snake body vertical"])]
 
-		
+		self.gameRender["pomme"] = self.gameRender["pomme"] + [self.can.create_image(self.pomme.get_coords()[0]*16+18, self.pomme.get_coords()[1]*16+30, anchor = NW, image = images["apple"])]
+		if self.pommeGold.get_coords() != () :
+			self.gameRender["pomme or"] = self.gameRender["pomme or"] + [self.can.create_image(self.pommeGold.get_coords()[0]*16+18, self.pommeGold.get_coords()[1]*16+30, anchor = NW, image = images["apple gold"])]
+		if self.pommeSpec.get_coords() != () :
+			self.gameRender["pomme spec"] = self.gameRender["pomme spec"] + [self.can.create_image(self.pommeSpec.get_coords()[0]*16+18, self.pommeSpec.get_coords()[1]*16+30, anchor = NW, image = images["apple spec"])]
 
 	def quitter(self) :
 		"""
