@@ -521,18 +521,7 @@ class Snaya :
 
 		self.pommes = {"pomme" : self.pomme.get_coords(), "pomme or" : self.pommeGold.get_coords(), "pomme spec" : self.pommeSpec.get_coords()}
 
-		if self.direction == "west" and self.oldDirection != "east" :
-			self.snake.go_west(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
-			self.oldDirection = "west"
-		elif self.direction == "north" and self.oldDirection != "south" :
-			self.snake.go_north(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
-			self.oldDirection = "north"
-		elif self.direction == "east" and self.oldDirection != "west" :
-			self.snake.go_east(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
-			self.oldDirection = "east"
-		elif self.direction == "south" and self.oldDirection != "north" :
-			self.snake.go_south(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
-			self.oldDirection = "south"
+		self.deplacer()
 
 		if self.snake.eat == True :
 			self.score = self.score + 100
@@ -554,6 +543,31 @@ class Snaya :
 			self.afficher_simple()
 
 		self.root.after(self.param.get_parametres()["step"], self.move)
+
+	def deplacer(self) :
+		"""
+		"""
+
+		if self.direction == "west" and self.oldDirection != "east" :
+			self.snake.go_west(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.oldDirection = "west"
+		elif self.direction == "north" and self.oldDirection != "south" :
+			self.snake.go_north(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.oldDirection = "north"
+		elif self.direction == "east" and self.oldDirection != "west" :
+			self.snake.go_east(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.oldDirection = "east"
+		elif self.direction == "south" and self.oldDirection != "north" :
+			self.snake.go_south(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.oldDirection = "south"
+		elif self.oldDirection == "west" :
+			self.snake.go_west(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+		elif self.oldDirection == "north" :
+			self.snake.go_north(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+		elif self.oldDirection == "east" :
+			self.snake.go_east(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+		elif self.oldDirection == "south" :
+			self.snake.go_south(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
 
 	def nettoyer_aff(self) :
 		"""
