@@ -519,15 +519,6 @@ class Snaya :
 		"""
 		"""
 
-		self.nettoyer_aff()
-
-		self.gameRender["score"] = self.gameRender["score"] + [self.can.create_text(5, 0, text = "Score : " + str(self.score), font = ("Courier", 10), anchor = NW, fill = "#E0E0E0")]
-
-		if self.param.get_parametres()["graph mode"] == "sprite" :
-			self.afficher()
-		else :
-			self.afficher_simple()
-
 		self.pommes = {"pomme" : self.pomme.get_coords(), "pomme or" : self.pommeGold.get_coords(), "pomme spec" : self.pommeSpec.get_coords()}
 
 		if self.direction == "west" and self.oldDirection != "east" :
@@ -552,6 +543,15 @@ class Snaya :
 		if self.snake.specEat == True :
 			self.score = self.score + 100
 			self.pommeSpec.choose(self.snake.get_coords() + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+
+		self.nettoyer_aff()
+
+		self.gameRender["score"] = self.gameRender["score"] + [self.can.create_text(5, 0, text = "Score : " + str(self.score), font = ("Courier", 10), anchor = NW, fill = "#E0E0E0")]
+
+		if self.param.get_parametres()["graph mode"] == "sprite" :
+			self.afficher()
+		else :
+			self.afficher_simple()
 
 		self.root.after(self.param.get_parametres()["step"], self.move)
 
