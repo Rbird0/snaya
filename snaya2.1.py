@@ -484,8 +484,9 @@ class Snaya :
 		"""
 
 		self.score = 0
+		self.oldTemps = 0
 		self.direction = "east"
-		self.oldDirection = "north"
+		self.oldDirection = "east"
 
 		self.dansJeu = True
 
@@ -542,7 +543,13 @@ class Snaya :
 		else :
 			self.afficher_simple()
 
-		self.root.after(self.param.get_parametres()["step"], self.move)
+		isOk = False
+		while isOk != True :
+			self.temps = time.time()*1000
+			if self.temps > self.oldTemps + self.param.get_parametres()["step"] :
+				isOk = True
+				self.oldTemps = self.temps
+				self.root.after(10, self.move)
 
 	def deplacer(self) :
 		"""
@@ -1592,6 +1599,7 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
 import random
+import time
 
 	#*************** PROGRAMME PRINCIPAL ***************#
 
