@@ -527,12 +527,22 @@ class Snaya :
 		if self.snake.eat == True :
 			self.score = self.score + 100
 			self.pomme.spawn_pomme(self.snake.get_coords() + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			if self.pommes["pomme or"] == () :
+				self.pommeGold.choose(self.snake.get_coords() + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			if self.pommes["pomme spec"] == () :
+				self.pommeSpec.choose(self.snake.get_coords() + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
 		if self.snake.goldEat == True :
 			self.score = self.score + 500
 			self.pommeGold.choose(self.snake.get_coords() + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.pomme.spawn_pomme(self.snake.get_coords() + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			if self.pommes["pomme spec"] == () :
+				self.pommeSpec.choose(self.snake.get_coords() + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
 		if self.snake.specEat == True :
 			self.score = self.score + 100
 			self.pommeSpec.choose(self.snake.get_coords() + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.pomme.spawn_pomme(self.snake.get_coords() + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			if self.pommes["pomme or"] == () :
+				self.pommeGold.choose(self.snake.get_coords() + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
 
 		self.nettoyer_aff()
 
