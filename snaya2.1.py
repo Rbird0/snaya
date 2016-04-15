@@ -524,6 +524,10 @@ class Snaya :
 
 		self.deplacer()
 
+		if self.snake.get_coords_and_directions()[0][1] != self.snake.get_coords_and_directions()[1][1] :
+			self.pommeGold.deplacement()
+			self.pommeSpec.deplacement()
+
 		if self.snake.eat == True :
 			self.score = self.score + 100
 			self.pomme.spawn_pomme(self.snake.get_coords() + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
@@ -1609,6 +1613,7 @@ class PommeRand(Pomme) :
 		"""
 		"""
 
+		self.depl = 0
 		self.choose(interdit, largeur, hauteur)
 
 	def choose(self, interdit, largeur, hauteur) :
@@ -1617,9 +1622,18 @@ class PommeRand(Pomme) :
 
 		if random.randint(0, 3) == 1 :
 			self.spawn_pomme(interdit, largeur, hauteur)
+			self.depl = 5
 		else :
 			self.coords = ()
 
+	def deplacement(self) :
+		"""
+		"""
+
+		if self.depl != 0 :
+			self.depl -= 1
+		else :
+			self.coords = ()
 #
 
 	#*************** IMPORTATION DES BIBLIOTHEQUES ***************#
