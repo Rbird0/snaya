@@ -553,13 +553,14 @@ class Snaya :
 		else :
 			self.afficher_simple()
 
-		isOk = False
-		while isOk != True :
-			self.temps = time.time()*1000
-			if self.temps > self.oldTemps + self.param.get_parametres()["step"] :
-				isOk = True
-				self.oldTemps = self.temps
-				self.root.after(10, self.move)
+		if self.snake.isOver() != True :
+			isOk = False
+			while isOk != True :
+				self.temps = time.time()*1000
+				if self.temps > self.oldTemps + self.param.get_parametres()["step"] :
+					isOk = True
+					self.oldTemps = self.temps
+					self.root.after(10, self.move)
 
 	def deplacer(self) :
 		"""
@@ -1431,6 +1432,7 @@ class Snake :
 		"""
 
 		self.coords = [((2, 0), "east"), ((1, 0), "east"), ((0, 0), "east")]
+		self.gameOver = False
 
 	def go_north(self, pommes, largeur, hauteur) :
 		"""
@@ -1538,6 +1540,18 @@ class Snake :
 				if j == "pomme spec" :
 					self.specEat = True
 
+		self.game_over_test()
+
+	def game_over_test(self) :
+		"""
+		"""
+
+		coords = []
+		for j in range(len(self.coords)) :
+			coords = coords + [self.coords[j][0]]
+		if coords[0] in coords[1:] :
+			self.gameOver = True
+
 	def get_coords(self) :
 		"""
 		"""
@@ -1552,6 +1566,12 @@ class Snake :
 		"""
 
 		return self.coords
+
+	def isOver(self) :
+		"""
+		"""
+
+		return self.gameOver
 
 class Pomme :
 	"""
