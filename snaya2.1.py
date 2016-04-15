@@ -1159,6 +1159,24 @@ class Highscores :
 					name = name + k
 			self.highscores[j] = {"name" : name, "score" : score}
 
+	def add_score(self, newScore, name) :
+		"""
+		"""
+
+		old = {0 : {"name" : "XXX", "score" : 0}}
+
+		for j in range(1, 11) :
+			old[j] = self.highscores[j]
+
+		for j in range(1,11) :
+			if newScore > self.highscores[j]["score"] :
+				self.highscores[j+1] = old[j]
+			if newScore > old[j]["score"] and (newScore <= old[j-1]["score"] or old[j-1] is old[0]) :
+				self.highscores[j] = {"name" : name, "score" : newScore}
+
+		self.highscores[11] = 0
+		del self.highscores[11]
+
 	def get_highscores(self) :
 		"""
 		"""
