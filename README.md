@@ -38,4 +38,4 @@ Rejoignez nous sur la page [Github](https://github.com/Rbird0/snaya/) du projet!
 
 ___
 
-(Ce fichier est au format *MarkDown*. Si vous ne savez pas ce que c'est, je vous invite à vous rendre [ici](https://daringfireball.net/projects/markdown/).)
+(Ce fichier est au format __*MarkDown*__. Si vous ne savez pas ce que c'est, je vous invite à vous rendre [ici](https://daringfireball.net/projects/markdown/).)
