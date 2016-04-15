@@ -33,4 +33,9 @@ ___
 
 Ce programme, aussi modeste qu'il soit, est proposé librement. Vous pouvez le redistribuer et/ou le modifier selon les termes de la GNU General Public License telle que publiée par la Free Software Foundation, en version 3 ou plus récente (à votre guise).
 Vous pouvez trouver les termes de la GNU GPLv3 dans le fichier LICENSE fourni avec le programme, ou à [cette adresse](http://www.gnu.org/licenses/gpl.html).
+
 Rejoignez nous sur la page [Github](https://github.com/Rbird0/snaya/) du projet!
+
+___
+
+(Ce fichier est au format *MarkDown*. Si vous ne savez pas ce que c'est, je vous invite à vous rendre [ici](https://daringfireball.net/projects/markdown/).)
