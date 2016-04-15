@@ -529,6 +529,8 @@ class Snaya :
 
 		snake = self.snake.get_coords_and_directions()
 		snakeCoords = self.snake.get_coords()
+		largeur = self.param.get_largeur()
+		hauteur = self.param.get_hauteur()
 
 		if snake[0][1] != snake[1][1] :
 			self.pommeGold.deplacement()
@@ -536,23 +538,23 @@ class Snaya :
 
 		if self.snake.eat == True :
 			self.score = self.score + 100
-			self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
 			if self.pommes["pomme or"] == () :
-				self.pommeGold.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+				self.pommeGold.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
 			if self.pommes["pomme spec"] == () :
-				self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+				self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], largeur, hauteur)
 		if self.snake.goldEat == True :
 			self.score = self.score + 500
-			self.pommeGold.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
-			self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.pommeGold.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
+			self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
 			if self.pommes["pomme spec"] == () :
-				self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+				self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], largeur, hauteur)
 		if self.snake.specEat == True :
 			self.score = self.score + 100
-			self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
-			self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], largeur, hauteur)
+			self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
 			if self.pommes["pomme or"] == () :
-				self.pommeGold.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+				self.pommeGold.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
 
 		self.nettoyer_aff()
 
@@ -576,26 +578,29 @@ class Snaya :
 		"""
 		"""
 
+		largeur = self.param.get_largeur()
+		hauteur = self.param.get_hauteur()
+
 		if self.direction == "west" and self.oldDirection != "east" :
-			self.snake.go_west(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.snake.go_west(self.pommes, largeur, hauteur)
 			self.oldDirection = "west"
 		elif self.direction == "north" and self.oldDirection != "south" :
-			self.snake.go_north(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.snake.go_north(self.pommes, largeur, hauteur)
 			self.oldDirection = "north"
 		elif self.direction == "east" and self.oldDirection != "west" :
-			self.snake.go_east(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.snake.go_east(self.pommes, largeur, hauteur)
 			self.oldDirection = "east"
 		elif self.direction == "south" and self.oldDirection != "north" :
-			self.snake.go_south(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.snake.go_south(self.pommes, largeur, hauteur)
 			self.oldDirection = "south"
 		elif self.oldDirection == "west" :
-			self.snake.go_west(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.snake.go_west(self.pommes, largeur, hauteur)
 		elif self.oldDirection == "north" :
-			self.snake.go_north(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.snake.go_north(self.pommes, largeur, hauteur)
 		elif self.oldDirection == "east" :
-			self.snake.go_east(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.snake.go_east(self.pommes, largeur, hauteur)
 		elif self.oldDirection == "south" :
-			self.snake.go_south(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.snake.go_south(self.pommes, largeur, hauteur)
 
 	def nettoyer_aff(self) :
 		"""
@@ -1351,6 +1356,30 @@ class Parametres :
 		"""
 
 		return self.param
+
+	def get_largeur(self) :
+		"""
+		"""
+
+		return self.param["largeur"]
+
+	def get_hauteur(self) :
+		"""
+		"""
+
+		return self.param["hauteur"]
+
+	def get_step(self) :
+		"""
+		"""
+
+		return self.param["step"]
+
+	def get_graph_mode(self) :
+		"""
+		"""
+
+		return self.param["graph mode"]
 
 class Images :
 	"""
