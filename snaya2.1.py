@@ -27,6 +27,8 @@ class Snaya :
 		self.root.deiconify()
 		self.initialize()
 
+		self.dansMenu = True
+		self.dansJeu = False
 		self.menu_init()
 		self.menu()
 
@@ -77,8 +79,8 @@ class Snaya :
 
 		self.menuRender = {"background" : [], "highlight line" : [], "title texts" : [], "sélection texts" : [], "highscores texts" : [], "achievements texts" : [], "achievements elements" : [], "paramètres texts" : []}
 		self.menuMechanics = {"current menu" : "title", "highlight" : 0}
-		self.menuCan = Canvas(self.root, width = 800, height = 600)
-		self.menuCan.pack()
+		self.can = Canvas(self.root, width = 800, height = 600)
+		self.can.pack()
 
 		self.bind()
 
@@ -92,317 +94,361 @@ class Snaya :
 
 		if parametres["graph mode"] == "sprite" :
 			for j in self.menuRender["background"] :
-				self.menuCan.delete(j)
+				self.can.delete(j)
 		for j in self.menuRender["highlight line"] :
-			self.menuCan.delete(j)
+			self.can.delete(j)
 		for j in self.menuRender["title texts"] :
-			self.menuCan.delete(j)
+			self.can.delete(j)
 		for j in self.menuRender["sélection texts"] :
-			self.menuCan.delete(j)
+			self.can.delete(j)
 		for j in self.menuRender["highscores texts"] :
-			self.menuCan.delete(j)
+			self.can.delete(j)
 		for j in self.menuRender["achievements texts"] :
-			self.menuCan.delete(j)
+			self.can.delete(j)
 		for j in self.menuRender["achievements elements"] :
-			self.menuCan.delete(j)
+			self.can.delete(j)
 		for j in self.menuRender["paramètres texts"] :
-			self.menuCan.delete(j)
+			self.can.delete(j)
 
 		if self.menuMechanics["current menu"] == "title" and parametres["graph mode"] == "sprite" :
 			images = self.images.get_images()
-			self.menuRender["background"] = self.menuRender["background"] + [self.menuCan.create_image(0, 0, anchor = NW, image = images["menu title"])]
+			self.menuRender["background"] = self.menuRender["background"] + [self.can.create_image(0, 0, anchor = NW, image = images["menu title"])]
 		elif parametres["graph mode"] == "sprite" :
 			images = self.images.get_images()
-			self.menuRender["background"] = self.menuRender["background"] + [self.menuCan.create_image(0, 0, anchor = NW, image = images["menu"])]
+			self.menuRender["background"] = self.menuRender["background"] + [self.can.create_image(0, 0, anchor = NW, image = images["menu"])]
 		else :
-			self.menuRender["background"] = self.menuRender["background"] + [self.menuCan.create_rectangle(0, 0, 124, 600, width = 0, fill = "#547e25")]
-			self.menuRender["background"] = self.menuRender["background"] + [self.menuCan.create_rectangle(124, 0, 676, 600, width = 0, fill = "#8c5918")]
-			self.menuRender["background"] = self.menuRender["background"] + [self.menuCan.create_rectangle(676, 0, 800, 600, width = 0, fill = "#547e25")]
+			self.menuRender["background"] = self.menuRender["background"] + [self.can.create_rectangle(0, 0, 124, 600, width = 0, fill = "#547e25")]
+			self.menuRender["background"] = self.menuRender["background"] + [self.can.create_rectangle(124, 0, 676, 600, width = 0, fill = "#8c5918")]
+			self.menuRender["background"] = self.menuRender["background"] + [self.can.create_rectangle(676, 0, 800, 600, width = 0, fill = "#547e25")]
 			if self.menuMechanics["current menu"] == "title" :
-				self.menuRender["title texts"] = self.menuRender["title texts"] + [self.menuCan.create_text(400, 30, anchor = N, text = "SNAYA", font = ("Mayan", -130), fill = "#f0cc00")]
+				self.menuRender["title texts"] = self.menuRender["title texts"] + [self.can.create_text(400, 30, anchor = N, text = "SNAYA", font = ("Mayan", -130), fill = "#f0cc00")]
 
 		if self.menuMechanics["current menu"] == "title" :
-
-			self.menuRender["title texts"] = self.menuRender["title texts"] + [self.menuCan.create_text(400, 275, anchor = S, text = "Jouer", font = ("Mayan", 25), fill = "#f0cc00")]
-			self.menuRender["title texts"] = self.menuRender["title texts"] + [self.menuCan.create_text(400, 337.5, anchor = S, text = "Highscores", font = ("Mayan", 25), fill = "#f0cc00")]
-			self.menuRender["title texts"] = self.menuRender["title texts"] + [self.menuCan.create_text(400, 400, anchor = S, text = "Achievements", font = ("Mayan", 25), fill = "#f0cc00")]
-			self.menuRender["title texts"] = self.menuRender["title texts"] + [self.menuCan.create_text(400, 462.5, anchor = S, text = "Paramètres", font = ("Mayan", 25), fill = "#f0cc00")]
-			self.menuRender["title texts"] = self.menuRender["title texts"] + [self.menuCan.create_text(400, 525, anchor = S, text = "Quitter", font = ("Mayan", 25), fill = "#f0cc00")]
-
-			self.menuRender["highlight line"] = [self.menuCan.create_line(375, 270 + self.menuMechanics["highlight"]*62.5, 425, 270 + self.menuMechanics["highlight"]*62.5, width = 2, fill = "#f0cc00")]
+			self.menu_title()
 
 		if self.menuMechanics["current menu"] == "sélection nom" :
-
-			self.menuRender["highscores texts"] = self.menuRender["highscores texts"] + [self.menuCan.create_text(400, 30, anchor = N, text = "ENTREZ VOTRE NOM", font = ("Mayan", 35), fill = "#f0cc00")]
-
-			self.menuRender["sélection texts"] = self.menuRender["sélection texts"] + [self.menuCan.create_text(325, 375, anchor = SE, text = self.playerName[0], font = ("Mayan", 75), fill = "#f0cc00")]
-			self.menuRender["sélection texts"] = self.menuRender["sélection texts"] + [self.menuCan.create_text(400, 375, anchor = S, text = self.playerName[1], font = ("Mayan", 75), fill = "#f0cc00")]
-			self.menuRender["sélection texts"] = self.menuRender["sélection texts"] + [self.menuCan.create_text(475, 375, anchor = SW, text = self.playerName[2], font = ("Mayan", 75), fill = "#f0cc00")]
-
-			self.menuRender["highlight line"] = [self.menuCan.create_line(273 + self.menuMechanics["highlight"]*102, 370, 323 + self.menuMechanics["highlight"]*102, 370, width = 2, fill = "#f0cc00")]
+			self.menu_selection()
 
 		if self.menuMechanics["current menu"] == "highscores" :
-
-			self.menuRender["highscores texts"] = self.menuRender["highscores texts"] + [self.menuCan.create_text(400, 30, anchor = N, text = "HIGHSCORES", font = ("Mayan", 35), fill = "#f0cc00")]
-
-			for j in highscores.keys() :
-				self.menuRender["highscores texts"] = self.menuRender["highscores texts"] + [self.menuCan.create_text(245, 160 + 40*(j - 1), anchor = NW, text = highscores[j]["name"], font = ("Mayan", 20), fill = "#f0cc00")]
-				self.menuRender["highscores texts"] = self.menuRender["highscores texts"] + [self.menuCan.create_text(350, 160 + 40*(j - 1), anchor = NW, text = " . . . . . . . . . . . ", font = ("Mayan", 20), fill = "#f0cc00")]
-				self.menuRender["highscores texts"] = self.menuRender["highscores texts"] + [self.menuCan.create_text(600, 160 + 40*(j - 1), anchor = NE, text = highscores[j]["score"], font = ("Mayan", 20), fill = "#f0cc00")]
-				self.menuRender["highscores texts"] = self.menuRender["highscores texts"] + [self.menuCan.create_text(245, 160 + 40*(j - 1), anchor = NE, text = str(j) + ". ", font = ("Mayan", 20), fill = "#f0cc00")]
+			self.menu_highscores(highscores)
 
 		if self.menuMechanics["current menu"] == "achievements" :
-			if parametres["graph mode"] == "sprite" :
-				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_image(201, 171, anchor = NW, image = images["ach bg"])]
-			else :
-				for j in range(0,5) :
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_rectangle(201, 171 + 70*j, 601, 231 + 70*j, width = 0, fill = "#6f4811")]
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_rectangle(206, 176 + 70*j, 256, 226 + 70*j, width = 0, fill = "#463b2b")]
-
-			self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.menuCan.create_text(400, 30, anchor = N, text = "ACHIEVEMENTS", font = ("Mayan", 35), fill = "#f0cc00")]
-
-			nbAch = 0
-
-			self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.menuCan.create_text(266, 176, anchor = NW, text = "Adam & Snake", font = ("Mayan", 15, "bold"), fill = "#f0cc00")]
-			self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.menuCan.create_text(266, 246, anchor = NW, text = "Mécanique newtonienne", font = ("Mayan", 15, "bold"), fill = "#f0cc00")]
-			self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.menuCan.create_text(266, 316, anchor = NW, text = "Jeunesse dorée", font = ("Mayan", 15, "bold"), fill = "#f0cc00")]
-			self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.menuCan.create_text(266, 386, anchor = NW, text = "Super Snake", font = ("Mayan", 15, "bold"), fill = "#f0cc00")]
-			self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.menuCan.create_text(266, 456, anchor = NW, text = "Globetrotter", font = ("Mayan", 15, "bold"), fill = "#f0cc00")]
-
-			if parametres["graph mode"] == "sprite" :
-				if achievements[1] == True :
-					nbAch += 1
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_image(206, 176, anchor = NW, image = images["ach1"])]
-					self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.menuCan.create_text(266, 201, anchor = NW, text = "Manger 10 pommes classiques en une partie.", font = ("Mayan", 10), fill = "#f0cc00")]
-				else :
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_image(207, 176, anchor = NW, image = images["no ach"])]
-				if achievements[2] == True :
-					nbAch += 1
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_image(206, 246, anchor = NW, image = images["ach2"])]
-					self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.menuCan.create_text(266, 271, anchor = NW, text = "Manger 100 pommes classiques au total.", font = ("Mayan", 10), fill = "#f0cc00")]
-				else :
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_image(207, 246, anchor = NW, image = images["no ach"])]
-				if achievements[3] == True :
-					nbAch += 1
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_image(206, 316, anchor = NW, image = images["ach3"])]
-					self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.menuCan.create_text(266, 341, anchor = NW, text = "Manger 150 pommes en or au total.", font = ("Mayan", 10), fill = "#f0cc00")]
-				else :
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_image(207, 316, anchor = NW, image = images["no ach"])]
-				if achievements[4] == True :
-					nbAch += 1
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_image(206, 386, anchor = NW, image = images["ach4"])]
-					self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.menuCan.create_text(266, 411, anchor = NW, text = "Manger 100 pommes spéciales au total.", font = ("Mayan", 10), fill = "#f0cc00")]
-				else :
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_image(207, 386, anchor = NW, image = images["no ach"])]
-				if achievements[5] == True :
-					nbAch += 1
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_image(206, 456, anchor = NW, image = images["ach5"])]
-					self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.menuCan.create_text(266, 481, anchor = NW, text = "Parcourir toute la grille en une seule partie.", font = ("Mayan", 10), fill = "#f0cc00")]
-				else :
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_image(207, 456, anchor = NW, image = images["no ach"])]
-
-			else :
-				if achievements[1] == True :
-					nbAch += 1
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_line(210, 200, 230, 220, width = 2, fill = "#76cb3d")]
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_line(230, 220, 252, 180, width = 2, fill = "#76cb3d")]
-				else :
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_line(210, 180, 252, 222, width = 2, fill = "#f8320b")]
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_line(210, 222, 252, 180, width = 2, fill = "#f8320b")]
-				if achievements[2] == True :
-					nbAch += 1
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_line(210, 270, 230, 290, width = 2, fill = "#76cb3d")]
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_line(230, 290, 252, 250, width = 2, fill = "#76cb3d")]
-				else :
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_line(210, 250, 252, 292, width = 2, fill = "#f8320b")]
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_line(210, 292, 252, 250, width = 2, fill = "#f8320b")]
-				if achievements[3] == True :
-					nbAch += 1
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_line(210, 340, 230, 360, width = 2, fill = "#76cb3d")]
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_line(230, 360, 252, 320, width = 2, fill = "#76cb3d")]
-				else :
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_line(210, 320, 252, 362, width = 2, fill = "#f8320b")]
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_line(210, 362, 252, 320, width = 2, fill = "#f8320b")]
-				if achievements[4] == True :
-					nbAch += 1
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_line(210, 410, 230, 430, width = 2, fill = "#76cb3d")]
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_line(230, 430, 252, 390, width = 2, fill = "#76cb3d")]
-				else :
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_line(210, 390, 252, 432, width = 2, fill = "#f8320b")]
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_line(210, 432, 252, 390, width = 2, fill = "#f8320b")]
-				if achievements[5] == True :
-					nbAch += 1
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_line(210, 480, 230, 500, width = 2, fill = "#76cb3d")]
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_line(230, 500, 252, 460, width = 2, fill = "#76cb3d")]
-				else :
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_line(210, 460, 252, 502, width = 2, fill = "#f8320b")]
-					self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_line(210, 502, 252, 460, width = 2, fill = "#f8320b")]
-			
-			self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.menuCan.create_text(546, 65, anchor = NW, text = str(nbAch), font = ("Mayan", 30), fill = "#f0cc00")]
-			self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.menuCan.create_text(592, 136, anchor = SE, text = "5", font = ("Mayan", 30), fill = "#f0cc00")]
-			self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.menuCan.create_line(556, 119, 590, 85, width = 2, fill = "#f0cc00")]
+			self.menu_achievements(images, achievements, parametres)
 
 		if self.menuMechanics["current menu"] == "paramètres" :
-			self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.menuCan.create_text(400, 30, anchor = N, text = "PARAMÈTRES", font = ("Mayan", 35), fill = "#f0cc00")]
+			self.menu_parametres(parametres)
 
-			self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.menuCan.create_text(200, 200, anchor = SW, text = "Dossier ressources", font = ("Mayan", 20), fill = "#f0cc00")]
-			self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.menuCan.create_text(200, 240, anchor = SW, text = "Sauvegarder", font = ("Mayan", 20), fill = "#f0cc00")]
-			self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.menuCan.create_text(200, 280, anchor = SW, text = "Mode graphique: " + parametres["graph mode"], font = ("Mayan", 20), fill = "#f0cc00")]
-			self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.menuCan.create_text(200, 320, anchor = SW, text = "Taille de la grille: " + str(parametres["largeur"]) + " x " + str(parametres["hauteur"]), font = ("Mayan", 20), fill = "#f0cc00")]
-			if parametres["bonus"] == True :
-				self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.menuCan.create_text(200, 360, anchor = SW, text = "Bonus: avec", font = ("Mayan", 20), fill = "#f0cc00")]
+		if self.dansMenu == True :
+			self.root.after(10, self.menu)
+		else :
+			self.launch()
+
+	def menu_title(self) :
+		"""
+		"""
+
+		self.menuRender["title texts"] = self.menuRender["title texts"] + [self.can.create_text(400, 275, anchor = S, text = "Jouer", font = ("Mayan", 25), fill = "#f0cc00")]
+		self.menuRender["title texts"] = self.menuRender["title texts"] + [self.can.create_text(400, 337.5, anchor = S, text = "Highscores", font = ("Mayan", 25), fill = "#f0cc00")]
+		self.menuRender["title texts"] = self.menuRender["title texts"] + [self.can.create_text(400, 400, anchor = S, text = "Achievements", font = ("Mayan", 25), fill = "#f0cc00")]
+		self.menuRender["title texts"] = self.menuRender["title texts"] + [self.can.create_text(400, 462.5, anchor = S, text = "Paramètres", font = ("Mayan", 25), fill = "#f0cc00")]
+		self.menuRender["title texts"] = self.menuRender["title texts"] + [self.can.create_text(400, 525, anchor = S, text = "Quitter", font = ("Mayan", 25), fill = "#f0cc00")]
+
+		self.menuRender["highlight line"] = [self.can.create_line(375, 270 + self.menuMechanics["highlight"]*62.5, 425, 270 + self.menuMechanics["highlight"]*62.5, width = 2, fill = "#f0cc00")]
+
+	def menu_selection(self) :
+		"""
+		"""
+
+		self.menuRender["highscores texts"] = self.menuRender["highscores texts"] + [self.can.create_text(400, 30, anchor = N, text = "ENTREZ VOTRE NOM", font = ("Mayan", 35), fill = "#f0cc00")]
+
+		self.menuRender["sélection texts"] = self.menuRender["sélection texts"] + [self.can.create_text(325, 375, anchor = SE, text = self.playerName[0], font = ("Mayan", 75), fill = "#f0cc00")]
+		self.menuRender["sélection texts"] = self.menuRender["sélection texts"] + [self.can.create_text(400, 375, anchor = S, text = self.playerName[1], font = ("Mayan", 75), fill = "#f0cc00")]
+		self.menuRender["sélection texts"] = self.menuRender["sélection texts"] + [self.can.create_text(475, 375, anchor = SW, text = self.playerName[2], font = ("Mayan", 75), fill = "#f0cc00")]
+
+		self.menuRender["highlight line"] = [self.can.create_line(273 + self.menuMechanics["highlight"]*102, 370, 323 + self.menuMechanics["highlight"]*102, 370, width = 2, fill = "#f0cc00")]
+
+	def menu_highscores(self, highscores) :
+		"""
+		"""
+
+		self.menuRender["highscores texts"] = self.menuRender["highscores texts"] + [self.can.create_text(400, 30, anchor = N, text = "HIGHSCORES", font = ("Mayan", 35), fill = "#f0cc00")]
+
+		for j in highscores.keys() :
+			self.menuRender["highscores texts"] = self.menuRender["highscores texts"] + [self.can.create_text(245, 160 + 40*(j - 1), anchor = NW, text = highscores[j]["name"], font = ("Mayan", 20), fill = "#f0cc00")]
+			self.menuRender["highscores texts"] = self.menuRender["highscores texts"] + [self.can.create_text(350, 160 + 40*(j - 1), anchor = NW, text = " . . . . . . . . . . . ", font = ("Mayan", 20), fill = "#f0cc00")]
+			self.menuRender["highscores texts"] = self.menuRender["highscores texts"] + [self.can.create_text(600, 160 + 40*(j - 1), anchor = NE, text = highscores[j]["score"], font = ("Mayan", 20), fill = "#f0cc00")]
+			self.menuRender["highscores texts"] = self.menuRender["highscores texts"] + [self.can.create_text(245, 160 + 40*(j - 1), anchor = NE, text = str(j) + ". ", font = ("Mayan", 20), fill = "#f0cc00")]
+
+	def menu_achievements(self, images, achievements, parametres) :
+		"""
+		"""
+
+		if parametres["graph mode"] == "sprite" :
+			self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_image(201, 171, anchor = NW, image = images["ach bg"])]
+		else :
+			for j in range(0,5) :
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_rectangle(201, 171 + 70*j, 601, 231 + 70*j, width = 0, fill = "#6f4811")]
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_rectangle(206, 176 + 70*j, 256, 226 + 70*j, width = 0, fill = "#463b2b")]
+
+		self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.can.create_text(400, 30, anchor = N, text = "ACHIEVEMENTS", font = ("Mayan", 35), fill = "#f0cc00")]
+
+		nbAch = 0
+
+		self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.can.create_text(266, 176, anchor = NW, text = "Adam & Snake", font = ("Mayan", 15, "bold"), fill = "#f0cc00")]
+		self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.can.create_text(266, 246, anchor = NW, text = "Mécanique newtonienne", font = ("Mayan", 15, "bold"), fill = "#f0cc00")]
+		self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.can.create_text(266, 316, anchor = NW, text = "Jeunesse dorée", font = ("Mayan", 15, "bold"), fill = "#f0cc00")]
+		self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.can.create_text(266, 386, anchor = NW, text = "Super Snake", font = ("Mayan", 15, "bold"), fill = "#f0cc00")]
+		self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.can.create_text(266, 456, anchor = NW, text = "Globetrotter", font = ("Mayan", 15, "bold"), fill = "#f0cc00")]
+
+		if parametres["graph mode"] == "sprite" :
+			if achievements[1] == True :
+				nbAch += 1
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_image(206, 176, anchor = NW, image = images["ach1"])]
+				self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.can.create_text(266, 201, anchor = NW, text = "Manger 10 pommes classiques en une partie.", font = ("Mayan", 10), fill = "#f0cc00")]
 			else :
-				self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.menuCan.create_text(200, 360, anchor = SW, text = "Bonus: sans", font = ("Mayan", 20), fill = "#f0cc00")]
-			self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.menuCan.create_text(200, 400, anchor = SW, text = "Vitesse: " + str(parametres["vitesse"]), font = ("Mayan", 20), fill = "#f0cc00")]
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_image(207, 176, anchor = NW, image = images["no ach"])]
+			if achievements[2] == True :
+				nbAch += 1
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_image(206, 246, anchor = NW, image = images["ach2"])]
+				self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.can.create_text(266, 271, anchor = NW, text = "Manger 100 pommes classiques au total.", font = ("Mayan", 10), fill = "#f0cc00")]
+			else :
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_image(207, 246, anchor = NW, image = images["no ach"])]
+			if achievements[3] == True :
+				nbAch += 1
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_image(206, 316, anchor = NW, image = images["ach3"])]
+				self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.can.create_text(266, 341, anchor = NW, text = "Manger 150 pommes en or au total.", font = ("Mayan", 10), fill = "#f0cc00")]
+			else :
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_image(207, 316, anchor = NW, image = images["no ach"])]
+			if achievements[4] == True :
+				nbAch += 1
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_image(206, 386, anchor = NW, image = images["ach4"])]
+				self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.can.create_text(266, 411, anchor = NW, text = "Manger 100 pommes spéciales au total.", font = ("Mayan", 10), fill = "#f0cc00")]
+			else :
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_image(207, 386, anchor = NW, image = images["no ach"])]
+			if achievements[5] == True :
+				nbAch += 1
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_image(206, 456, anchor = NW, image = images["ach5"])]
+				self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.can.create_text(266, 481, anchor = NW, text = "Parcourir toute la grille en une seule partie.", font = ("Mayan", 10), fill = "#f0cc00")]
+			else :
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_image(207, 456, anchor = NW, image = images["no ach"])]
 
-			if self.menuMechanics["highlight"] <= 2 :
-				self.menuRender["highlight line"] = [self.menuCan.create_line(220, 198 + self.menuMechanics["highlight"]*40, 270, 198 + self.menuMechanics["highlight"]*40, width = 2, fill = "#f0cc00")]
-			elif self.menuMechanics["highlight"] >= 5 :
-				self.menuRender["highlight line"] = [self.menuCan.create_line(220, 198 + (self.menuMechanics["highlight"] - 1)*40, 270, 198 + (self.menuMechanics["highlight"] - 1)*40, width = 2, fill = "#f0cc00")]
-			elif self.menuMechanics["highlight"] == 3 :
-				self.menuRender["highlight line"] = [self.menuCan.create_line(419, 198 + self.menuMechanics["highlight"]*40, 439, 198 + self.menuMechanics["highlight"]*40, width = 2, fill = "#f0cc00")]
-			elif self.menuMechanics["highlight"] == 4 :
-				self.menuRender["highlight line"] = [self.menuCan.create_line(472, 198 + (self.menuMechanics["highlight"] - 1)*40, 492, 198 + (self.menuMechanics["highlight"] - 1)*40, width = 2, fill = "#f0cc00")]
+		else :
+			if achievements[1] == True :
+				nbAch += 1
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_line(210, 200, 230, 220, width = 2, fill = "#76cb3d")]
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_line(230, 220, 252, 180, width = 2, fill = "#76cb3d")]
+			else :
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_line(210, 180, 252, 222, width = 2, fill = "#f8320b")]
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_line(210, 222, 252, 180, width = 2, fill = "#f8320b")]
+			if achievements[2] == True :
+				nbAch += 1
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_line(210, 270, 230, 290, width = 2, fill = "#76cb3d")]
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_line(230, 290, 252, 250, width = 2, fill = "#76cb3d")]
+			else :
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_line(210, 250, 252, 292, width = 2, fill = "#f8320b")]
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_line(210, 292, 252, 250, width = 2, fill = "#f8320b")]
+			if achievements[3] == True :
+				nbAch += 1
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_line(210, 340, 230, 360, width = 2, fill = "#76cb3d")]
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_line(230, 360, 252, 320, width = 2, fill = "#76cb3d")]
+			else :
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_line(210, 320, 252, 362, width = 2, fill = "#f8320b")]
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_line(210, 362, 252, 320, width = 2, fill = "#f8320b")]
+			if achievements[4] == True :
+				nbAch += 1
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_line(210, 410, 230, 430, width = 2, fill = "#76cb3d")]
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_line(230, 430, 252, 390, width = 2, fill = "#76cb3d")]
+			else :
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_line(210, 390, 252, 432, width = 2, fill = "#f8320b")]
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_line(210, 432, 252, 390, width = 2, fill = "#f8320b")]
+			if achievements[5] == True :
+				nbAch += 1
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_line(210, 480, 230, 500, width = 2, fill = "#76cb3d")]
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_line(230, 500, 252, 460, width = 2, fill = "#76cb3d")]
+			else :
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_line(210, 460, 252, 502, width = 2, fill = "#f8320b")]
+				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_line(210, 502, 252, 460, width = 2, fill = "#f8320b")]
+		
+		self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.can.create_text(546, 65, anchor = NW, text = str(nbAch), font = ("Mayan", 30), fill = "#f0cc00")]
+		self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.can.create_text(592, 136, anchor = SE, text = "5", font = ("Mayan", 30), fill = "#f0cc00")]
+		self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_line(556, 119, 590, 85, width = 2, fill = "#f0cc00")]
 
-		self.root.after(10, self.menu)
+	def menu_parametres(self, parametres) :
+		"""
+		"""
+
+		self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.can.create_text(400, 30, anchor = N, text = "PARAMÈTRES", font = ("Mayan", 35), fill = "#f0cc00")]
+
+		self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.can.create_text(200, 200, anchor = SW, text = "Dossier ressources", font = ("Mayan", 20), fill = "#f0cc00")]
+		self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.can.create_text(200, 240, anchor = SW, text = "Sauvegarder", font = ("Mayan", 20), fill = "#f0cc00")]
+		self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.can.create_text(200, 280, anchor = SW, text = "Mode graphique: " + parametres["graph mode"], font = ("Mayan", 20), fill = "#f0cc00")]
+		self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.can.create_text(200, 320, anchor = SW, text = "Taille de la grille: " + str(parametres["largeur"]) + " x " + str(parametres["hauteur"]), font = ("Mayan", 20), fill = "#f0cc00")]
+		if parametres["bonus"] == True :
+			self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.can.create_text(200, 360, anchor = SW, text = "Bonus: avec", font = ("Mayan", 20), fill = "#f0cc00")]
+		else :
+			self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.can.create_text(200, 360, anchor = SW, text = "Bonus: sans", font = ("Mayan", 20), fill = "#f0cc00")]
+		self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.can.create_text(200, 400, anchor = SW, text = "Vitesse: " + str(parametres["vitesse"]), font = ("Mayan", 20), fill = "#f0cc00")]
+
+		if self.menuMechanics["highlight"] <= 2 :
+			self.menuRender["highlight line"] = [self.can.create_line(220, 198 + self.menuMechanics["highlight"]*40, 270, 198 + self.menuMechanics["highlight"]*40, width = 2, fill = "#f0cc00")]
+		elif self.menuMechanics["highlight"] >= 5 :
+			self.menuRender["highlight line"] = [self.can.create_line(220, 198 + (self.menuMechanics["highlight"] - 1)*40, 270, 198 + (self.menuMechanics["highlight"] - 1)*40, width = 2, fill = "#f0cc00")]
+		elif self.menuMechanics["highlight"] == 3 :
+			self.menuRender["highlight line"] = [self.can.create_line(419, 198 + self.menuMechanics["highlight"]*40, 439, 198 + self.menuMechanics["highlight"]*40, width = 2, fill = "#f0cc00")]
+		elif self.menuMechanics["highlight"] == 4 :
+			self.menuRender["highlight line"] = [self.can.create_line(472, 198 + (self.menuMechanics["highlight"] - 1)*40, 492, 198 + (self.menuMechanics["highlight"] - 1)*40, width = 2, fill = "#f0cc00")]
 
 	def bind(self) :
 		"""
 		"""
 
-		self.menuCan.bind_all('<Up>', self.menu_haut)
-		self.menuCan.bind_all('z', self.menu_haut)
-		self.menuCan.bind_all('<Down>', self.menu_bas)
-		self.menuCan.bind_all('s', self.menu_bas)
-		self.menuCan.bind_all('<Left>', self.menu_gauche)
-		self.menuCan.bind_all('q', self.menu_gauche)
-		self.menuCan.bind_all('<Right>', self.menu_droite)
-		self.menuCan.bind_all('d', self.menu_droite)
-		self.menuCan.bind_all('<Return>', self.menu_suivant)
-		self.menuCan.bind_all('<space>', self.menu_suivant)
-		self.menuCan.bind_all('<Escape>', self.menu_precedent)
-		self.menuCan.bind_all('p', self.menu_precedent)
+		self.can.bind_all('<Up>', self.haut)
+		self.can.bind_all('z', self.haut)
+		self.can.bind_all('<Down>', self.bas)
+		self.can.bind_all('s', self.bas)
+		self.can.bind_all('<Left>', self.gauche)
+		self.can.bind_all('q', self.gauche)
+		self.can.bind_all('<Right>', self.droite)
+		self.can.bind_all('d', self.droite)
+		self.can.bind_all('<Return>', self.suivant)
+		self.can.bind_all('<space>', self.suivant)
+		self.can.bind_all('<Escape>', self.precedent)
+		self.can.bind_all('p', self.precedent)
 
-	def menu_haut(self, event) :
+	def haut(self, event) :
 		"""
 		"""
 
-		if self.menuMechanics["current menu"] == "title" or self.menuMechanics["current menu"] == "paramètres" :
-			self.menuMechanics["highlight"] -= 1
-		if self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == -1 :
-			self.menuMechanics["highlight"] = 4
-		if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == 0 :
-			self.name_plus_one(0)
-		if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == 1 :
-			self.name_plus_one(1)
-		if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == 2 :
-			self.name_plus_one(2)
-		if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == -1 :
-			self.menuMechanics["highlight"] = 6
+		if self.dansMenu == True :
+			if self.menuMechanics["current menu"] == "title" or self.menuMechanics["current menu"] == "paramètres" :
+				self.menuMechanics["highlight"] -= 1
+			if self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == -1 :
+				self.menuMechanics["highlight"] = 4
+			if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == 0 :
+				self.name_plus_one(0)
+			if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == 1 :
+				self.name_plus_one(1)
+			if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == 2 :
+				self.name_plus_one(2)
+			if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == -1 :
+				self.menuMechanics["highlight"] = 6
+		elif self.dansJeu == True and self.direction != "south" :
+			self.direction = "north"
 	
-	def menu_bas(self, event) :
+	def bas(self, event) :
 		"""
 		"""
 
-		if self.menuMechanics["current menu"] == "title" or self.menuMechanics["current menu"] == "paramètres" :
-			self.menuMechanics["highlight"] += 1
-		if self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == 5 :
-			self.menuMechanics["highlight"] = 0
-		if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == 0 :
-			self.name_minus_one(0)
-		if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == 1 :
-			self.name_minus_one(1)
-		if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == 2 :
-			self.name_minus_one(2)
-		if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 7 :
-			self.menuMechanics["highlight"] = 0
+		if self.dansMenu == True :
+			if self.menuMechanics["current menu"] == "title" or self.menuMechanics["current menu"] == "paramètres" :
+				self.menuMechanics["highlight"] += 1
+			if self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == 5 :
+				self.menuMechanics["highlight"] = 0
+			if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == 0 :
+				self.name_minus_one(0)
+			if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == 1 :
+				self.name_minus_one(1)
+			if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == 2 :
+				self.name_minus_one(2)
+			if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 7 :
+				self.menuMechanics["highlight"] = 0
+		elif self.dansJeu == True and self.direction != "north" :
+			self.direction = "south"
 
-	def menu_droite(self, event) :
+	def droite(self, event) :
 		"""
 		"""
 
-		if self.menuMechanics["current menu"] == "sélection nom" :
-			self.menuMechanics["highlight"] += 1
-		if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == 3 :
-			self.menuMechanics["highlight"] = 0
-		if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 2 and self.paths.get_path("resources") != "" :
-			self.param.switch_graph_mode()
-			if self.param.get_parametres()["graph mode"] == "sprite" :
-				self.images = Images(self.root, self.paths.get_path("resources"), self.skins.get_skins()["selected skin"])
-		elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 3 :
-			self.param.plus_one_largeur()
-		elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 4 :
-			self.param.plus_one_hauteur()
-		elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 5 :
-			self.param.switch_bonus()
-		elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 6 :
-			self.param.plus_one_vitesse()
-
-	def menu_gauche(self, event) :
-		"""
-		"""
-
-		if self.menuMechanics["current menu"] == "sélection nom" :
-			self.menuMechanics["highlight"] -= 1
-		if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == -1 :
-			self.menuMechanics["highlight"] = 2
-		if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 2 and self.paths.get_path("resources") != "" :
-			self.param.switch_graph_mode()
-			if self.param.get_parametres()["graph mode"] == "sprite" :
-				self.images = Images(self.root, self.paths.get_path("resources"), self.skins.get_skins()["selected skin"])
-		if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 3 :
-			self.param.minus_one_largeur()
-		elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 4 :
-			self.param.minus_one_hauteur()
-		elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 5 :
-			self.param.switch_bonus()
-		elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 6 :
-			self.param.minus_one_vitesse()
-
-	def menu_suivant(self, event) :
-		"""
-		"""
-
-		if self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == 0 :
-			self.menuMechanics["current menu"] = "sélection nom"
-			self.menuMechanics["highlight"] = 0
-		elif self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == 1 :
-			self.menuMechanics["current menu"] = "highscores"
-		elif self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == 2 :
-			self.menuMechanics["current menu"] = "achievements"
-		elif self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == 3 :
-			self.menuMechanics["current menu"] = "paramètres"
-			self.menuMechanics["highlight"] = 0
-		elif self.menuMechanics["current menu"] == "sélection nom" :
-			self.launch()
-		elif self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == 4 :
-			self.quitter()
-		elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 0 :
-			path = filedialog.askdirectory(title = "Choisir le dossier de ressources")
-			if path != "" :
-				self.paths.set_path("resources", path)
+		if self.dansMenu == True :
+			if self.menuMechanics["current menu"] == "sélection nom" :
+				self.menuMechanics["highlight"] += 1
+			if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == 3 :
+				self.menuMechanics["highlight"] = 0
+			if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 2 and self.paths.get_path("resources") != "" :
+				self.param.switch_graph_mode()
 				if self.param.get_parametres()["graph mode"] == "sprite" :
-					self.images.update(self.root, self.paths.get_path("resources"), self.skins.get_skins()["selected skin"])
-			else :
-				print("Vous n'avez sélectionné aucun dossier! Rien ne sera fait.")
-		elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 1 :
-			self.save.write_to_file(self.playerName["name"], self.paths.get_path("resources"), self.hs.get_highscores(), self.ach.get_achievements(), self.skins.get_skins(), self.comptes.get_comptes(), self.param.get_parametres())
+					self.images = Images(self.root, self.paths.get_path("resources"), self.skins.get_skins()["selected skin"])
+			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 3 :
+				self.param.plus_one_largeur()
+			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 4 :
+				self.param.plus_one_hauteur()
+			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 5 :
+				self.param.switch_bonus()
+			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 6 :
+				self.param.plus_one_vitesse()
+		elif self.dansJeu == True and self.direction != "west" :
+			self.direction = "east"
 
-	def menu_precedent(self, event) :
+	def gauche(self, event) :
 		"""
 		"""
 
-		if self.menuMechanics["current menu"] == "title" :
-			self.quitter()
-		if self.menuMechanics["current menu"] == "sélection nom" :
-			self.menuMechanics["highlight"] = 0
-		if self.menuMechanics["current menu"] == "highscores" :
-			self.menuMechanics["highlight"] = 1
-		if self.menuMechanics["current menu"] == "achievements" :
-			self.menuMechanics["highlight"] = 2
-		if self.menuMechanics["current menu"] == "paramètres" :
-			self.menuMechanics["highlight"] = 3
-		self.menuMechanics["current menu"] = "title"
+		if self.dansMenu == True :
+			if self.menuMechanics["current menu"] == "sélection nom" :
+				self.menuMechanics["highlight"] -= 1
+			if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == -1 :
+				self.menuMechanics["highlight"] = 2
+			if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 2 and self.paths.get_path("resources") != "" :
+				self.param.switch_graph_mode()
+				if self.param.get_parametres()["graph mode"] == "sprite" :
+					self.images = Images(self.root, self.paths.get_path("resources"), self.skins.get_skins()["selected skin"])
+			if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 3 :
+				self.param.minus_one_largeur()
+			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 4 :
+				self.param.minus_one_hauteur()
+			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 5 :
+				self.param.switch_bonus()
+			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 6 :
+				self.param.minus_one_vitesse()
+		elif self.dansJeu == True and self.direction != "east" :
+			self.direction = "west"
+
+	def suivant(self, event) :
+		"""
+		"""
+
+		if self.dansMenu == True :
+			if self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == 0 :
+				self.menuMechanics["current menu"] = "sélection nom"
+				self.menuMechanics["highlight"] = 0
+			elif self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == 1 :
+				self.menuMechanics["current menu"] = "highscores"
+			elif self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == 2 :
+				self.menuMechanics["current menu"] = "achievements"
+			elif self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == 3 :
+				self.menuMechanics["current menu"] = "paramètres"
+				self.menuMechanics["highlight"] = 0
+			elif self.menuMechanics["current menu"] == "sélection nom" :
+				self.dansMenu = False
+			elif self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == 4 :
+				self.quitter()
+			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 0 :
+				path = filedialog.askdirectory(title = "Choisir le dossier de ressources")
+				if path != "" :
+					self.paths.set_path("resources", path)
+					if self.param.get_parametres()["graph mode"] == "sprite" :
+						self.images.update(self.root, self.paths.get_path("resources"), self.skins.get_skins()["selected skin"])
+				else :
+					print("Vous n'avez sélectionné aucun dossier! Rien ne sera fait.")
+			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 1 :
+				self.save.write_to_file(self.playerName["name"], self.paths.get_path("resources"), self.hs.get_highscores(), self.ach.get_achievements(), self.skins.get_skins(), self.comptes.get_comptes(), self.param.get_parametres())
+
+	def precedent(self, event) :
+		"""
+		"""
+
+		if self.dansMenu == True :
+			if self.menuMechanics["current menu"] == "title" :
+				self.quitter()
+			if self.menuMechanics["current menu"] == "sélection nom" :
+				self.menuMechanics["highlight"] = 0
+			if self.menuMechanics["current menu"] == "highscores" :
+				self.menuMechanics["highlight"] = 1
+			if self.menuMechanics["current menu"] == "achievements" :
+				self.menuMechanics["highlight"] = 2
+			if self.menuMechanics["current menu"] == "paramètres" :
+				self.menuMechanics["highlight"] = 3
+			self.menuMechanics["current menu"] = "title"
 
 	def name_plus_one(self, position) :
 		"""
@@ -440,7 +486,213 @@ class Snaya :
 		"""
 		"""
 
-		return 0
+		self.score = 0
+		self.oldTemps = 0
+		self.direction = "east"
+		self.oldDirection = "east"
+
+		self.dansJeu = True
+
+		self.snake = Snake()
+		interdit = self.snake.get_coords()
+		self.pomme = Pomme(interdit, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+		interdit = interdit + [self.pomme.get_coords()]
+		self.pommeGold = PommeRand(interdit, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+		interdit = interdit + [self.pommeGold.get_coords()]
+		self.pommeSpec = PommeRand(interdit, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+		self.pommes = {"pomme" : self.pomme.get_coords(), "pomme or" : self.pommeGold.get_coords(), "pomme spec" : self.pommeSpec.get_coords()}
+
+		self.can.delete(ALL)
+		self.can.config(width = 16*self.param.get_parametres()["largeur"]+32, height = 16*self.param.get_parametres()["hauteur"]+48, bg = "#050505")
+
+		self.gameRender = {"score" : [], "score line" : [], "grid" : [], "tete" : [], "snake" : [], "pomme" : [], "pomme or" : [], "pomme spec" : []}
+		self.afficher_init()
+		self.move()
+
+	def afficher_init(self) :
+		"""
+		"""
+
+		self.gameRender["score line"] = [self.can.create_line(0, 14, 16*self.param.get_parametres()["largeur"]+32, 14, fill = "#E0E0E0")]
+
+		for i in range(0, self.param.get_parametres()["largeur"]) :
+			for j in range(0, self.param.get_parametres()["hauteur"]) :
+				self.gameRender["grid"] = self.gameRender["grid"] + [self.can.create_rectangle(i*16+18, j*16+30, (i+1)*16+18, (j+1)*16+30, outline = "#404040", fill = "#1B1B1B")]
+
+	def move(self) :
+		"""
+		"""
+
+		self.pommes = {"pomme" : self.pomme.get_coords(), "pomme or" : self.pommeGold.get_coords(), "pomme spec" : self.pommeSpec.get_coords()}
+
+		self.deplacer()
+
+		if self.snake.get_coords_and_directions()[0][1] != self.snake.get_coords_and_directions()[1][1] :
+			self.pommeGold.deplacement()
+			self.pommeSpec.deplacement()
+
+		if self.snake.eat == True :
+			self.score = self.score + 100
+			self.pomme.spawn_pomme(self.snake.get_coords() + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			if self.pommes["pomme or"] == () :
+				self.pommeGold.choose(self.snake.get_coords() + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			if self.pommes["pomme spec"] == () :
+				self.pommeSpec.choose(self.snake.get_coords() + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+		if self.snake.goldEat == True :
+			self.score = self.score + 500
+			self.pommeGold.choose(self.snake.get_coords() + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.pomme.spawn_pomme(self.snake.get_coords() + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			if self.pommes["pomme spec"] == () :
+				self.pommeSpec.choose(self.snake.get_coords() + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+		if self.snake.specEat == True :
+			self.score = self.score + 100
+			self.pommeSpec.choose(self.snake.get_coords() + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.pomme.spawn_pomme(self.snake.get_coords() + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			if self.pommes["pomme or"] == () :
+				self.pommeGold.choose(self.snake.get_coords() + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+
+		self.nettoyer_aff()
+
+		self.gameRender["score"] = self.gameRender["score"] + [self.can.create_text(5, 0, text = "Score : " + str(self.score), font = ("Courier", 10), anchor = NW, fill = "#E0E0E0")]
+
+		if self.param.get_parametres()["graph mode"] == "sprite" :
+			self.afficher()
+		else :
+			self.afficher_simple()
+
+		if self.snake.isOver() != True :
+			isOk = False
+			while isOk != True :
+				self.temps = time.time()*1000
+				if self.temps > self.oldTemps + self.param.get_parametres()["step"] :
+					isOk = True
+					self.oldTemps = self.temps
+					self.root.after(10, self.move)
+
+	def deplacer(self) :
+		"""
+		"""
+
+		if self.direction == "west" and self.oldDirection != "east" :
+			self.snake.go_west(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.oldDirection = "west"
+		elif self.direction == "north" and self.oldDirection != "south" :
+			self.snake.go_north(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.oldDirection = "north"
+		elif self.direction == "east" and self.oldDirection != "west" :
+			self.snake.go_east(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.oldDirection = "east"
+		elif self.direction == "south" and self.oldDirection != "north" :
+			self.snake.go_south(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.oldDirection = "south"
+		elif self.oldDirection == "west" :
+			self.snake.go_west(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+		elif self.oldDirection == "north" :
+			self.snake.go_north(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+		elif self.oldDirection == "east" :
+			self.snake.go_east(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+		elif self.oldDirection == "south" :
+			self.snake.go_south(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+
+	def nettoyer_aff(self) :
+		"""
+		"""
+
+		for j in self.gameRender["score"] :
+			self.can.delete(j)
+		for j in self.gameRender["tete"] :
+			self.can.delete(j)
+		for j in self.gameRender["snake"] :
+			self.can.delete(j)
+		for j in self.gameRender["pomme"] :
+			self.can.delete(j)
+		for j in self.gameRender["pomme or"] :
+			self.can.delete(j)
+		for j in self.gameRender["pomme spec"] :
+			self.can.delete(j)
+
+	def afficher(self) :
+		"""
+		"""
+
+		snake = self.snake.get_coords_and_directions()
+		images = self.images.get_images()
+
+
+		if snake[0][1] == "west" :
+			self.gameRender["tete"] = self.gameRender["tete"] + [self.can.create_image(snake[0][0][0]*16+18, snake[0][0][1]*16+30, anchor = N, image = images["snake head left"])]
+		elif snake[0][1] == "north" :
+			self.gameRender["tete"] = self.gameRender["tete"] + [self.can.create_image(snake[0][0][0]*16+18, snake[0][0][1]*16+30, anchor = W, image = images["snake head top"])]
+		elif snake[0][1] == "east" :
+			self.gameRender["tete"] = self.gameRender["tete"] + [self.can.create_image(snake[0][0][0]*16+18, snake[0][0][1]*16+30, anchor = NW, image = images["snake head right"])]
+		else :
+			self.gameRender["tete"] = self.gameRender["tete"] + [self.can.create_image(snake[0][0][0]*16+18, snake[0][0][1]*16+30, anchor = NW, image = images["snake head bot"])]
+
+		tour = 0
+		for j in snake[1:] :
+			direction = j[1]
+			if snake[tour][1] == "east" :
+				if snake[tour+1][1] == "east" :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body horizontal"])] #on dessine le corps du serpent
+				elif snake[tour+1][1] == "north" :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body firstangle"])] #on dessine le corps du serpent
+				elif snake[tour+1][1] == "south" :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body thirdangle"])] #on dessine le corps du serpent
+				else :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body"])] #on dessine le corps du serpent
+			elif snake[tour][1] == "north" :
+				if snake[tour+1][1] == "east" :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body fthangle"])] #on dessine le corps du serpent
+				elif snake[tour+1][1] == "north" :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body vertical"])] #on dessine le corps du serpent
+				elif snake[tour+1][1] == "west" :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body thirdangle"])] #on dessine le corps du serpent
+				else :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body"])] #on dessine le corps du serpent
+			elif snake[tour][1] == "west" :
+				if snake[tour+1][1] == "south" :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body fthangle"])] #on dessine le corps du serpent
+				elif snake[tour+1][1] == "north" :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body secangle"])] #on dessine le corps du serpent
+				elif snake[tour+1][1] == "west" :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body horizontal"])] #on dessine le corps du serpent
+				else :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body"])] #on dessine le corps du serpent
+			elif snake[tour][1] == "south" :
+				if snake[tour+1][1] == "east" :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body secangle"])] #on dessine le corps du serpent
+				elif snake[tour+1][1] == "south" :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body vertical"])] #on dessine le corps du serpent
+				elif snake[tour+1][1] == "west" :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body firstangle"])] #on dessine le corps du serpent
+				else :
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body"])] #on dessine le corps du serpent
+			else :
+				self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body"])] #on dessine le corps du serpent
+			tour = tour+1
+
+		self.gameRender["pomme"] = self.gameRender["pomme"] + [self.can.create_image(self.pomme.get_coords()[0]*16+18, self.pomme.get_coords()[1]*16+30, anchor = NW, image = images["apple"])]
+		if self.pommeGold.get_coords() != () :
+			self.gameRender["pomme or"] = self.gameRender["pomme or"] + [self.can.create_image(self.pommeGold.get_coords()[0]*16+18, self.pommeGold.get_coords()[1]*16+30, anchor = NW, image = images["apple gold"])]
+		if self.pommeSpec.get_coords() != () :
+			self.gameRender["pomme spec"] = self.gameRender["pomme spec"] + [self.can.create_image(self.pommeSpec.get_coords()[0]*16+18, self.pommeSpec.get_coords()[1]*16+30, anchor = NW, image = images["apple spec"])]
+
+	def afficher_simple(self) :
+		"""
+		"""
+
+		snake = self.snake.get_coords_and_directions()
+
+		self.gameRender["tete"] = self.gameRender["tete"] + [self.can.create_rectangle(snake[0][0][0]*16+18, snake[0][0][1]*16+30, (snake[0][0][0]+1)*16+18, (snake[0][0][1]+1)*16+30, outline = "#E0E0E0", fill = "#FFAA00")]
+
+		for j in snake[1:] :
+			self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_rectangle(j[0][0]*16+18, j[0][1]*16+30, (j[0][0]+1)*16+18, (j[0][1]+1)*16+30, outline = "#E0E0E0", fill = "#FF7000")]
+
+		self.gameRender["pomme"] = self.gameRender["pomme"] + [self.can.create_rectangle(self.pomme.get_coords()[0]*16+18, self.pomme.get_coords()[1]*16+30, (self.pomme.get_coords()[0]+1)*16+18, (self.pomme.get_coords()[1]+1)*16+30, outline = "#E0E0E0", fill = "#FF0000")]
+		if self.pommeGold.get_coords() != () :
+			self.gameRender["pomme or"] = self.gameRender["pomme or"] + [self.can.create_rectangle(self.pommeGold.get_coords()[0]*16+18, self.pommeGold.get_coords()[1]*16+30, (self.pommeGold.get_coords()[0]+1)*16+18, (self.pommeGold.get_coords()[1]+1)*16+30, outline = "#E0E0E0", fill = "#FFE600")]
+		if self.pommeSpec.get_coords() != () :
+			self.gameRender["pomme spec"] = self.gameRender["pomme spec"] + [self.can.create_rectangle(self.pommeSpec.get_coords()[0]*16+18, self.pommeSpec.get_coords()[1]*16+30, (self.pommeSpec.get_coords()[0]+1)*16+18, (self.pommeSpec.get_coords()[1]+1)*16+30, outline = "#E0E0E0", fill = "#0000FF")]
 
 	def quitter(self) :
 		"""
@@ -543,13 +795,11 @@ class Save :
 
 		if not nameS or not nameE or not cheminsS or not cheminsE or not highscoresS or not highscoresE or not achievementsS or not achievementsE or not skinsS or not skinsE or not comptesS or not comptesE or not parametresS or not parametresE :
 			self.integrity = False
-			print("hey")
 
 	def use_default(self) :
 		"""
 		"""
 
-		print("coucou")
 		self.isFileSelected = False
 		self.integrity = True
 		self.save = ['/name_start', 'name = "AAA"', '/name_end', '/chemins_start', 'resources path = ""', '/chemins_end', '/highscores_start', '0,"---"', '0,"---"', '0,"---"', '0,"---"', '0,"---"', '0,"---"', '0,"---"', '0,"---"', '0,"---"', '0,"---"', '/highscores_end', '/achievements_start', 'achievement1 = False', 'achievement2 = False', 'achievement3 = False', 'achievement4 = False', 'achievement5 = False', '/achievements_end', '/skins_start', 'jaune_vert = True', 'bleu_jaune = False', 'selected skin = "jaune_vert"', '/skins_end', '/comptes_start', 'nombre pommes norm = "0"', 'nombre pommes gold = "0"', 'nombre pommes spec = "0"', 'score total = "0"', 'nombre parties = "0"', '/comptes_end', '/parametres_start', 'graph mode = "simple"', 'grille taille = "20,20"', 'bonus = True', 'vitesse = "2"', '/parametres_end']
@@ -1175,7 +1425,219 @@ class Images :
 		"""
 
 		return self.images
+#
 
+	#*************** CLASSES DE JEU ***************#
+
+
+class Snake :
+	"""
+	"""
+
+	def __init__(self) :
+		"""
+		"""
+
+		self.coords = [((2, 0), "east"), ((1, 0), "east"), ((0, 0), "east")]
+		self.gameOver = False
+
+	def go_north(self, pommes, largeur, hauteur) :
+		"""
+		"""
+
+		suppl = self.coords[-1]
+		body = self.coords[:-1]
+
+		self.eat = False
+		self.goldEat = False
+		self.specEat = False
+
+		tete = self.coords[0]
+		self.coords = [((tete[0][0], tete[0][1]-1), "north")] + body
+
+		tete = self.coords[0]
+
+		if tete[0][1] == -1 :
+			self.coords = [((tete[0][0], hauteur-1), tete[1])] + self.coords[1:]
+
+		tete = self.coords[0]
+
+		self.eating(tete, pommes, suppl)
+
+	def go_south(self, pommes, largeur, hauteur) :
+		"""
+		"""
+
+		suppl = self.coords[-1]
+		body = self.coords[:-1]
+
+		self.eat = False
+		self.goldEat = False
+		self.specEat = False
+
+		tete = self.coords[0]
+		self.coords = [((tete[0][0], tete[0][1]+1), "south")] + body
+
+		tete = self.coords[0]
+
+		if tete[0][1] == hauteur :
+			self.coords = [((tete[0][0], 0), tete[1])] + self.coords[1:]
+
+		tete = self.coords[0]
+
+		self.eating(tete, pommes, suppl)
+
+	def go_west(self, pommes, largeur, hauteur) :
+		"""
+		"""
+
+		suppl = self.coords[-1]
+		body = self.coords[:-1]
+
+		self.eat = False
+		self.goldEat = False
+		self.specEat = False
+
+		tete = self.coords[0]
+		self.coords = [((tete[0][0]-1, tete[0][1]), "west")] + body
+
+		tete = self.coords[0]
+
+		if tete[0][0] == -1 :
+			self.coords = [((largeur-1, tete[0][1]), tete[1])] + self.coords[1:]
+
+		tete = self.coords[0]
+
+		self.eating(tete, pommes, suppl)
+
+	def go_east(self, pommes, largeur, hauteur) :
+		"""
+		"""
+
+		suppl = self.coords[-1]
+		body = self.coords[:-1]
+
+		self.eat = False
+		self.goldEat = False
+		self.specEat = False
+
+		tete = self.coords[0]
+		self.coords = [((tete[0][0]+1, tete[0][1]), "east")] + body
+
+		tete = self.coords[0]
+
+		if tete[0][0] == largeur :
+			self.coords = [((0, tete[0][1]), tete[1])] + self.coords[1:]
+
+		tete = self.coords[0]
+
+		self.eating(tete, pommes, suppl)
+
+	def eating(self, tete, pommes, suppl) :
+		"""
+		"""
+
+		for j in pommes :
+			if tete[0] == pommes[j] :
+				self.coords = self.coords + [suppl]
+				if j == "pomme" :
+					self.eat = True
+				if j == "pomme or" :
+					self.goldEat = True
+				if j == "pomme spec" :
+					self.specEat = True
+
+		self.game_over_test()
+
+	def game_over_test(self) :
+		"""
+		"""
+
+		coords = []
+		for j in range(len(self.coords)) :
+			coords = coords + [self.coords[j][0]]
+		if coords[0] in coords[1:] :
+			self.gameOver = True
+
+	def get_coords(self) :
+		"""
+		"""
+
+		coords = []
+		for j in range(len(self.coords)-1) :
+			coords.append(self.coords[j][0])
+		return coords
+
+	def get_coords_and_directions(self) :
+		"""
+		"""
+
+		return self.coords
+
+	def isOver(self) :
+		"""
+		"""
+
+		return self.gameOver
+
+class Pomme :
+	"""
+	"""
+
+	def __init__(self, interdit, largeur, hauteur) :
+		"""
+		"""
+
+		self.spawn_pomme(interdit, largeur, hauteur)
+
+	def spawn_pomme(self, interdit, largeur, hauteur) :
+		"""
+		"""
+
+		grid = []
+		for i in range(0, largeur) :
+			for j in range(0, hauteur) :
+				if (i, j) not in interdit :
+					grid = grid + [(i, j)]
+		pos = random.randint(0, len(grid))
+		self.coords = grid[pos-1]
+
+	def get_coords(self) :
+		"""
+		"""
+
+		return self.coords
+
+class PommeRand(Pomme) :
+	"""
+	"""
+
+	def __init__(self, interdit, largeur, hauteur) :
+		"""
+		"""
+
+		self.depl = 0
+		self.choose(interdit, largeur, hauteur)
+
+	def choose(self, interdit, largeur, hauteur) :
+		"""
+		"""
+
+		if random.randint(0, 3) == 1 :
+			self.spawn_pomme(interdit, largeur, hauteur)
+			self.depl = 5
+		else :
+			self.coords = ()
+
+	def deplacement(self) :
+		"""
+		"""
+
+		if self.depl != 0 :
+			self.depl -= 1
+		else :
+			self.coords = ()
+#
 
 	#*************** IMPORTATION DES BIBLIOTHEQUES ***************#
 
@@ -1184,6 +1646,7 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
 import random
+import time
 
 	#*************** PROGRAMME PRINCIPAL ***************#
 
