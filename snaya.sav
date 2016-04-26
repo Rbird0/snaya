@@ -2,7 +2,7 @@
 
 /name_start
 
-name = "RBI"
+name = "TBI"
 
 /name_end
 
@@ -20,9 +20,9 @@ resources path = "D:/Lycee/ISN/Projet2.0/resources"
 
 /highscores_start
 
-0,"---"
-0,"---"
-0,"---"
+2100,"TBI"
+2000,"RBI"
+400,"RBI"
 0,"---"
 0,"---"
 0,"---"
