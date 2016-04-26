@@ -29,10 +29,14 @@ class Snaya :
 
 		self.dansMenu = True
 		self.dansJeu = False
+		self.can = Canvas(self.root, width = 800, height = 600)
+		self.can.pack()
 		self.menu_init()
 		self.menu()
 
 		self.root.mainloop()
+		
+
 
 	def save_load(self) :
 		"""
@@ -79,8 +83,7 @@ class Snaya :
 
 		self.menuRender = {"background" : [], "highlight line" : [], "title texts" : [], "sélection texts" : [], "highscores texts" : [], "achievements texts" : [], "achievements elements" : [], "paramètres texts" : []}
 		self.menuMechanics = {"current menu" : "title", "highlight" : 0}
-		self.can = Canvas(self.root, width = 800, height = 600)
-		self.can.pack()
+		
 
 		self.bind()
 
@@ -117,6 +120,7 @@ class Snaya :
 			images = self.images.get_images()
 			self.menuRender["background"] = self.menuRender["background"] + [self.can.create_image(0, 0, anchor = NW, image = images["menu"])]
 		else :
+			images = 0
 			self.menuRender["background"] = self.menuRender["background"] + [self.can.create_rectangle(0, 0, 124, 600, width = 0, fill = "#547e25")]
 			self.menuRender["background"] = self.menuRender["background"] + [self.can.create_rectangle(124, 0, 676, 600, width = 0, fill = "#8c5918")]
 			self.menuRender["background"] = self.menuRender["background"] + [self.can.create_rectangle(676, 0, 800, 600, width = 0, fill = "#547e25")]
@@ -432,6 +436,9 @@ class Snaya :
 					print("Vous n'avez sélectionné aucun dossier! Rien ne sera fait.")
 			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 1 :
 				self.save.write_to_file(self.playerName["name"], self.paths.get_path("resources"), self.hs.get_highscores(), self.ach.get_achievements(), self.skins.get_skins(), self.comptes.get_comptes(), self.param.get_parametres())
+		elif self.isOver == True :
+			self.isOver = False
+			self.retour_menu()
 
 	def precedent(self, event) :
 		"""
@@ -505,7 +512,7 @@ class Snaya :
 		self.can.delete(ALL)
 		self.can.config(width = 16*self.param.get_parametres()["largeur"]+32, height = 16*self.param.get_parametres()["hauteur"]+48, bg = "#050505")
 
-		self.gameRender = {"score" : [], "score line" : [], "grid" : [], "tete" : [], "snake" : [], "pomme" : [], "pomme or" : [], "pomme spec" : []}
+		self.gameRender = {"score" : [], "score line" : [], "grid" : [], "tete" : [], "snake" : [], "pomme" : [], "pomme or" : [], "pomme spec" : [], "game over" : []}
 		self.afficher_init()
 		self.move()
 
@@ -527,29 +534,34 @@ class Snaya :
 
 		self.deplacer()
 
-		if self.snake.get_coords_and_directions()[0][1] != self.snake.get_coords_and_directions()[1][1] :
+		snake = self.snake.get_coords_and_directions()
+		snakeCoords = self.snake.get_coords()
+		largeur = self.param.get_largeur()
+		hauteur = self.param.get_hauteur()
+
+		if snake[0][1] != snake[1][1] :
 			self.pommeGold.deplacement()
 			self.pommeSpec.deplacement()
 
 		if self.snake.eat == True :
 			self.score = self.score + 100
-			self.pomme.spawn_pomme(self.snake.get_coords() + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
 			if self.pommes["pomme or"] == () :
-				self.pommeGold.choose(self.snake.get_coords() + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+				self.pommeGold.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
 			if self.pommes["pomme spec"] == () :
-				self.pommeSpec.choose(self.snake.get_coords() + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+				self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], largeur, hauteur)
 		if self.snake.goldEat == True :
 			self.score = self.score + 500
-			self.pommeGold.choose(self.snake.get_coords() + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
-			self.pomme.spawn_pomme(self.snake.get_coords() + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.pommeGold.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
+			self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
 			if self.pommes["pomme spec"] == () :
-				self.pommeSpec.choose(self.snake.get_coords() + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+				self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], largeur, hauteur)
 		if self.snake.specEat == True :
 			self.score = self.score + 100
-			self.pommeSpec.choose(self.snake.get_coords() + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
-			self.pomme.spawn_pomme(self.snake.get_coords() + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], largeur, hauteur)
+			self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
 			if self.pommes["pomme or"] == () :
-				self.pommeGold.choose(self.snake.get_coords() + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+				self.pommeGold.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
 
 		self.nettoyer_aff()
 
@@ -568,31 +580,36 @@ class Snaya :
 					isOk = True
 					self.oldTemps = self.temps
 					self.root.after(10, self.move)
+		else :
+			self.game_over()
 
 	def deplacer(self) :
 		"""
 		"""
 
+		largeur = self.param.get_largeur()
+		hauteur = self.param.get_hauteur()
+
 		if self.direction == "west" and self.oldDirection != "east" :
-			self.snake.go_west(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.snake.go_west(self.pommes, largeur, hauteur)
 			self.oldDirection = "west"
 		elif self.direction == "north" and self.oldDirection != "south" :
-			self.snake.go_north(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.snake.go_north(self.pommes, largeur, hauteur)
 			self.oldDirection = "north"
 		elif self.direction == "east" and self.oldDirection != "west" :
-			self.snake.go_east(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.snake.go_east(self.pommes, largeur, hauteur)
 			self.oldDirection = "east"
 		elif self.direction == "south" and self.oldDirection != "north" :
-			self.snake.go_south(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.snake.go_south(self.pommes, largeur, hauteur)
 			self.oldDirection = "south"
 		elif self.oldDirection == "west" :
-			self.snake.go_west(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.snake.go_west(self.pommes, largeur, hauteur)
 		elif self.oldDirection == "north" :
-			self.snake.go_north(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.snake.go_north(self.pommes, largeur, hauteur)
 		elif self.oldDirection == "east" :
-			self.snake.go_east(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.snake.go_east(self.pommes, largeur, hauteur)
 		elif self.oldDirection == "south" :
-			self.snake.go_south(self.pommes, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.snake.go_south(self.pommes, largeur, hauteur)
 
 	def nettoyer_aff(self) :
 		"""
@@ -682,18 +699,46 @@ class Snaya :
 		"""
 
 		snake = self.snake.get_coords_and_directions()
+		pomme = self.pomme.get_coords()
+		pommeGold = self.pommeGold.get_coords()
+		pommeSpec = self.pommeSpec.get_coords()
 
 		self.gameRender["tete"] = self.gameRender["tete"] + [self.can.create_rectangle(snake[0][0][0]*16+18, snake[0][0][1]*16+30, (snake[0][0][0]+1)*16+18, (snake[0][0][1]+1)*16+30, outline = "#E0E0E0", fill = "#FFAA00")]
 
 		for j in snake[1:] :
 			self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_rectangle(j[0][0]*16+18, j[0][1]*16+30, (j[0][0]+1)*16+18, (j[0][1]+1)*16+30, outline = "#E0E0E0", fill = "#FF7000")]
 
-		self.gameRender["pomme"] = self.gameRender["pomme"] + [self.can.create_rectangle(self.pomme.get_coords()[0]*16+18, self.pomme.get_coords()[1]*16+30, (self.pomme.get_coords()[0]+1)*16+18, (self.pomme.get_coords()[1]+1)*16+30, outline = "#E0E0E0", fill = "#FF0000")]
+		self.gameRender["pomme"] = self.gameRender["pomme"] + [self.can.create_rectangle(pomme[0]*16+18, pomme[1]*16+30, (pomme[0]+1)*16+18, (pomme[1]+1)*16+30, outline = "#E0E0E0", fill = "#FF0000")]
 		if self.pommeGold.get_coords() != () :
-			self.gameRender["pomme or"] = self.gameRender["pomme or"] + [self.can.create_rectangle(self.pommeGold.get_coords()[0]*16+18, self.pommeGold.get_coords()[1]*16+30, (self.pommeGold.get_coords()[0]+1)*16+18, (self.pommeGold.get_coords()[1]+1)*16+30, outline = "#E0E0E0", fill = "#FFE600")]
+			self.gameRender["pomme or"] = self.gameRender["pomme or"] + [self.can.create_rectangle(pommeGold[0]*16+18, pommeGold[1]*16+30, (pommeGold[0]+1)*16+18, (pommeGold[1]+1)*16+30, outline = "#E0E0E0", fill = "#FFE600")]
 		if self.pommeSpec.get_coords() != () :
-			self.gameRender["pomme spec"] = self.gameRender["pomme spec"] + [self.can.create_rectangle(self.pommeSpec.get_coords()[0]*16+18, self.pommeSpec.get_coords()[1]*16+30, (self.pommeSpec.get_coords()[0]+1)*16+18, (self.pommeSpec.get_coords()[1]+1)*16+30, outline = "#E0E0E0", fill = "#0000FF")]
+			self.gameRender["pomme spec"] = self.gameRender["pomme spec"] + [self.can.create_rectangle(pommeSpec[0]*16+18, pommeSpec[1]*16+30, (pommeSpec[0]+1)*16+18, (pommeSpec[1]+1)*16+30, outline = "#E0E0E0", fill = "#0000FF")]
 
+	def game_over(self) :
+		"""
+		"""
+
+		self.isOver = True
+		self.gameRender["game over"] = self.gameRender["game over"] + [self.can.create_rectangle(42, 54, 16*self.param.get_parametres()["largeur"]-6, 16*self.param.get_parametres()["hauteur"]+6, stipple = "gray50", fill = "#424242", width = 0)]
+		self.gameRender["game over"] = self.gameRender["game over"] + [self.can.create_text(8*self.param.get_parametres()["largeur"]+16, 60, anchor = N, text = "Game Over", font = ("Mayan", 12), fill = "#E0E0E0")]
+		self.gameRender["game over"] = self.gameRender["game over"] + [self.can.create_text(8*self.param.get_parametres()["largeur"]+16, 16*self.param.get_parametres()["hauteur"]-12, anchor = S, text = "Retour au", font = ("Mayan", 12), fill = "#E0E0E0")]
+		self.gameRender["game over"] = self.gameRender["game over"] + [self.can.create_text(8*self.param.get_parametres()["largeur"]+16, 16*self.param.get_parametres()["hauteur"], anchor = S, text = "menu", font = ("Mayan", 12), fill = "#E0E0E0")]
+
+	def retour_menu(self) :
+		"""
+		"""
+
+		self.can.delete(ALL)
+		self.can.config(width = 800, height = 600)
+		self.dansMenu = True
+		self.dansJeu = False
+
+		self.menuRender = {"background" : [], "highlight line" : [], "title texts" : [], "sélection texts" : [], "highscores texts" : [], "achievements texts" : [], "achievements elements" : [], "paramètres texts" : []}
+		self.menuMechanics = {"current menu" : "title", "highlight" : 0}
+
+		self.menu()
+		
+		
 	def quitter(self) :
 		"""
 		"""
@@ -1346,6 +1391,30 @@ class Parametres :
 
 		return self.param
 
+	def get_largeur(self) :
+		"""
+		"""
+
+		return self.param["largeur"]
+
+	def get_hauteur(self) :
+		"""
+		"""
+
+		return self.param["hauteur"]
+
+	def get_step(self) :
+		"""
+		"""
+
+		return self.param["step"]
+
+	def get_graph_mode(self) :
+		"""
+		"""
+
+		return self.param["graph mode"]
+
 class Images :
 	"""
 	"""
@@ -1565,9 +1634,10 @@ class Snake :
 				if j == "pomme spec" :
 					self.specEat = True
 
-		self.game_over_test()
+		self.game_over()
+		
 
-	def game_over_test(self) :
+	def game_over(self) :
 		"""
 		"""
 
