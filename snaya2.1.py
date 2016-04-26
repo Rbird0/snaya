@@ -334,8 +334,10 @@ class Snaya :
 				self.name_plus_one(1)
 			if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == 2 :
 				self.name_plus_one(2)
-			if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == -1 :
+			if self.menuMechanics["current menu"] == "paramètres" and self.param.get_graph_mode() != "sprite" and self.menuMechanics["highlight"] == -1 :
 				self.menuMechanics["highlight"] = 6
+			if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == -1 :
+				self.menuMechanics["highlight"] = 7
 		elif self.dansJeu == True and self.direction != "south" :
 			self.direction = "north"
 	
@@ -354,7 +356,9 @@ class Snaya :
 				self.name_minus_one(1)
 			if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == 2 :
 				self.name_minus_one(2)
-			if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 7 :
+			if self.menuMechanics["current menu"] == "paramètres" and self.param.get_graph_mode() != "sprite" and self.menuMechanics["highlight"] == 7 :
+				self.menuMechanics["highlight"] = 0
+			if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 8 :
 				self.menuMechanics["highlight"] = 0
 		elif self.dansJeu == True and self.direction != "north" :
 			self.direction = "south"
@@ -380,6 +384,15 @@ class Snaya :
 				self.param.switch_bonus()
 			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 6 :
 				self.param.plus_one_vitesse()
+			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 7 :
+				j = 0
+				while self.skins.get_skins()["unlocked"][j] != self.skins.get_skins()["selected skin"] :
+					j += 1
+				if self.skins.get_skins()["unlocked"][j] is not self.skins.get_skins()["unlocked"][-1] :
+					self.skins.select_skin(self.skins.get_skins()["unlocked"][j+1])
+				else :
+					self.skins.select_skin(self.skins.get_skins()["unlocked"][0])
+				self.images = Images(self.root, self.paths.get_path("resources"), self.skins.get_skins()["selected skin"])
 		elif self.dansJeu == True and self.direction != "west" :
 			self.direction = "east"
 
@@ -404,6 +417,15 @@ class Snaya :
 				self.param.switch_bonus()
 			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 6 :
 				self.param.minus_one_vitesse()
+			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 7 :
+				j = 0
+				while self.skins.get_skins()["unlocked"][j] != self.skins.get_skins()["selected skin"] :
+					j += 1
+				if self.skins.get_skins()["unlocked"][j] is not self.skins.get_skins()["unlocked"][0] :
+					self.skins.select_skin(self.skins.get_skins()["unlocked"][j-1])
+				else :
+					self.skins.select_skin(self.skins.get_skins()["unlocked"][-1])
+				self.images = Images(self.root, self.paths.get_path("resources"), self.skins.get_skins()["selected skin"])
 		elif self.dansJeu == True and self.direction != "east" :
 			self.direction = "west"
 
@@ -1264,6 +1286,15 @@ class Skins :
 		"""
 
 		self.skins = save
+		self.skins["unlocked"] = ["jaune_vert"]
+		if self.skins["bleu_jaune"] == True :
+			self.skins["unlocked"] += ["bleu_jaune"]
+
+	def select_skin(self, skin) :
+		"""
+		"""
+
+		self.skins["selected skin"] = skin
 
 	def get_skins(self) :
 		"""
