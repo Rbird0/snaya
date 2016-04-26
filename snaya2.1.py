@@ -35,8 +35,6 @@ class Snaya :
 		self.menu()
 
 		self.root.mainloop()
-		
-
 
 	def save_load(self) :
 		"""
@@ -730,15 +728,17 @@ class Snaya :
 
 		self.can.delete(ALL)
 		self.can.config(width = 800, height = 600)
+
 		self.dansMenu = True
 		self.dansJeu = False
+
+		self.hs.add_score(self.score, self.playerName["name"])
 
 		self.menuRender = {"background" : [], "highlight line" : [], "title texts" : [], "sélection texts" : [], "highscores texts" : [], "achievements texts" : [], "achievements elements" : [], "paramètres texts" : []}
 		self.menuMechanics = {"current menu" : "title", "highlight" : 0}
 
 		self.menu()
-		
-		
+
 	def quitter(self) :
 		"""
 		"""
@@ -1635,7 +1635,6 @@ class Snake :
 					self.specEat = True
 
 		self.game_over()
-		
 
 	def game_over(self) :
 		"""
