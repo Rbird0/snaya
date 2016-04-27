@@ -21,13 +21,13 @@ resources path = "D:/Lycee/ISN/Projet2.0/resources"
 /highscores_start
 
 9600,"RBI"
+8600,"RBI"
 4800,"RBI"
 4800,"RBI"
-0,"---"
-0,"---"
-0,"---"
-0,"---"
-0,"---"
+4400,"RBI"
+3700,"RBI"
+3500,"RBI"
+3100,"RBI"
 0,"---"
 0,"---"
 
@@ -62,11 +62,11 @@ selected skin = "jaune_vert"
 
 /comptes_start
 
-nombre pommes norm = "51"
-nombre pommes gold = "24"
-nombre pommes spec = "21"
-score total = "19200"
-nombre parties = "3"
+nombre pommes norm = "141"
+nombre pommes gold = "52"
+nombre pommes spec = "24"
+score total = "42500"
+nombre parties = "8"
 
 /comptes_end
 

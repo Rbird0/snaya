@@ -772,6 +772,9 @@ class Snaya :
 		self.comptes.plus_one_partie()
 		self.comptes.add_score(self.score)
 
+		if self.comptes.get_comptes()["score total"] >= 100000 and self.skins.get_skins()["bleu_jaune"] != True :
+			self.skins.unlock_skin("bleu_jaune")
+
 		self.gameRender["game over"] = self.gameRender["game over"] + [self.can.create_rectangle(42, 54, 16*self.param.get_parametres()["largeur"]-6, 16*self.param.get_parametres()["hauteur"]+6, stipple = "gray50", fill = "#424242", width = 0)]
 		self.gameRender["game over"] = self.gameRender["game over"] + [self.can.create_text(8*self.param.get_parametres()["largeur"]+16, 60, anchor = N, text = "Game Over", font = ("Mayan", 12), fill = "#E0E0E0")]
 		self.gameRender["game over"] = self.gameRender["game over"] + [self.can.create_text(8*self.param.get_parametres()["largeur"]+16, 16*self.param.get_parametres()["hauteur"]-12, anchor = S, text = "Retour au", font = ("Mayan", 12), fill = "#E0E0E0")]
@@ -1326,6 +1329,13 @@ class Skins :
 		"""
 
 		self.skins["selected skin"] = skin
+
+	def unlock_skin(self, skin) :
+		"""
+		"""
+
+		self.skins[skin] = True
+		self.skins["unlocked"] += skin
 
 	def get_skins(self) :
 		"""
