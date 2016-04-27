@@ -576,6 +576,7 @@ class Snaya :
 		if self.bonus == True :
 			if self.snake.eat == True :
 				self.score = self.score + 100
+				self.comptes.plus_one_pomme()
 				self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
 				if self.pommes["pomme or"] == () :
 					self.pommeGold.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
@@ -583,6 +584,7 @@ class Snaya :
 					self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], largeur, hauteur)
 			if self.snake.goldEat == True :
 				self.score = self.score + 500
+				self.comptes.plus_one_pomme_gold()
 				self.pommeGold.mange()
 				self.pommeGold.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
 				self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
@@ -590,6 +592,7 @@ class Snaya :
 					self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], largeur, hauteur)
 			if self.snake.specEat == True :
 				self.score = self.score + 100
+				self.comptes.plus_one_pomme_spec()
 				self.pommeSpec.mange()
 				self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], largeur, hauteur)
 				self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
@@ -765,6 +768,10 @@ class Snaya :
 			self.pommeGold.despawn()
 			self.pommeSpec.despawn()
 		self.isOver = True
+
+		self.comptes.plus_one_partie()
+		self.comptes.add_score(self.score)
+
 		self.gameRender["game over"] = self.gameRender["game over"] + [self.can.create_rectangle(42, 54, 16*self.param.get_parametres()["largeur"]-6, 16*self.param.get_parametres()["hauteur"]+6, stipple = "gray50", fill = "#424242", width = 0)]
 		self.gameRender["game over"] = self.gameRender["game over"] + [self.can.create_text(8*self.param.get_parametres()["largeur"]+16, 60, anchor = N, text = "Game Over", font = ("Mayan", 12), fill = "#E0E0E0")]
 		self.gameRender["game over"] = self.gameRender["game over"] + [self.can.create_text(8*self.param.get_parametres()["largeur"]+16, 16*self.param.get_parametres()["hauteur"]-12, anchor = S, text = "Retour au", font = ("Mayan", 12), fill = "#E0E0E0")]
