@@ -528,7 +528,7 @@ class Snaya :
 		interdit = interdit + [self.pomme.get_coords()]
 		self.pommeGold = PommeRand(interdit, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
 		interdit = interdit + [self.pommeGold.get_coords()]
-		self.pommeSpec = PommeRand(interdit, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+		self.pommeSpec = PommeSpec(interdit, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
 		self.pommes = {"pomme" : self.pomme.get_coords(), "pomme or" : self.pommeGold.get_coords(), "pomme spec" : self.pommeSpec.get_coords()}
 
 		self.can.delete(ALL)
@@ -574,12 +574,14 @@ class Snaya :
 				self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], largeur, hauteur)
 		if self.snake.goldEat == True :
 			self.score = self.score + 500
+			self.pommeGold.mange()
 			self.pommeGold.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
 			self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
 			if self.pommes["pomme spec"] == () :
 				self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], largeur, hauteur)
 		if self.snake.specEat == True :
 			self.score = self.score + 100
+			self.pommeSpec.mange()
 			self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], largeur, hauteur)
 			self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
 			if self.pommes["pomme or"] == () :
@@ -598,7 +600,7 @@ class Snaya :
 			isOk = False
 			while isOk != True :
 				self.temps = time.time()*1000
-				if self.temps > self.oldTemps + self.param.get_parametres()["step"] :
+				if self.temps > self.oldTemps + self.param.get_parametres()["step"] + self.pommeSpec.get_step() :
 					isOk = True
 					self.oldTemps = self.temps
 					self.root.after(10, self.move)
@@ -1738,6 +1740,13 @@ class PommeRand(Pomme) :
 
 		self.depl = 0
 		self.choose(interdit, largeur, hauteur)
+		self.date = 0
+
+	def mange(self) :
+		"""
+		"""
+
+		self.date = time.time()*1000
 
 	def choose(self, interdit, largeur, hauteur) :
 		"""
@@ -1757,6 +1766,25 @@ class PommeRand(Pomme) :
 			self.depl -= 1
 		else :
 			self.coords = ()
+
+class PommeSpec(PommeRand) :
+	"""
+	"""
+
+	def get_step(self) :
+		"""
+		"""
+
+		if self.temps() <= 5000 :
+			return 100
+		else :
+			return 0
+
+	def temps(self) :
+		"""
+		"""
+
+		return time.time()*1000 - self.date
 #
 
 	#*************** IMPORTATION DES BIBLIOTHEQUES ***************#
