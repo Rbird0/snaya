@@ -1336,6 +1336,36 @@ class Comptes :
 
 		self.comptes = save
 
+	def plus_one_pomme(self) :
+		"""
+		"""
+
+		self.comptes["nombre pommes"] += 1
+
+	def plus_one_pomme_gold(self) :
+		"""
+		"""
+
+		self.comptes["nombre pommes or"] += 1
+
+	def plus_one_pomme_spec(self) :
+		"""
+		"""
+
+		self.comptes["nombre pommes spec"] += 1
+
+	def plus_one_partie(self) :
+		"""
+		"""
+
+		self.comptes["nombre parties"] += 1
+
+	def add_score(self, score) :
+		"""
+		"""
+
+		self.comptes["score total"] += score
+
 	def get_comptes(self) :
 		"""
 		"""
