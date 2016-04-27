@@ -521,15 +521,19 @@ class Snaya :
 		self.oldDirection = "east"
 
 		self.dansJeu = True
+		self.bonus = self.param.get_parametres()["bonus"]
 
 		self.snake = Snake()
 		interdit = self.snake.get_coords()
 		self.pomme = Pomme(interdit, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
-		interdit = interdit + [self.pomme.get_coords()]
-		self.pommeGold = PommeRand(interdit, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
-		interdit = interdit + [self.pommeGold.get_coords()]
-		self.pommeSpec = PommeSpec(interdit, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
-		self.pommes = {"pomme" : self.pomme.get_coords(), "pomme or" : self.pommeGold.get_coords(), "pomme spec" : self.pommeSpec.get_coords()}
+		if self.bonus == True :
+			interdit = interdit + [self.pomme.get_coords()]
+			self.pommeGold = PommeRand(interdit, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			interdit = interdit + [self.pommeGold.get_coords()]
+			self.pommeSpec = PommeSpec(interdit, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+			self.pommes = {"pomme" : self.pomme.get_coords(), "pomme or" : self.pommeGold.get_coords(), "pomme spec" : self.pommeSpec.get_coords()}
+		else :
+			self.pommes = {"pomme" : self.pomme.get_coords()}
 
 		self.can.delete(ALL)
 		self.can.config(width = 16*self.param.get_parametres()["largeur"]+32, height = 16*self.param.get_parametres()["hauteur"]+48, bg = "#050505")
@@ -552,7 +556,10 @@ class Snaya :
 		"""
 		"""
 
-		self.pommes = {"pomme" : self.pomme.get_coords(), "pomme or" : self.pommeGold.get_coords(), "pomme spec" : self.pommeSpec.get_coords()}
+		if self.bonus == True :
+			self.pommes = {"pomme" : self.pomme.get_coords(), "pomme or" : self.pommeGold.get_coords(), "pomme spec" : self.pommeSpec.get_coords()}
+		else :
+			self.pommes = {"pomme" : self.pomme.get_coords()}
 
 		self.deplacer()
 
@@ -561,31 +568,37 @@ class Snaya :
 		largeur = self.param.get_largeur()
 		hauteur = self.param.get_hauteur()
 
-		if snake[0][1] != snake[1][1] :
-			self.pommeGold.deplacement()
-			self.pommeSpec.deplacement()
+		if self.bonus == True :
+			if snake[0][1] != snake[1][1] :
+				self.pommeGold.deplacement()
+				self.pommeSpec.deplacement()
 
-		if self.snake.eat == True :
-			self.score = self.score + 100
-			self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
-			if self.pommes["pomme or"] == () :
+		if self.bonus == True :
+			if self.snake.eat == True :
+				self.score = self.score + 100
+				self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
+				if self.pommes["pomme or"] == () :
+					self.pommeGold.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
+				if self.pommes["pomme spec"] == () :
+					self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], largeur, hauteur)
+			if self.snake.goldEat == True :
+				self.score = self.score + 500
+				self.pommeGold.mange()
 				self.pommeGold.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
-			if self.pommes["pomme spec"] == () :
+				self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
+				if self.pommes["pomme spec"] == () :
+					self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], largeur, hauteur)
+			if self.snake.specEat == True :
+				self.score = self.score + 100
+				self.pommeSpec.mange()
 				self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], largeur, hauteur)
-		if self.snake.goldEat == True :
-			self.score = self.score + 500
-			self.pommeGold.mange()
-			self.pommeGold.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
-			self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
-			if self.pommes["pomme spec"] == () :
-				self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], largeur, hauteur)
-		if self.snake.specEat == True :
-			self.score = self.score + 100
-			self.pommeSpec.mange()
-			self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], largeur, hauteur)
-			self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
-			if self.pommes["pomme or"] == () :
-				self.pommeGold.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
+				self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
+				if self.pommes["pomme or"] == () :
+					self.pommeGold.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
+		else :
+			if self.snake.eat == True :
+				self.score = self.score + 100
+				self.pomme.spawn_pomme(snakeCoords, largeur, hauteur)
 
 		self.nettoyer_aff()
 
@@ -600,10 +613,16 @@ class Snaya :
 			isOk = False
 			while isOk != True :
 				self.temps = time.time()*1000
-				if self.temps > self.oldTemps + self.param.get_parametres()["step"] + self.pommeSpec.get_step() :
-					isOk = True
-					self.oldTemps = self.temps
-					self.root.after(10, self.move)
+				if self.bonus == True :
+					if self.temps > self.oldTemps + self.param.get_parametres()["step"] + self.pommeSpec.get_step() :
+						isOk = True
+						self.oldTemps = self.temps
+						self.root.after(10, self.move)
+				else :
+					if self.temps > self.oldTemps + self.param.get_parametres()["step"] :
+						isOk = True
+						self.oldTemps = self.temps
+						self.root.after(10, self.move)
 		else :
 			self.game_over()
 
@@ -742,6 +761,9 @@ class Snaya :
 		"""
 		"""
 
+		if self.bonus == True :
+			self.pommeGold.despawn()
+			self.pommeSpec.despawn()
 		self.isOver = True
 		self.gameRender["game over"] = self.gameRender["game over"] + [self.can.create_rectangle(42, 54, 16*self.param.get_parametres()["largeur"]-6, 16*self.param.get_parametres()["hauteur"]+6, stipple = "gray50", fill = "#424242", width = 0)]
 		self.gameRender["game over"] = self.gameRender["game over"] + [self.can.create_text(8*self.param.get_parametres()["largeur"]+16, 60, anchor = N, text = "Game Over", font = ("Mayan", 12), fill = "#E0E0E0")]
@@ -1729,6 +1751,12 @@ class Pomme :
 		"""
 
 		return self.coords
+
+	def despawn(self) :
+		"""
+		"""
+
+		self.coords = ()
 
 class PommeRand(Pomme) :
 	"""
