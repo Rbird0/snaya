@@ -523,6 +523,13 @@ class Snaya :
 		self.dansJeu = True
 		self.bonus = self.param.get_parametres()["bonus"]
 
+		self.grilleParcours = []
+		for j in range(self.param.get_largeur()) :
+			for i in range(self.param.get_hauteur()) :
+				self.grilleParcours += [(j, i)]
+
+		self.pommesPartie = 0
+
 		self.snake = Snake()
 		interdit = self.snake.get_coords()
 		self.pomme = Pomme(interdit, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
@@ -568,6 +575,13 @@ class Snaya :
 		largeur = self.param.get_largeur()
 		hauteur = self.param.get_hauteur()
 
+		for j in range(len(self.grilleParcours)-1) :
+			print("grid " + str(self.grilleParcours[j]))
+			print("snake" + str(snakeCoords[0]))
+			if snakeCoords[0] == self.grilleParcours[j] :
+				print("pok")
+				self.grilleParcours = self.grilleParcours[:j] + self.grilleParcours[j+1:]
+
 		if self.bonus == True :
 			if snake[0][1] != snake[1][1] :
 				self.pommeGold.deplacement()
@@ -577,6 +591,7 @@ class Snaya :
 			if self.snake.eat == True :
 				self.score = self.score + 100
 				self.comptes.plus_one_pomme()
+				self.pommesPartie += 1
 				self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
 				if self.pommes["pomme or"] == () :
 					self.pommeGold.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
@@ -601,6 +616,8 @@ class Snaya :
 		else :
 			if self.snake.eat == True :
 				self.score = self.score + 100
+				self.comptes.plus_one_pomme()
+				self.pommesPartie += 1
 				self.pomme.spawn_pomme(snakeCoords, largeur, hauteur)
 
 		self.nettoyer_aff()
@@ -775,6 +792,18 @@ class Snaya :
 
 		if self.comptes.get_comptes()["score total"] >= 100000 and self.skins.get_skins()["bleu_jaune"] != True :
 			self.skins.unlock_skin("bleu_jaune")
+
+		if self.pommesPartie >= 10 :
+			self.ach.ach_unlock(1)
+
+		if self.comptes.get_comptes()["nombre pommes"] >= 100 :
+			self.ach.ach_unlock(2)
+
+		if self.comptes.get_comptes()["nombre pommes or"] >= 150 :
+			self.ach.ach_unlock(3)
+
+		if self.comptes.get_comptes()["nombre pommes spec"] >= 100 :
+			self.ach.ach_unlock(4)
 
 		if self.save.isFileSelected == True :
 			self.save.write_to_file(self.playerName["name"], self.paths.get_path("resources"), self.hs.get_highscores(), self.ach.get_achievements(), self.skins.get_skins(), self.comptes.get_comptes(), self.param.get_parametres())
@@ -1308,6 +1337,12 @@ class Achievements :
 		self.numbers = {}
 		for j in self.achievements.keys() :
 			self.numbers[int(j[3])] = self.achievements[j]
+
+	def ach_unlock(self, ach) :
+		"""
+		"""
+
+		self.numbers[ach] = True
 
 	def get_achievements(self) :
 		"""
