@@ -22,14 +22,14 @@ resources path = "D:/Lycee/ISN/Projet2.0/resources"
 
 9600,"RBI"
 8600,"RBI"
+5600,"RBI"
+5100,"RBI"
+4900,"RBI"
 4800,"RBI"
 4800,"RBI"
 4400,"RBI"
+4000,"RBI"
 3700,"RBI"
-3500,"RBI"
-3100,"RBI"
-0,"---"
-0,"---"
 
 /highscores_end
 
@@ -52,7 +52,7 @@ achievement5 = False
 /skins_start
 
 jaune_vert = True
-bleu_jaune = False
+bleu_jaune = True
 selected skin = "jaune_vert"
 
 /skins_end
@@ -62,11 +62,11 @@ selected skin = "jaune_vert"
 
 /comptes_start
 
-nombre pommes norm = "141"
-nombre pommes gold = "52"
-nombre pommes spec = "24"
-score total = "42500"
-nombre parties = "8"
+nombre pommes norm = "379"
+nombre pommes gold = "132"
+nombre pommes spec = "36"
+score total = "107500"
+nombre parties = "27"
 
 /comptes_end
 
@@ -76,7 +76,7 @@ nombre parties = "8"
 /parametres_start
 
 graph mode = "sprite"
-grille taille = "20,20"
+grille taille = "15,15"
 bonus = True
 vitesse = "3"
 
