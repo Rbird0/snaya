@@ -2,7 +2,7 @@
 
 /name_start
 
-name = "TBI"
+name = "RBI"
 
 /name_end
 
@@ -20,9 +20,9 @@ resources path = "D:/Lycee/ISN/Projet2.0/resources"
 
 /highscores_start
 
-2100,"TBI"
-2000,"RBI"
-400,"RBI"
+9600,"RBI"
+4800,"RBI"
+4800,"RBI"
 0,"---"
 0,"---"
 0,"---"
@@ -52,7 +52,7 @@ achievement5 = False
 /skins_start
 
 jaune_vert = True
-bleu_jaune = True
+bleu_jaune = False
 selected skin = "jaune_vert"
 
 /skins_end
@@ -62,11 +62,11 @@ selected skin = "jaune_vert"
 
 /comptes_start
 
-nombre pommes norm = "0"
-nombre pommes gold = "0"
-nombre pommes spec = "0"
-score total = "0"
-nombre parties = "0"
+nombre pommes norm = "51"
+nombre pommes gold = "24"
+nombre pommes spec = "21"
+score total = "19200"
+nombre parties = "3"
 
 /comptes_end
 
@@ -78,6 +78,6 @@ nombre parties = "0"
 graph mode = "sprite"
 grille taille = "20,20"
 bonus = True
-vitesse = "2"
+vitesse = "3"
 
 /parametres_end
