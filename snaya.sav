@@ -42,7 +42,7 @@ achievement1 = True
 achievement2 = True
 achievement3 = False
 achievement4 = False
-achievement5 = False
+achievement5 = True
 
 /achievements_end
 
@@ -62,11 +62,11 @@ selected skin = "bleu_jaune"
 
 /comptes_start
 
-nombre pommes norm = "499"
+nombre pommes norm = "506"
 nombre pommes gold = "143"
-nombre pommes spec = "44"
-score total = "125800"
-nombre parties = "50"
+nombre pommes spec = "45"
+score total = "126600"
+nombre parties = "52"
 
 /comptes_end
 

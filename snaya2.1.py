@@ -524,9 +524,6 @@ class Snaya :
 		self.bonus = self.param.get_parametres()["bonus"]
 
 		self.grilleParcours = []
-		for j in range(self.param.get_largeur()) :
-			for i in range(self.param.get_hauteur()) :
-				self.grilleParcours += [(j, i)]
 
 		self.pommesPartie = 0
 
@@ -575,12 +572,8 @@ class Snaya :
 		largeur = self.param.get_largeur()
 		hauteur = self.param.get_hauteur()
 
-		for j in range(len(self.grilleParcours)-1) :
-			print("grid " + str(self.grilleParcours[j]))
-			print("snake" + str(snakeCoords[0]))
-			if snakeCoords[0] == self.grilleParcours[j] :
-				print("pok")
-				self.grilleParcours = self.grilleParcours[:j] + self.grilleParcours[j+1:]
+		if snakeCoords[0] not in self.grilleParcours :
+			self.grilleParcours += [snakeCoords[0]]
 
 		if self.bonus == True :
 			if snake[0][1] != snake[1][1] :
@@ -804,6 +797,9 @@ class Snaya :
 
 		if self.comptes.get_comptes()["nombre pommes spec"] >= 100 :
 			self.ach.ach_unlock(4)
+
+		if len(self.grilleParcours) == self.param.get_largeur()*self.param.get_hauteur() :
+			self.ach.ach_unlock(5)
 
 		if self.save.isFileSelected == True :
 			self.save.write_to_file(self.playerName["name"], self.paths.get_path("resources"), self.hs.get_highscores(), self.ach.get_achievements(), self.skins.get_skins(), self.comptes.get_comptes(), self.param.get_parametres())
