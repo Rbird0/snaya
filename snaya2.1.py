@@ -461,6 +461,8 @@ class Snaya :
 		elif self.isOver == True :
 			self.isOver = False
 			self.retour_menu()
+		if self.dansJeu == True :
+			self.pause = not self.pause
 
 	def precedent(self, event) :
 		"""
@@ -478,6 +480,11 @@ class Snaya :
 			if self.menuMechanics["current menu"] == "paramètres" :
 				self.menuMechanics["highlight"] = 3
 			self.menuMechanics["current menu"] = "title"
+		elif self.isOver == True :
+			self.isOver = False
+			self.retour_menu()
+		if self.dansJeu == True :
+			self.pause = not self.pause
 
 	def name_plus_one(self, position) :
 		"""
@@ -521,6 +528,8 @@ class Snaya :
 		self.oldDirection = "east"
 
 		self.dansJeu = True
+		self.pause = False
+		self.isOver = False
 		self.bonus = self.param.get_parametres()["bonus"]
 
 		self.grilleParcours = []
@@ -542,7 +551,7 @@ class Snaya :
 		self.can.delete(ALL)
 		self.can.config(width = 16*self.param.get_parametres()["largeur"]+32, height = 16*self.param.get_parametres()["hauteur"]+48, bg = "#050505")
 
-		self.gameRender = {"score" : [], "score line" : [], "grid" : [], "tete" : [], "snake" : [], "pomme" : [], "pomme or" : [], "pomme spec" : [], "game over" : []}
+		self.gameRender = {"score" : [], "score line" : [], "grid" : [], "tete" : [], "snake" : [], "pomme" : [], "pomme or" : [], "pomme spec" : [], "game over" : [], "pause" : []}
 		self.afficher_init()
 		self.move()
 
@@ -565,7 +574,8 @@ class Snaya :
 		else :
 			self.pommes = {"pomme" : self.pomme.get_coords()}
 
-		self.deplacer()
+		if self.pause != True :
+			self.deplacer()
 
 		snake = self.snake.get_coords_and_directions()
 		snakeCoords = self.snake.get_coords()
@@ -580,38 +590,39 @@ class Snaya :
 				self.pommeGold.deplacement()
 				self.pommeSpec.deplacement()
 
-		if self.bonus == True :
-			if self.snake.eat == True :
-				self.score = self.score + 100
-				self.comptes.plus_one_pomme()
-				self.pommesPartie += 1
-				self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
-				if self.pommes["pomme or"] == () :
+		if self.pause != True :
+			if self.bonus == True :
+				if self.snake.eat == True :
+					self.score = self.score + 100
+					self.comptes.plus_one_pomme()
+					self.pommesPartie += 1
+					self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
+					if self.pommes["pomme or"] == () :
+						self.pommeGold.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
+					if self.pommes["pomme spec"] == () :
+						self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], largeur, hauteur)
+				if self.snake.goldEat == True :
+					self.score = self.score + 500
+					self.comptes.plus_one_pomme_gold()
+					self.pommeGold.mange()
 					self.pommeGold.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
-				if self.pommes["pomme spec"] == () :
+					self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
+					if self.pommes["pomme spec"] == () :
+						self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], largeur, hauteur)
+				if self.snake.specEat == True :
+					self.score = self.score + 100
+					self.comptes.plus_one_pomme_spec()
+					self.pommeSpec.mange()
 					self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], largeur, hauteur)
-			if self.snake.goldEat == True :
-				self.score = self.score + 500
-				self.comptes.plus_one_pomme_gold()
-				self.pommeGold.mange()
-				self.pommeGold.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
-				self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
-				if self.pommes["pomme spec"] == () :
-					self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], largeur, hauteur)
-			if self.snake.specEat == True :
-				self.score = self.score + 100
-				self.comptes.plus_one_pomme_spec()
-				self.pommeSpec.mange()
-				self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], largeur, hauteur)
-				self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
-				if self.pommes["pomme or"] == () :
-					self.pommeGold.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
-		else :
-			if self.snake.eat == True :
-				self.score = self.score + 100
-				self.comptes.plus_one_pomme()
-				self.pommesPartie += 1
-				self.pomme.spawn_pomme(snakeCoords, largeur, hauteur)
+					self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
+					if self.pommes["pomme or"] == () :
+						self.pommeGold.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
+			else :
+				if self.snake.eat == True :
+					self.score = self.score + 100
+					self.comptes.plus_one_pomme()
+					self.pommesPartie += 1
+					self.pomme.spawn_pomme(snakeCoords, largeur, hauteur)
 
 		self.nettoyer_aff()
 
@@ -621,6 +632,9 @@ class Snaya :
 			self.afficher()
 		else :
 			self.afficher_simple()
+
+		if self.pause == True :
+			self.afficher_pause()
 
 		if self.snake.isOver() != True :
 			isOk = False
@@ -682,6 +696,8 @@ class Snaya :
 		for j in self.gameRender["pomme or"] :
 			self.can.delete(j)
 		for j in self.gameRender["pomme spec"] :
+			self.can.delete(j)
+		for j in self.gameRender["pause"] :
 			self.can.delete(j)
 
 	def afficher(self) :
@@ -769,6 +785,13 @@ class Snaya :
 			self.gameRender["pomme or"] = self.gameRender["pomme or"] + [self.can.create_rectangle(pommeGold[0]*16+18, pommeGold[1]*16+30, (pommeGold[0]+1)*16+18, (pommeGold[1]+1)*16+30, outline = "#E0E0E0", fill = "#FFE600")]
 		if self.pommeSpec.get_coords() != () :
 			self.gameRender["pomme spec"] = self.gameRender["pomme spec"] + [self.can.create_rectangle(pommeSpec[0]*16+18, pommeSpec[1]*16+30, (pommeSpec[0]+1)*16+18, (pommeSpec[1]+1)*16+30, outline = "#E0E0E0", fill = "#0000FF")]
+
+	def afficher_pause(self) :
+		"""
+		"""
+
+		self.gameRender["pause"] = self.gameRender["pause"] + [self.can.create_rectangle(42, 54, 16*self.param.get_parametres()["largeur"]-6, 16*self.param.get_parametres()["hauteur"]+6, stipple = "gray50", fill = "#424242", width = 0)]
+		self.gameRender["pause"] = self.gameRender["pause"] + [self.can.create_text(8*self.param.get_parametres()["largeur"]+16, 60, anchor = N, text = "Pause", font = ("Mayan", 12), fill = "#E0E0E0")]
 
 	def game_over(self) :
 		"""
