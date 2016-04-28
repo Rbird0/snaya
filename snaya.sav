@@ -40,7 +40,7 @@ resources path = "D:/Lycee/ISN/Projet2.0/resources"
 
 achievement1 = True
 achievement2 = True
-achievement3 = False
+achievement3 = True
 achievement4 = False
 achievement5 = True
 
@@ -53,7 +53,7 @@ achievement5 = True
 
 jaune_vert = True
 bleu_jaune = True
-selected skin = "bleu_jaune"
+selected skin = "jaune_vert"
 
 /skins_end
 
@@ -62,11 +62,11 @@ selected skin = "bleu_jaune"
 
 /comptes_start
 
-nombre pommes norm = "506"
-nombre pommes gold = "143"
-nombre pommes spec = "45"
-score total = "126600"
-nombre parties = "52"
+nombre pommes norm = "665"
+nombre pommes gold = "156"
+nombre pommes spec = "52"
+score total = "149700"
+nombre parties = "61"
 
 /comptes_end
 
@@ -76,7 +76,7 @@ nombre parties = "52"
 /parametres_start
 
 graph mode = "sprite"
-grille taille = "10,10"
+grille taille = "20,20"
 bonus = True
 vitesse = "3"
 
