@@ -403,19 +403,19 @@ class Snaya :
 				self.menuMechanics["highlight"] += 1
 			if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == 3 : #Puis si la position devient 3, on la ramène à 0
 				self.menuMechanics["highlight"] = 0
-			if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 2 and self.paths.get_path("resources") != "" : #Si l'on se trouve dans le menu de paramètres, que c'est la troisième ligne qui est sélectionnée, et qu'un chemin pour le dossier de ressources est bien sélectionné, on passe en mode sprite
+			if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 2 and self.paths.get_path("resources") != "" : #Si l'on se trouve dans le menu de paramètres, que c'est la troisième ligne qui est sélectionnée, et qu'un chemin pour le dossier de ressources est bien sélectionné, on passe à l'autre mode graphique (sprite si l'on était sur simple et simple si l'on était sur sprite)
 				self.param.switch_graph_mode()
-				if self.param.get_parametres()["graph mode"] == "sprite" :
+				if self.param.get_parametres()["graph mode"] == "sprite" : #Si c'est en mode sprite qu'on est passé, on définit l'attribut images
 					self.images = Images(self.root, self.paths.get_path("resources"), self.skins.get_skins()["selected skin"])
-			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 3 :
+			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 3 : #Sinon si c'est la partie gauche de la quatrième ligne qui est sélectionnée, on ajoute un à la largeur du tableau
 				self.param.plus_one_largeur()
-			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 4 :
+			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 4 : #Sinon si c'est la partie droite quatrième ligne qui est sélectionnée, on ajoute un à la hauteur du tableau
 				self.param.plus_one_hauteur()
-			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 5 :
+			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 5 : #Sinon si c'est la cinquième ligne qui est sélectionnée, on inverse l'activation ou non des bonus
 				self.param.switch_bonus()
-			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 6 :
+			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 6 : #Sinon si c'est la sixième ligne qui est sélectionnée, on ajoute un à la vitesse
 				self.param.plus_one_vitesse()
-			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 7 :
+			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 7 : #Sinon si c'est la septième ligne qui est sélectionnée, on sélectionne la skin suivante,
 				j = 0
 				while self.skins.get_skins()["unlocked"][j] != self.skins.get_skins()["selected skin"] :
 					j += 1
@@ -423,33 +423,33 @@ class Snaya :
 					self.skins.select_skin(self.skins.get_skins()["unlocked"][j+1])
 				else :
 					self.skins.select_skin(self.skins.get_skins()["unlocked"][0])
-				self.images = Images(self.root, self.paths.get_path("resources"), self.skins.get_skins()["selected skin"])
-		elif self.dansJeu == True and self.direction != "west" :
-			self.direction = "east"
+				self.images = Images(self.root, self.paths.get_path("resources"), self.skins.get_skins()["selected skin"]) #et on rafraîchit le dictionnaire d'images
+		elif self.dansJeu == True and self.direction != "west" : #Sinon, si l'on est en jeu,
+			self.direction = "east" #on passe la direction actuelle à "est"
 
 	def gauche(self, event) :
 		"""
 		Fonction gérant les actions lorsque l'utilisateur appuie sur la touche Gauche.
 		"""
 
-		if self.dansMenu == True :
-			if self.menuMechanics["current menu"] == "sélection nom" :
+		if self.dansMenu == True : #Si l'on se trouve dans le menu,
+			if self.menuMechanics["current menu"] == "sélection nom" : #Si l'on se trouve sur l'écran de sélection de nom, on passe à la lettre à la position précédente
 				self.menuMechanics["highlight"] -= 1
-			if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == -1 :
+			if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == -1 : #Puis si la position devient -1, on la ramène à 2
 				self.menuMechanics["highlight"] = 2
-			if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 2 and self.paths.get_path("resources") != "" :
+			if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 2 and self.paths.get_path("resources") != "" : #Si l'on se trouve dans le menu de paramètres, que c'est la troisième ligne qui est sélectionnée, et qu'un chemin pour le dossier de ressources est bien sélectionné, on passe à l'autre mode graphique (sprite si l'on était sur simple et simple si l'on était sur sprite)
 				self.param.switch_graph_mode()
-				if self.param.get_parametres()["graph mode"] == "sprite" :
+				if self.param.get_parametres()["graph mode"] == "sprite" : #Si c'est en mode sprite qu'on est passé, on définit l'attribut images
 					self.images = Images(self.root, self.paths.get_path("resources"), self.skins.get_skins()["selected skin"])
-			if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 3 :
+			if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 3 : #Sinon si c'est la partie gauche de la quatrième ligne qui est sélectionnée, on retire un à la largeur du tableau
 				self.param.minus_one_largeur()
-			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 4 :
+			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 4 : #Sinon si c'est la partie droite quatrième ligne qui est sélectionnée, on retire un à la hauteur du tableau
 				self.param.minus_one_hauteur()
-			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 5 :
+			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 5 : #Sinon si c'est la cinquième ligne qui est sélectionnée, on inverse l'activation ou non des bonus
 				self.param.switch_bonus()
-			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 6 :
+			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 6 : #Sinon si c'est la sixième ligne qui est sélectionnée, on retire un à la vitesse
 				self.param.minus_one_vitesse()
-			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 7 :
+			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 7 : #Sinon si c'est la septième ligne qui est sélectionnée, on sélectionne la skin précédente,
 				j = 0
 				while self.skins.get_skins()["unlocked"][j] != self.skins.get_skins()["selected skin"] :
 					j += 1
@@ -457,31 +457,31 @@ class Snaya :
 					self.skins.select_skin(self.skins.get_skins()["unlocked"][j-1])
 				else :
 					self.skins.select_skin(self.skins.get_skins()["unlocked"][-1])
-				self.images = Images(self.root, self.paths.get_path("resources"), self.skins.get_skins()["selected skin"])
-		elif self.dansJeu == True and self.direction != "east" :
-			self.direction = "west"
+				self.images = Images(self.root, self.paths.get_path("resources"), self.skins.get_skins()["selected skin"]) #et on rafraîchit le dictionnaire d'images
+		elif self.dansJeu == True and self.direction != "east" : #Sinon, si l'on est en jeu,
+			self.direction = "west" #on passe la direction actuelle à "ouest"
 
 	def suivant(self, event) :
 		"""
 		Fonction gérant les actions lorsque l'utilisateur appuie sur la touche Suivant.
 		"""
 
-		if self.dansMenu == True :
-			if self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == 0 :
+		if self.dansMenu == True : #Si l'on se trouve dans le menu,
+			if self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == 0 : #Si l'on se trouve dans le menu principal et que la ligne active est la première, on passe à l'écran de sélection du nom
 				self.menuMechanics["current menu"] = "sélection nom"
 				self.menuMechanics["highlight"] = 0
-			elif self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == 1 :
+			elif self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == 1 : #Si l'on se trouve dans le menu principal et que la ligne active est la deuxième, on passe à l'écran de highscores
 				self.menuMechanics["current menu"] = "highscores"
-			elif self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == 2 :
+			elif self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == 2 : #Si l'on se trouve dans le menu principal et que la ligne active est la troisième, on passe à l'écran d'achievements
 				self.menuMechanics["current menu"] = "achievements"
-			elif self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == 3 :
+			elif self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == 3 : #Si l'on se trouve dans le menu principal et que la ligne active est la quatrième, on passe au menu des paramètres
 				self.menuMechanics["current menu"] = "paramètres"
 				self.menuMechanics["highlight"] = 0
-			elif self.menuMechanics["current menu"] == "sélection nom" :
+			elif self.menuMechanics["current menu"] == "sélection nom" : #Si l'on se trouve dans l'écran de sélection du nom, on lance la partie
 				self.dansMenu = False
-			elif self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == 4 :
+			elif self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == 4 : #Si l'on se trouve dans le menu principal et que la ligne active est la cinquième, on quitte le jeu
 				self.quitter()
-			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 0 :
+			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 0 : #Si l'on se trouve dans le menu des paramètres et que la ligne active est la première, on affiche un dialogue permettant à l'utilisateur de choisir son dossier de ressources
 				path = filedialog.askdirectory(title = "Choisir le dossier de ressources")
 				if path != "" :
 					self.paths.set_path("resources", path)
@@ -489,12 +489,12 @@ class Snaya :
 						self.images.update(self.root, self.paths.get_path("resources"), self.skins.get_skins()["selected skin"])
 				else :
 					print("Vous n'avez sélectionné aucun dossier! Rien ne sera fait.")
-			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 1 :
+			elif self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 1 : #Si l'on se trouve dans le menu des paramètres et que la ligne active est la deuxième, on sauvegarde, c'est à dire qu'on écrase le fichier de sauvegarde avec les données actuelles
 				self.save.write_to_file(self.playerName["name"], self.paths.get_path("resources"), self.hs.get_highscores(), self.ach.get_achievements(), self.skins.get_skins(), self.comptes.get_comptes(), self.param.get_parametres())
-		elif self.isOver == True :
+		elif self.isOver == True : #Si l'on se trouve sur l'écran de game over, on retourne au menu pricipal
 			self.isOver = False
 			self.retour_menu()
-		if self.dansJeu == True :
+		if self.dansJeu == True : #Si l'on est en jeu, on met la pause ou on la retire si elle est déjà active
 			self.pause = not self.pause
 
 	def precedent(self, event) :
@@ -502,10 +502,10 @@ class Snaya :
 		Fonction gérant les actions lorsque l'utilisateur appuie sur la touche Précédent.
 		"""
 
-		if self.dansMenu == True :
-			if self.menuMechanics["current menu"] == "title" :
+		if self.dansMenu == True : #Si l'on se trouve dans le menu,
+			if self.menuMechanics["current menu"] == "title" : #Si l'on se trouve sur le menu principal, on quitte le jeu
 				self.quitter()
-			if self.menuMechanics["current menu"] == "sélection nom" :
+			if self.menuMechanics["current menu"] == "sélection nom" : #Si l'on se trouve sur l'écran de sélection de nom, l'écran de highscores, l'écran d'achievements ou le menu de paramètres, on retourne au menu principal
 				self.menuMechanics["highlight"] = 0
 			if self.menuMechanics["current menu"] == "highscores" :
 				self.menuMechanics["highlight"] = 1
@@ -514,10 +514,10 @@ class Snaya :
 			if self.menuMechanics["current menu"] == "paramètres" :
 				self.menuMechanics["highlight"] = 3
 			self.menuMechanics["current menu"] = "title"
-		elif self.isOver == True :
+		elif self.isOver == True : #Si l'on se trouve sur l'écran de game over, on retourne au menu pricipal
 			self.isOver = False
 			self.retour_menu()
-		if self.dansJeu == True :
+		if self.dansJeu == True : #Si l'on est en jeu, on met la pause ou on la retire si elle est déjà active
 			self.pause = not self.pause
 
 	def name_plus_one(self, position) :
