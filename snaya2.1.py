@@ -11,57 +11,62 @@
 
 class Snaya :
 	"""
+	Classe principale du programme. C'est ici que tout commence, et c'est ici que tout est structuré. Un objet Snaya est créé dès le lancement du programme et appelle lui même les autres objets.
 	"""
 
 	def __init__(self) :
 		"""
+		Première fonction executée par le programme. Celle-ci initialise la fenêtre, définit les classes de sauvegarde et de chemins d'accès, ... C'est une fonction "structurante", c'est à dire qu'elle indique dans quel ordre les différentes fonction "executantes" seront appellées plutôt que d'effectuer elle-même les actions. 
 		"""
 
-		self.root = Tk()
+		self.root = Tk() #On crée une fenêtre ayant pour titre "Snaya"
 		self.root.title("Snaya")
 
-		self.save = Save()
+		self.save = Save() #On définit un objet Save et un objet Paths attributs de snaya
 		self.paths = Paths()
 
-		self.save_load()
-		self.root.deiconify()
-		self.initialize()
+		self.save_load() #On execute la fonction chargeant la sauvegarde
+		self.root.deiconify() #On remet le focus du clavier sur la fenêtre principale
+		self.initialize() #On execute la fonction initialisant certaines variables et objets attributs
 
-		self.dansMenu = True
-		self.dansJeu = False
-		self.can = Canvas(self.root, width = 800, height = 600)
+		self.dansMenu = True #On indique qu'on se trouve dans le menu
+		self.dansJeu = False #On indique qu'on n'est pas en train de jouer
+		self.can = Canvas(self.root, width = 800, height = 600) #On définit un canevas avec la taille de la fenêtre pour le menu et on le charge
 		self.can.pack()
-		self.menu_init()
-		self.menu()
+		self.menu_init() #On lance l'initialisation du menu
+		self.menu() #On lance le menu
 
-		self.root.mainloop()
+		self.root.mainloop() #On indique à tkinter qu'il doit s'attendre à recevoir des instructions au clavier et à la souris pour la fenêtre pricipale
 
 	def save_load(self) :
 		"""
+		Fonction permettant de charger la sauvegarde. Elle executera les fonctions de l'objet save dans le bon ordre.
 		"""
 
-		self.save.open_dialog()
-		if self.save.isFileSelected == True :
-			self.save.check_integrity()
-			if self.save.integrity == True :
-				self.paths.set_path("save", self.save.path)
-				self.save.proceed()
-			else :
-				print("Le fichier sélectionné n'est pas valide. Une sauvegarde vierge sera utilisée.")
-				self.save.use_default()
-		else :
-			print("Vous n'avez séléctionné aucun fichier. Une sauvegarde vierge sera utilisée.")
-			self.save.use_default()
+		self.save.open_dialog() #On demande à l'attribut save d'ouvrir une fenêtre de dialogue permettant de sélectionner le fichier de sauvegarde
+		if self.save.isFileSelected == True : #Si un fichier a été sélectionné,
+			self.save.check_integrity() #on demande à l'attribut save de vérifier rapidement si le fichier est au bon format,
+			if self.save.integrity == True : #et si c'est le cas,
+				self.paths.set_path("save", self.save.path) #on demande à l'attribut paths de "se souvenir" que le chemin de la sauvegarde est celui indiqué par la fenêtre de dialogue,
+				self.save.proceed() #et on charge le fichier
+			else : #Si le fichier n'a pas passé le test de format,
+				print("Le fichier sélectionné n'est pas valide. Une sauvegarde vierge sera utilisée.") #on indique à l'utilisateur via la console que le fichier n'est pas valide et qu'une sauvegarde vide sera utilisée,
+				self.save.use_default() #et on indique à l'attribut save d'utiliser la sauvegarde (vide) par défaut
+		else : #Si aucun fichier n'a été sélectionné,
+			print("Vous n'avez séléctionné aucun fichier. Une sauvegarde vierge sera utilisée.") #on indique à l'utilisateur via la console qu'aucun fichier a été sélectionné et qu'une sauvegarde vide sera utilisée,
+			self.save.use_default() #et on indique à l'attribut save d'utiliser la sauvegarde (vide) par défaut
 
 	def initialize(self) :
 		"""
+		Fonction initialisant certains attributs essentiels au programme.
 		"""
 
-		self.name = self.save.playerName
-		self.playerName = {"name" : self.name, 0 : self.name[0], 1 : self.name[1], 2 : self.name[2]}
+		self.name = self.save.playerName #On indique qu'il faut aller chercher le nom du joueur dans l'attribut playerName de save
+		self.playerName = {"name" : self.name, 0 : self.name[0], 1 : self.name[1], 2 : self.name[2]} #On définit un dictionnaire playerName attribut de snaya et contenant la string définissant le nom du joueur ainsi que les trois lettres qui le constituent, séparément
 
-		self.paths.set_path("resources", self.save.resourcesPath)
-		self.hs = Highscores(self.save.highscores)
+		self.paths.set_path("resources", self.save.resourcesPath) #On demande à l'attribut paths de "se souvenir" que le chemin du dossier de ressources est celui indiqué par le fichier de sauvegarde
+
+		self.hs = Highscores(self.save.highscores) #On définit des objets Highscores, Achievements, Skins, Comptes et Parametres tous attributs de snaya
 		self.ach = Achievements(self.save.achievements)
 		self.skins = Skins(self.save.skins)
 		self.comptes = Comptes(self.save.comptes)
@@ -69,34 +74,35 @@ class Snaya :
 
 	def menu_init(self) :
 		"""
+		Fonction initialisant certains attributs essentiels au menu.
 		"""
 
-		parametres = self.param.get_parametres()
+		parametres = self.param.get_parametres() #On demande à param de nous indiquer les différents paramètres et à skins de nous donner les différentes informations relatives aux skins
 		skins = self.skins.get_skins()
 
-		if parametres["graph mode"] == "sprite" :
-			self.images = Images(self.root, self.paths.get_path("resources"), skins["selected skin"])
-		else :
-			self.images = Images()
+		if parametres["graph mode"] == "sprite" : #Si l'on est en mode sprite,
+			self.images = Images(self.root, self.paths.get_path("resources"), skins["selected skin"]) #on définit un objet Image attribut de snaya en lui indiquant le chemin des images à l'aide du chemin de ressources indiqué dans paths
+		else : #Sinon,
+			self.images = Images() #on définit un objet Image attribut de snaya sans indiquer de chemin
 
-		self.menuRender = {"background" : [], "highlight line" : [], "title texts" : [], "sélection texts" : [], "highscores texts" : [], "achievements texts" : [], "achievements elements" : [], "paramètres texts" : []}
-		self.menuMechanics = {"current menu" : "title", "highlight" : 0}
+		self.menuRender = {"background" : [], "highlight line" : [], "title texts" : [], "sélection texts" : [], "highscores texts" : [], "achievements texts" : [], "achievements elements" : [], "paramètres texts" : []} #On définit un attribut de snaya menuRender dictionnaire contenant les listes des choses affichées dans le menu
+		self.menuMechanics = {"current menu" : "title", "highlight" : 0} #On définit un attribut de snaya menuMechanics dictionnaire contenant les mécaniques du menu tels que le menu actuel et la sélection actuelle dans le menu
 		
-
-		self.bind()
+		self.bind() #On execute la fonction affectant des actions aux touches
 
 	def menu(self) :
 		"""
+		Fonction permettant de gérer l'affichage et les mécaniques du menu. Celle-ci tournera en boucle tant que l'utilisateur sera dans le menu.
 		"""
 
-		highscores = self.hs.get_highscores()
+		highscores = self.hs.get_highscores() #On va chercher les highscores, les achievements et les paramètres dans leurs attributs respectifs
 		achievements = self.ach.get_achievements()
 		parametres = self.param.get_parametres()
 
-		if parametres["graph mode"] == "sprite" :
-			for j in self.menuRender["background"] :
+		if parametres["graph mode"] == "sprite" : #Si l'on est en mode sprite,
+			for j in self.menuRender["background"] : #On supprime l'arrière-plan du menu
 				self.can.delete(j)
-		for j in self.menuRender["highlight line"] :
+		for j in self.menuRender["highlight line"] : #On supprime les éléments de toutes les sections du rendu du menu
 			self.can.delete(j)
 		for j in self.menuRender["title texts"] :
 			self.can.delete(j)
@@ -111,70 +117,81 @@ class Snaya :
 		for j in self.menuRender["paramètres texts"] :
 			self.can.delete(j)
 
-		if self.menuMechanics["current menu"] == "title" and parametres["graph mode"] == "sprite" :
-			images = self.images.get_images()
+		if self.menuMechanics["current menu"] == "title" and parametres["graph mode"] == "sprite" : #Si le menu actuel est le menu principal et si l'on est en mode sprite,
+			images = self.images.get_images() #on affiche l'"image de titre" du jeu
 			self.menuRender["background"] = self.menuRender["background"] + [self.can.create_image(0, 0, anchor = NW, image = images["menu title"])]
-		elif parametres["graph mode"] == "sprite" :
-			images = self.images.get_images()
+		elif parametres["graph mode"] == "sprite" : #Sinon si l'on est en mode sprite mais pas dans le menu principal,
+			images = self.images.get_images() #on affiche l'image d'arrière plan du menu
 			self.menuRender["background"] = self.menuRender["background"] + [self.can.create_image(0, 0, anchor = NW, image = images["menu"])]
-		else :
-			images = 0
+		else : #Sinon,
+			images = 0 #on affiche des rectangles grossiers en arrière-plan,
 			self.menuRender["background"] = self.menuRender["background"] + [self.can.create_rectangle(0, 0, 124, 600, width = 0, fill = "#547e25")]
 			self.menuRender["background"] = self.menuRender["background"] + [self.can.create_rectangle(124, 0, 676, 600, width = 0, fill = "#8c5918")]
 			self.menuRender["background"] = self.menuRender["background"] + [self.can.create_rectangle(676, 0, 800, 600, width = 0, fill = "#547e25")]
-			if self.menuMechanics["current menu"] == "title" :
+			if self.menuMechanics["current menu"] == "title" : #et si le menu actuel est le menu principal, on affiche un texte en haut en guise de titre
 				self.menuRender["title texts"] = self.menuRender["title texts"] + [self.can.create_text(400, 30, anchor = N, text = "SNAYA", font = ("Mayan", -130), fill = "#f0cc00")]
 
-		if self.menuMechanics["current menu"] == "title" :
-			self.menu_title()
+		if self.menuMechanics["current menu"] == "title" : #Si l'on est dans le menu de titre,
+			self.menu_title() #on execute la fonction affichant le menu de titre
 
-		if self.menuMechanics["current menu"] == "sélection nom" :
-			self.menu_selection()
+		if self.menuMechanics["current menu"] == "sélection nom" : #Si l'on est dans le menu de sélection de nom,
+			self.menu_selection() #on execute la fonction affichant le menu de sélection de nom
 
-		if self.menuMechanics["current menu"] == "highscores" :
-			self.menu_highscores(highscores)
+		if self.menuMechanics["current menu"] == "highscores" : #Si l'on est dans le menu de highscores,
+			self.menu_highscores(highscores) #on execute la fonction affichant le menu de highscores
 
-		if self.menuMechanics["current menu"] == "achievements" :
-			self.menu_achievements(images, achievements, parametres)
+		if self.menuMechanics["current menu"] == "achievements" : #Si l'on est dans le menu d'achievements,
+			self.menu_achievements(images, achievements, parametres) #on execute la fonction affichant le menu d'achievements
 
-		if self.menuMechanics["current menu"] == "paramètres" :
-			self.menu_parametres(parametres)
+		if self.menuMechanics["current menu"] == "paramètres" : #Si l'on est dans le menu de paramètres,
+			self.menu_parametres(parametres) #on execute la fonction affichant le menu de paramètres
 
-		if self.dansMenu == True :
+		if self.dansMenu == True : #On rafraîchit le menu toutes les 10 millisecondes
 			self.root.after(10, self.menu)
 		else :
-			self.launch()
+			self.launch() #Et si le jeu a été lancé, on execute la fonction d'initialisation du jeu
 
 	def menu_title(self) :
 		"""
+		Fonction affichant les textes et la barre de sélection du menu principal.
 		"""
 
+		#On affiche les textes "Jouer", "Highscores", "Achievements", et "Paramètres"
 		self.menuRender["title texts"] = self.menuRender["title texts"] + [self.can.create_text(400, 275, anchor = S, text = "Jouer", font = ("Mayan", 25), fill = "#f0cc00")]
 		self.menuRender["title texts"] = self.menuRender["title texts"] + [self.can.create_text(400, 337.5, anchor = S, text = "Highscores", font = ("Mayan", 25), fill = "#f0cc00")]
 		self.menuRender["title texts"] = self.menuRender["title texts"] + [self.can.create_text(400, 400, anchor = S, text = "Achievements", font = ("Mayan", 25), fill = "#f0cc00")]
 		self.menuRender["title texts"] = self.menuRender["title texts"] + [self.can.create_text(400, 462.5, anchor = S, text = "Paramètres", font = ("Mayan", 25), fill = "#f0cc00")]
 		self.menuRender["title texts"] = self.menuRender["title texts"] + [self.can.create_text(400, 525, anchor = S, text = "Quitter", font = ("Mayan", 25), fill = "#f0cc00")]
 
+		#On affiche la barre de sélection suivant sa position gérée par l'attribut menuMechanics
 		self.menuRender["highlight line"] = [self.can.create_line(375, 270 + self.menuMechanics["highlight"]*62.5, 425, 270 + self.menuMechanics["highlight"]*62.5, width = 2, fill = "#f0cc00")]
 
 	def menu_selection(self) :
 		"""
+		Fonction affichant les textes et la barre de sélection du menu de sélection de nom.
 		"""
 
+		#On affiche le titre de la section
 		self.menuRender["highscores texts"] = self.menuRender["highscores texts"] + [self.can.create_text(400, 30, anchor = N, text = "ENTREZ VOTRE NOM", font = ("Mayan", 35), fill = "#f0cc00")]
 
+		#On affiche les trois lettres sélectionnées suivant leur valeur donnée par l'attribut playerName[position de la lettre]
 		self.menuRender["sélection texts"] = self.menuRender["sélection texts"] + [self.can.create_text(325, 375, anchor = SE, text = self.playerName[0], font = ("Mayan", 75), fill = "#f0cc00")]
 		self.menuRender["sélection texts"] = self.menuRender["sélection texts"] + [self.can.create_text(400, 375, anchor = S, text = self.playerName[1], font = ("Mayan", 75), fill = "#f0cc00")]
 		self.menuRender["sélection texts"] = self.menuRender["sélection texts"] + [self.can.create_text(475, 375, anchor = SW, text = self.playerName[2], font = ("Mayan", 75), fill = "#f0cc00")]
 
+		#On affiche la barre de sélection suivant sa position gérée par l'attribut menuMechanics
 		self.menuRender["highlight line"] = [self.can.create_line(273 + self.menuMechanics["highlight"]*102, 370, 323 + self.menuMechanics["highlight"]*102, 370, width = 2, fill = "#f0cc00")]
 
 	def menu_highscores(self, highscores) :
 		"""
+		Fonction affichant les textes du menu de highscores.
 		"""
 
+		#On affiche le titre de la section
 		self.menuRender["highscores texts"] = self.menuRender["highscores texts"] + [self.can.create_text(400, 30, anchor = N, text = "HIGHSCORES", font = ("Mayan", 35), fill = "#f0cc00")]
 
+		#Pour j dans les clés du dictionnaire de highscores,
+		#on affiche les lignes dans l'ordre et en utilisant les valeurs renvoyées par le dictionnaire pour la clé en question
 		for j in highscores.keys() :
 			self.menuRender["highscores texts"] = self.menuRender["highscores texts"] + [self.can.create_text(245, 160 + 40*(j - 1), anchor = NW, text = highscores[j]["name"], font = ("Mayan", 20), fill = "#f0cc00")]
 			self.menuRender["highscores texts"] = self.menuRender["highscores texts"] + [self.can.create_text(350, 160 + 40*(j - 1), anchor = NW, text = " . . . . . . . . . . . ", font = ("Mayan", 20), fill = "#f0cc00")]
@@ -183,31 +200,34 @@ class Snaya :
 
 	def menu_achievements(self, images, achievements, parametres) :
 		"""
+		Menu affichant les textes et les éléments du menu d'achievements.
 		"""
 
-		if parametres["graph mode"] == "sprite" :
-			self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_image(201, 171, anchor = NW, image = images["ach bg"])]
-		else :
-			for j in range(0,5) :
+		if parametres["graph mode"] == "sprite" : #Si l'on est en mode sprite,
+			self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_image(201, 171, anchor = NW, image = images["ach bg"])] #on affiche une image avec de la transparence pour le fond
+		else : #Sinon,
+			for j in range(0,5) : #on crée des rectangles ayant la même fonction
 				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_rectangle(201, 171 + 70*j, 601, 231 + 70*j, width = 0, fill = "#6f4811")]
 				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_rectangle(206, 176 + 70*j, 256, 226 + 70*j, width = 0, fill = "#463b2b")]
 
+		#On affiche le titre de la section
 		self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.can.create_text(400, 30, anchor = N, text = "ACHIEVEMENTS", font = ("Mayan", 35), fill = "#f0cc00")]
 
-		nbAch = 0
+		nbAch = 0 #On initialise le nombre d'achievements à 0
 
+		#On affiche les titres des achievements
 		self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.can.create_text(266, 176, anchor = NW, text = "Adam & Snake", font = ("Mayan", 15, "bold"), fill = "#f0cc00")]
 		self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.can.create_text(266, 246, anchor = NW, text = "Mécanique newtonienne", font = ("Mayan", 15, "bold"), fill = "#f0cc00")]
 		self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.can.create_text(266, 316, anchor = NW, text = "Jeunesse dorée", font = ("Mayan", 15, "bold"), fill = "#f0cc00")]
 		self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.can.create_text(266, 386, anchor = NW, text = "Super Snake", font = ("Mayan", 15, "bold"), fill = "#f0cc00")]
 		self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.can.create_text(266, 456, anchor = NW, text = "Globetrotter", font = ("Mayan", 15, "bold"), fill = "#f0cc00")]
 
-		if parametres["graph mode"] == "sprite" :
-			if achievements[1] == True :
+		if parametres["graph mode"] == "sprite" : #Si l'on est en mode sprite,
+			if achievements[1] == True : #pour chaque achievement débloqué, on affiche l'image correspondante et sa description, et on augmente le comtpe d'achievements d'1,
 				nbAch += 1
 				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_image(206, 176, anchor = NW, image = images["ach1"])]
 				self.menuRender["achievements texts"] = self.menuRender["achievements texts"] + [self.can.create_text(266, 201, anchor = NW, text = "Manger 10 pommes classiques en une partie.", font = ("Mayan", 10), fill = "#f0cc00")]
-			else :
+			else : #et pour chaque achievement non débloqué, on affiche une image grisée
 				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_image(207, 176, anchor = NW, image = images["no ach"])]
 			if achievements[2] == True :
 				nbAch += 1
@@ -234,12 +254,12 @@ class Snaya :
 			else :
 				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_image(207, 456, anchor = NW, image = images["no ach"])]
 
-		else :
-			if achievements[1] == True :
+		else : #Sinon,
+			if achievements[1] == True : #pour chaque achievement débloqué, on affiche un "V" vert et sa description, et on augmente le comtpe d'achievements d'1,
 				nbAch += 1
 				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_line(210, 200, 230, 220, width = 2, fill = "#76cb3d")]
 				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_line(230, 220, 252, 180, width = 2, fill = "#76cb3d")]
-			else :
+			else : #et pour chaque achievement non débloqué, on affiche une croix rouge
 				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_line(210, 180, 252, 222, width = 2, fill = "#f8320b")]
 				self.menuRender["achievements elements"] = self.menuRender["achievements elements"] + [self.can.create_line(210, 222, 252, 180, width = 2, fill = "#f8320b")]
 			if achievements[2] == True :
@@ -277,10 +297,13 @@ class Snaya :
 
 	def menu_parametres(self, parametres) :
 		"""
+		Fonction affichant les textes et la barre de sélection du menu de paramètres.
 		"""
 
+		#On affiche le titre de la section
 		self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.can.create_text(400, 30, anchor = N, text = "PARAMÈTRES", font = ("Mayan", 35), fill = "#f0cc00")]
 
+		#Pour chaque paramètre, on va venir afficher le nom et l'état actuel
 		self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.can.create_text(200, 200, anchor = SW, text = "Dossier ressources", font = ("Mayan", 20), fill = "#f0cc00")]
 		self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.can.create_text(200, 240, anchor = SW, text = "Sauvegarder", font = ("Mayan", 20), fill = "#f0cc00")]
 		self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.can.create_text(200, 280, anchor = SW, text = "Mode graphique: " + parametres["graph mode"], font = ("Mayan", 20), fill = "#f0cc00")]
@@ -290,9 +313,10 @@ class Snaya :
 		else :
 			self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.can.create_text(200, 360, anchor = SW, text = "Bonus: sans", font = ("Mayan", 20), fill = "#f0cc00")]
 		self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.can.create_text(200, 400, anchor = SW, text = "Vitesse: " + str(parametres["vitesse"]), font = ("Mayan", 20), fill = "#f0cc00")]
-		if parametres["graph mode"] == "sprite" :
+		if parametres["graph mode"] == "sprite" : #Si l'on est en mode sprite, on ajoute un paramètre de sélection de la skin
 			self.menuRender["paramètres texts"] = self.menuRender["paramètres texts"] + [self.can.create_text(200, 440, anchor = SW, text = "Skin: " + self.skins.get_skins()["selected skin"], font = ("Mayan", 20), fill = "#f0cc00")]
 
+		#On affiche la barre de sélection suivant sa position gérée par l'attribut menuMechanics
 		if self.menuMechanics["highlight"] <= 2 :
 			self.menuRender["highlight line"] = [self.can.create_line(220, 198 + self.menuMechanics["highlight"]*40, 270, 198 + self.menuMechanics["highlight"]*40, width = 2, fill = "#f0cc00")]
 		elif self.menuMechanics["highlight"] >= 5 :
@@ -304,8 +328,11 @@ class Snaya :
 
 	def bind(self) :
 		"""
+		Fonction affectant les fonctions aux différentes touches.
 		"""
 
+		#Pour chaque touche, on affecte la fonction correspondant:
+		#Haut et Z permettent d'aller vers le haut, Bas et S permettent d'aller vers le bas, etc...
 		self.can.bind_all('<Up>', self.haut)
 		self.can.bind_all('z', self.haut)
 		self.can.bind_all('<Down>', self.bas)
@@ -321,58 +348,62 @@ class Snaya :
 
 	def haut(self, event) :
 		"""
+		Fonction gérant les actions lorsque l'utilisateur appuie sur la touche Haut.
 		"""
 
-		if self.dansMenu == True :
-			if self.menuMechanics["current menu"] == "title" or self.menuMechanics["current menu"] == "paramètres" :
+		if self.dansMenu == True : #Si l'on se trouve dans le menu,
+			if self.menuMechanics["current menu"] == "title" or self.menuMechanics["current menu"] == "paramètres" : #si l'on est dans le menu principal ou le menu de paramètres, on enlève 1 à la position de la barre de sélection
 				self.menuMechanics["highlight"] -= 1
-			if self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == -1 :
+			if self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == -1 : #Ensuite, si l'on est dans le menu principal et que la barre de sélection se trouve en position -1, on la ramène sur la position 4
 				self.menuMechanics["highlight"] = 4
-			if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == 0 :
+			if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == 0 : #Si l'on se trouve sur l'écran de sélection de nom et suivant la position de la lettre modifiée, on execute la fonction permettant de passer à la lettre suivante
 				self.name_plus_one(0)
 			if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == 1 :
 				self.name_plus_one(1)
 			if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == 2 :
 				self.name_plus_one(2)
-			if self.menuMechanics["current menu"] == "paramètres" and self.param.get_graph_mode() != "sprite" and self.menuMechanics["highlight"] == -1 :
+			if self.menuMechanics["current menu"] == "paramètres" and self.param.get_graph_mode() != "sprite" and self.menuMechanics["highlight"] == -1 : #Si l'on est dans le menu de paramètres, que l'on est en mode simplifié et que la barre de sélection se trouve en position -1, on la ramène sur la position 6
 				self.menuMechanics["highlight"] = 6
-			if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == -1 :
+			if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == -1 : #Si l'on est dans le menu de paramètres, que l'on est en mode sprite et que la barre de sélection se trouve en position -1, on la ramène sur la position 7
 				self.menuMechanics["highlight"] = 7
-		elif self.dansJeu == True and self.direction != "south" :
-			self.direction = "north"
+
+		elif self.dansJeu == True and self.direction != "south" : #Sinon, si l'on est en jeu,
+			self.direction = "north" #on passe la direction actuelle à "nord"
 	
 	def bas(self, event) :
 		"""
+		Fonction gérant les actions lorsque l'utilisateur appuie sur la touche Bas.
 		"""
 
-		if self.dansMenu == True :
-			if self.menuMechanics["current menu"] == "title" or self.menuMechanics["current menu"] == "paramètres" :
+		if self.dansMenu == True : #Si l'on se trouve dans le menu,
+			if self.menuMechanics["current menu"] == "title" or self.menuMechanics["current menu"] == "paramètres" : #si l'on est dans le menu principal ou le menu de paramètres, on ajoute 1 à la position de la barre de sélection
 				self.menuMechanics["highlight"] += 1
-			if self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == 5 :
+			if self.menuMechanics["current menu"] == "title" and self.menuMechanics["highlight"] == 5 : #Ensuite, si l'on est dans le menu principal et que la barre de sélection se trouve en position 5, on la ramène sur la position 0
 				self.menuMechanics["highlight"] = 0
-			if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == 0 :
+			if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == 0 : #Si l'on se trouve sur l'écran de sélection de nom et suivant la position de la lettre modifiée, on execute la fonction permettant de passer à la lettre précédente
 				self.name_minus_one(0)
 			if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == 1 :
 				self.name_minus_one(1)
 			if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == 2 :
 				self.name_minus_one(2)
-			if self.menuMechanics["current menu"] == "paramètres" and self.param.get_graph_mode() != "sprite" and self.menuMechanics["highlight"] == 7 :
+			if self.menuMechanics["current menu"] == "paramètres" and self.param.get_graph_mode() != "sprite" and self.menuMechanics["highlight"] == 7 : #Si l'on est dans le menu de paramètres, que l'on est en mode simplifié et que la barre de sélection se trouve en position 7, on la ramène sur la position 0
 				self.menuMechanics["highlight"] = 0
-			if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 8 :
+			if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 8 : #Si l'on est dans le menu de paramètres, que l'on est en mode sprite et que la barre de sélection se trouve en position 8, on la ramène sur la position 0
 				self.menuMechanics["highlight"] = 0
-		elif self.dansJeu == True and self.direction != "north" :
-			self.direction = "south"
+		elif self.dansJeu == True and self.direction != "north" : #Sinon, si l'on est en jeu,
+			self.direction = "south" #on passe la direction actuelle à "sud"
 
 	def droite(self, event) :
 		"""
+		Fonction gérant les actions lorsque l'utilisateur appuie sur la touche Droite.
 		"""
 
-		if self.dansMenu == True :
-			if self.menuMechanics["current menu"] == "sélection nom" :
+		if self.dansMenu == True : #Si l'on se trouve dans le menu,
+			if self.menuMechanics["current menu"] == "sélection nom" : #Si l'on se trouve sur l'écran de sélection de nom, on passe à la lettre à la position suivante
 				self.menuMechanics["highlight"] += 1
-			if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == 3 :
+			if self.menuMechanics["current menu"] == "sélection nom" and self.menuMechanics["highlight"] == 3 : #Puis si la position devient 3, on la ramène à 0
 				self.menuMechanics["highlight"] = 0
-			if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 2 and self.paths.get_path("resources") != "" :
+			if self.menuMechanics["current menu"] == "paramètres" and self.menuMechanics["highlight"] == 2 and self.paths.get_path("resources") != "" : #Si l'on se trouve dans le menu de paramètres, que c'est la troisième ligne qui est sélectionnée, et qu'un chemin pour le dossier de ressources est bien sélectionné, on passe en mode sprite
 				self.param.switch_graph_mode()
 				if self.param.get_parametres()["graph mode"] == "sprite" :
 					self.images = Images(self.root, self.paths.get_path("resources"), self.skins.get_skins()["selected skin"])
@@ -398,6 +429,7 @@ class Snaya :
 
 	def gauche(self, event) :
 		"""
+		Fonction gérant les actions lorsque l'utilisateur appuie sur la touche Gauche.
 		"""
 
 		if self.dansMenu == True :
@@ -431,6 +463,7 @@ class Snaya :
 
 	def suivant(self, event) :
 		"""
+		Fonction gérant les actions lorsque l'utilisateur appuie sur la touche Suivant.
 		"""
 
 		if self.dansMenu == True :
@@ -466,6 +499,7 @@ class Snaya :
 
 	def precedent(self, event) :
 		"""
+		Fonction gérant les actions lorsque l'utilisateur appuie sur la touche Précédent.
 		"""
 
 		if self.dansMenu == True :
