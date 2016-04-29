@@ -522,6 +522,7 @@ class Snaya :
 
 	def name_plus_one(self, position) :
 		"""
+		Fonction prenant en entrée une position de lettre et passant la lettre correspondante dans le nom du joueur à la suivante dans l'ordre alphabétique.
 		"""
 
 		lettres = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -535,6 +536,7 @@ class Snaya :
 
 	def name_minus_one(self, position) :
 		"""
+		Fonction prenant en entrée une position de lettre et passant la lettre correspondante dans le nom du joueur à la précédente dans l'ordre alphabétique.
 		"""
 
 		lettres = "ZYXWVUTSRQPONMLKJIHGFEDCBA"
@@ -548,46 +550,48 @@ class Snaya :
 
 	def name_build(self) :
 		"""
+		Fonction refraîchissant le nom du joueur avec les trois lettres qui le définissent.
 		"""
 
 		self.playerName["name"] = self.playerName[0] + self.playerName[1] + self.playerName[2]
 
 	def launch(self) :
 		"""
+		Fonction initialisant divers attributs nécessaires au lancement du jeu.
 		"""
 
-		self.score = 0
+		self.score = 0 #On initialise le score et le temps de la boucle précédente à 0
 		self.oldTemps = 0
-		self.direction = "east"
+		self.direction = "east" #On initialise les deux dernières directions à "est"
 		self.oldDirection = "east"
 
-		self.dansJeu = True
+		self.dansJeu = True #On indique qu'on est en jeu et on passe la pause et le game over à faux
 		self.pause = False
 		self.isOver = False
-		self.bonus = self.param.get_parametres()["bonus"]
+		self.bonus = self.param.get_parametres()["bonus"] #On va chercher dans les paramètres l'activation ou non des bonus (pommes dorées et spéciales)
 
-		self.grilleParcours = []
+		self.grilleParcours = [] #On initialise une liste utilisée pour déterminer si le joueur obtient un certain achievement
 
-		self.pommesPartie = 0
+		self.pommesPartie = 0 #On initialise le nombre de pommes normales mangées depuis le début de la partie à 0
 
-		self.snake = Snake()
-		interdit = self.snake.get_coords()
-		self.pomme = Pomme(interdit, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
-		if self.bonus == True :
-			interdit = interdit + [self.pomme.get_coords()]
-			self.pommeGold = PommeRand(interdit, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
+		self.snake = Snake() #On crée un objet Snake attribut de snaya
+		interdit = self.snake.get_coords() #Les pommes ne peuvent pas apparaître sur une case où se trouve le serpent: ici on crée une variable qui va contenir toutes les cases où les pommes ne peuvent pas apparître
+		self.pomme = Pomme(interdit, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"]) #On fait apparaître une pomme (objet Pomme attribut de snaya)
+		if self.bonus == True : #Si les bonus sont activés
+			interdit = interdit + [self.pomme.get_coords()] #Les pommes ne peuvent également pas apparître sur une case où il y a déjà une pomme
+			self.pommeGold = PommeRand(interdit, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"]) #On crée un objet PommeRand attribut de snaya, qui nous permettra de gérer le comportement de la pomme en or
 			interdit = interdit + [self.pommeGold.get_coords()]
-			self.pommeSpec = PommeSpec(interdit, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"])
-			self.pommes = {"pomme" : self.pomme.get_coords(), "pomme or" : self.pommeGold.get_coords(), "pomme spec" : self.pommeSpec.get_coords()}
-		else :
+			self.pommeSpec = PommeSpec(interdit, self.param.get_parametres()["largeur"], self.param.get_parametres()["hauteur"]) #On crée un objet PommeSpec attribut de snaya, qui nous permettra de gérer le comportement de la pomme spéciale
+			self.pommes = {"pomme" : self.pomme.get_coords(), "pomme or" : self.pommeGold.get_coords(), "pomme spec" : self.pommeSpec.get_coords()} #Et on stocke toutes leurs coordonnées dans un dictionnaire
+		else : #Sinon, on ne stocke que les coordonnées de la pomme normale
 			self.pommes = {"pomme" : self.pomme.get_coords()}
 
-		self.can.delete(ALL)
-		self.can.config(width = 16*self.param.get_parametres()["largeur"]+32, height = 16*self.param.get_parametres()["hauteur"]+48, bg = "#050505")
+		self.can.delete(ALL) #On supprime tout l'affichage existant
+		self.can.config(width = 16*self.param.get_parametres()["largeur"]+32, height = 16*self.param.get_parametres()["hauteur"]+48, bg = "#050505") #On redimensionne le canevas afin qu'il s'adapte à la taille de grille choisie
 
-		self.gameRender = {"score" : [], "score line" : [], "grid" : [], "tete" : [], "snake" : [], "pomme" : [], "pomme or" : [], "pomme spec" : [], "game over" : [], "pause" : []}
-		self.afficher_init()
-		self.move()
+		self.gameRender = {"score" : [], "score line" : [], "grid" : [], "tete" : [], "snake" : [], "pomme" : [], "pomme or" : [], "pomme spec" : [], "game over" : [], "pause" : []} #On initialise un dictionnaire contenant les différents éléments qui seront affichés (vides pour l'instant)
+		self.afficher_init() #On execute la fonction qui affiche les éléments fixes du jeu, comme la grille de fond
+		self.move() #On lance la fonction qui tourne en boucle pendant le jeu et qui permet d'effectuer les différentes actions
 
 	def afficher_init(self) :
 		"""
