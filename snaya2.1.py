@@ -591,15 +591,16 @@ class Snaya :
 
 		self.gameRender = {"score" : [], "score line" : [], "grid" : [], "tete" : [], "snake" : [], "pomme" : [], "pomme or" : [], "pomme spec" : [], "game over" : [], "pause" : []} #On initialise un dictionnaire contenant les différents éléments qui seront affichés (vides pour l'instant)
 		self.afficher_init() #On execute la fonction qui affiche les éléments fixes du jeu, comme la grille de fond
-		self.move() #On lance la fonction qui tourne en boucle pendant le jeu et qui permet d'effectuer les différentes actions
+		self.move() #On lance la fonction qui tourne en boucle pendant le jeu et qui permet de gérer le déroulement du jeu ainsi que les actions du joueur
 
 	def afficher_init(self) :
 		"""
+		Fonction qui va afficher les éléments fixes lorsque l'on est en jeu, c'est à dire la grille et la barre en dessous de l'affichage du score.
 		"""
 
-		self.gameRender["score line"] = [self.can.create_line(0, 14, 16*self.param.get_parametres()["largeur"]+32, 14, fill = "#E0E0E0")]
+		self.gameRender["score line"] = [self.can.create_line(0, 14, 16*self.param.get_parametres()["largeur"]+32, 14, fill = "#E0E0E0")] #On crée une ligne qui se trouve en dessous du score
 
-		for i in range(0, self.param.get_parametres()["largeur"]) :
+		for i in range(0, self.param.get_parametres()["largeur"]) : #On crée un certain nombre de rectangles qui vont constituer la grille sur laquelle se déplace le serpent
 			for j in range(0, self.param.get_parametres()["hauteur"]) :
 				self.gameRender["grid"] = self.gameRender["grid"] + [self.can.create_rectangle(i*16+18, j*16+30, (i+1)*16+18, (j+1)*16+30, outline = "#404040", fill = "#1B1B1B")]
 
