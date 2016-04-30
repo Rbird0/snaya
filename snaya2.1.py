@@ -11,7 +11,7 @@
 
 class Snaya :
 	"""
-	Classe principale du programme. C'est ici que tout commence, et c'est ici que tout est structuré. Un objet Snaya est créé dès le lancement du programme et appelle lui même les autres objets.
+	Classe principale du programme. C'est ici que tout commence, et c'est ici que tout est structuré. Un objet Snaya est créé dès le lancement du programme et structure le déroulement du jeu, alors que les données qui sont utilisées sont souvent stockées dans des objets qu'on lui passera en attribut.
 	"""
 
 	def __init__(self) :
@@ -908,12 +908,12 @@ class Snaya :
 			return 0 #Sinon, on ne fait rien
 #
 
-	#*************** CLASSES SECONDAIRES ***************#
+	#*************** CLASSES SECONDAIRES (CLASSES DE STOCKAGE) ***************#
 
 
 class Save :
 	"""
-	Classe gérant les sauvegarde. C'est ici qu'on va charger le fichier de sauvegarde mais aussi l'écrire.
+	Classe qui gérera les sauvegarde. C'est ici qu'on va charger le fichier de sauvegarde mais aussi l'écrire.
 	"""
 
 	def __init__(self) :
@@ -1301,32 +1301,36 @@ class Save :
 
 	def write_to_file(self, name, resourcesPath, highscores, achievements, skins, comptes, parametres) :
 		"""
-		
+		Fonction sauvegardant la partie en écrivant dans le fichier suivant les valeurs qui lui sont passées en entrée.
 		"""
 
-		try :
+		try : #Si l'on arrive à ouvrir le fichier en écriture, on continue
 			self.file = open(self.path, 'w')
-		except Exception :
+		except Exception : #Sinon on affiche un message d'erreur et on quitte de la fonction
 			print("Erreur lors de l'ouverture du fichier.")
 			return 0
 
+		#On définit à l'avance le texte que l'on trouvera à l'intérieur de chaque catégorie afin d'avoir un peu plus de clarté
 		highscoresFin = str(highscores[1]["score"]) + ',"' + highscores[1]["name"] + '"\n' + str(highscores[2]["score"]) + ',"' + highscores[2]["name"] + '"\n' + str(highscores[3]["score"]) + ',"' + highscores[3]["name"] + '"\n' + str(highscores[4]["score"]) + ',"' + highscores[4]["name"] + '"\n' + str(highscores[5]["score"]) + ',"' + highscores[5]["name"] + '"\n' + str(highscores[6]["score"]) + ',"' + highscores[6]["name"] + '"\n' + str(highscores[7]["score"]) + ',"' + highscores[7]["name"] + '"\n' + str(highscores[8]["score"]) + ',"' + highscores[8]["name"] + '"\n' + str(highscores[9]["score"]) + ',"' + highscores[9]["name"] + '"\n' + str(highscores[10]["score"]) + ',"' + highscores[10]["name"] + '"'
 		achievementsFin = "achievement1 = " + str(achievements[1]) + "\n" + "achievement2 = " + str(achievements[2]) + "\n" + "achievement3 = " + str(achievements[3]) + "\n" + "achievement4 = " + str(achievements[4]) + "\n" + "achievement5 = " + str(achievements[5])
 		skinsFin = "jaune_vert = " + str(skins["jaune_vert"]) + "\n" + "bleu_jaune = " + str(skins["bleu_jaune"]) + "\n" + 'selected skin = "' + skins["selected skin"] + '"'
 		comptesFin = 'nombre pommes norm = "' + str(comptes["nombre pommes"]) + '"\n' + 'nombre pommes gold = "' + str(comptes["nombre pommes or"]) + '"\n' + 'nombre pommes spec = "' + str(comptes["nombre pommes spec"]) + '"\n' + 'score total = "' + str(comptes["score total"]) + '"\n' + 'nombre parties = "' + str(comptes["nombre parties"]) + '"'
 		parametresFin = 'graph mode = "' + parametres["graph mode"] + '"\n' + 'grille taille = "' + str(parametres["largeur"]) + "," + str(parametres["hauteur"]) + '"\n' + "bonus = " + str(parametres["bonus"]) + "\n" + 'vitesse = "' + str(parametres["vitesse"]) + '"'
 
+		#Puis on les assemble
 		sequence = "###NOM###\n\n/name_start\n\nname = " + '"' + name + '"' + "\n\n/name_end\n\n\n###CHEMINS###\n\n/chemins_start\n\nresources path = " + '"' + resourcesPath + '"' + "\n\n/chemins_end\n\n\n###HIGHSCORES###\n\n/highscores_start\n\n" + highscoresFin + "\n\n/highscores_end\n\n\n###ACHIEVEMENTS###\n\n/achievements_start\n\n" + achievementsFin + "\n\n/achievements_end\n\n\n###SKINS###\n\n/skins_start\n\n" + skinsFin + "\n\n/skins_end\n\n\n###COMPTES###\n\n/comptes_start\n\n" + comptesFin + "\n\n/comptes_end\n\n\n###PARAMETRES###\n\n/parametres_start\n\n" + parametresFin + "\n\n/parametres_end"
-		self.file.write(sequence)
+		self.file.write(sequence) #Et on écrit le tout dans le fichier
 
-		self.file.close()
+		self.file.close() #Avant de le fermer
 
 class Paths :
 	"""
+	Classe qui gérera les chemins d'accès aux dossiers et fichiers. C'est ici que seront stockés les chemins d'accès au dossier ressources et au fichier de sauvegarde.
 	"""
 
 	def __init__(self) :
 		"""
+		Fonction initialisant les chemins à une string vide.
 		"""
 
 		self.save = ""
@@ -1334,28 +1338,32 @@ class Paths :
 
 	def set_path(self, asking, path) :
 		"""
+		Fonction permettant de changer la valeur d'un chemin. On aura en entrée le type de chemin que l'on souhaite modifier puis le nouveau chemin.
 		"""
 
-		if asking == "save" :
+		if asking == "save" : #Si le chemin modifié est celui de la sauvegarde, on modifie la variable le gérant avec la valeur en entrée, de même si c'est le chemin du dossier ressources qui est modifié
 			self.save = path
 		elif asking == "resources" :
 			self.resources = path
 
 	def get_path(self, asking) :
 		"""
+		Fonction renvoyant un chemin en fonction du type demandé.
 		"""
 
-		if asking == "save" :
+		if asking == "save" : #Si c'est le chemin du fichier de sauvegarde qui est demandé, sa valeur est renvoyée, de même si c'est le chemin du dossier ressources qui est demandé
 			return self.save
 		elif asking == "resources" :
 			return self.resources
 
 class Highscores :
 	"""
+	Classe qui gérera les highscores. C'est ici qu'ils sont stockés et qu'un nouveau score est ajouté.
 	"""
 
 	def __init__(self, save) :
 		"""
+		Fonction initialisant différents attributs de la classe en fonction des valeurs données en entrée.
 		"""
 
 		self.highscores = save
@@ -1363,9 +1371,10 @@ class Highscores :
 
 	def order(self) :
 		"""
+		Fonction remettant le dictionnaire définissant les highscores en ordre.
 		"""
 
-		for j in self.highscores.keys() :
+		for j in self.highscores.keys() : #Pour chaque score du dictionnaire, on va venir lire le nom qui lui est associé et la valeur du score et modifier la valeur renvoyée par cette même clé avec un nouveau dictionnaire contenant deux clés: celle du score et celle du nom du joueur correspondant
 			score, nom = self.highscores[j].split(",")
 			score = int(score)
 			name = ""
@@ -1376,6 +1385,7 @@ class Highscores :
 
 	def add_score(self, newScore, name) :
 		"""
+		Fonction ajoutant un nouveau score à la liste au bon emplacement par rapport aux anciens scores.
 		"""
 
 		old = {0 : {"name" : "XXX", "score" : 0}}
@@ -1383,27 +1393,30 @@ class Highscores :
 		for j in range(1, 11) :
 			old[j] = self.highscores[j]
 
-		for j in range(1,11) :
-			if newScore > self.highscores[j]["score"] :
-				self.highscores[j+1] = old[j]
-			if newScore > old[j]["score"] and (newScore <= old[j-1]["score"] or old[j-1] is old[0]) :
-				self.highscores[j] = {"name" : name, "score" : newScore}
+		for j in range(1,11) : #Pour j entre 1 et 10,
+			if newScore > self.highscores[j]["score"] : #si le nouveau score est supérieur au score numéro j des highscores,
+				self.highscores[j+1] = old[j] #celui-ci passe à la position suivante,
+			if newScore > old[j]["score"] and (newScore <= old[j-1]["score"] or old[j-1] is old[0]) : #et si le nouveau score est inférieur ou égal au score précédent ou s'il n'y a pas de score précédent,
+				self.highscores[j] = {"name" : name, "score" : newScore} #il devient le score numéro j
 
 		self.highscores[11] = 0
 		del self.highscores[11]
 
 	def get_highscores(self) :
 		"""
+		Fonction renvoyant le dictionnaire de highscores.
 		"""
 
 		return self.highscores
 
 class Achievements :
 	"""
+	Classe qui gérera les achievements. C'est ici qu'ils sont stockés et obtenus.
 	"""
 
 	def __init__(self, save) :
 		"""
+		Fonction initialisant différents attributs de la classe en fonction des valeurs données en entrée.
 		"""
 
 		self.achievements = save
@@ -1411,20 +1424,23 @@ class Achievements :
 
 	def order(self) :
 		"""
+		Fonction créant un dictionnaire définissant les achievements suivant leur numéro.
 		"""
 
 		self.numbers = {}
-		for j in self.achievements.keys() :
+		for j in self.achievements.keys() : #Le dictionnaire numbers attribut de la classe renvoie la valeur avec des clés entières plutôt que des strings
 			self.numbers[int(j[3])] = self.achievements[j]
 
 	def ach_unlock(self, ach) :
 		"""
+		Fonction prenant en entrée le numéro de l'achievement et modifiant son état à "déverouillé".
 		"""
 
 		self.numbers[ach] = True
 
 	def get_achievements(self) :
 		"""
+		Fonction renvoyant le dictionnaire définissant l'obtention ou non des différents achievements.
 		"""
 
 		return self.numbers
