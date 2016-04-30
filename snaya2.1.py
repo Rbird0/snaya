@@ -847,7 +847,7 @@ class Snaya :
 			self.pommeGold.despawn()
 			self.pommeSpec.despawn()
 
-		self.isOver = True
+		self.isOver = True #On indique que la partie a été perdue
 
 		self.comptes.plus_one_partie() #On incrémente le nombre total de parties et on augmente le compte du score total du score de la partie qui vient de se terminer
 		self.comptes.add_score(self.score)
@@ -881,29 +881,31 @@ class Snaya :
 
 	def retour_menu(self) :
 		"""
+		Fonction permettant de revenir au menu après que la partie soit terminée.
 		"""
 
-		self.can.delete(ALL)
-		self.can.config(width = 800, height = 600)
+		self.can.delete(ALL) #On supprime tous les éléments du canevas
+		self.can.config(width = 800, height = 600) #On lui redonne également sa taille de 800 par 600 pixels
 
-		self.dansMenu = True
+		self.dansMenu = True #On indique que l'on se trouve désormais dans le menu et plus en jeu
 		self.dansJeu = False
 
-		self.hs.add_score(self.score, self.playerName["name"])
+		self.hs.add_score(self.score, self.playerName["name"]) #On execute la fonction ajoutant automatiquement le score de la partie dans la liste des highscores
 
-		self.menuRender = {"background" : [], "highlight line" : [], "title texts" : [], "sélection texts" : [], "highscores texts" : [], "achievements texts" : [], "achievements elements" : [], "paramètres texts" : []}
+		self.menuRender = {"background" : [], "highlight line" : [], "title texts" : [], "sélection texts" : [], "highscores texts" : [], "achievements texts" : [], "achievements elements" : [], "paramètres texts" : []} #On initialise à nouveau les éléments d'affichage et mécaniques du menu
 		self.menuMechanics = {"current menu" : "title", "highlight" : 0}
 
-		self.menu()
+		self.menu() #On lance la fonction du menu tournant en boucle
 
 	def quitter(self) :
 		"""
+		Fonction affichant un dialogue et fermant la fenêtre si la réponse de l'utilisateur est "oui"
 		"""
 
-		if (messagebox.askyesno(title = "Quitter", message = "Voulez-vous vraiment quitter? :(")) :
-			self.root.destroy()
+		if (messagebox.askyesno(title = "Quitter", message = "Voulez-vous vraiment quitter? :(")) : #Si la réponse au dialogue est oui,
+			self.root.destroy() #on ferme la fenêtre principale du programme
 		else :
-			return 0
+			return 0 #Sinon, on ne fait rien
 #
 
 	#*************** CLASSES SECONDAIRES ***************#
