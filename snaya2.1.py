@@ -913,10 +913,12 @@ class Snaya :
 
 class Save :
 	"""
+	Classe gérant les sauvegarde. C'est ici qu'on va charger le fichier de sauvegarde mais aussi l'écrire.
 	"""
 
 	def __init__(self) :
 		"""
+		Fonction initialisant différents attributs de la classe.
 		"""
 
 		self.path = ""
@@ -927,6 +929,7 @@ class Save :
 
 	def open_dialog(self) :
 		"""
+		Fonction faisant apparaître un dialogue qui demande à l'utilisateur de choisir un chemin d'accès au fichier de sauvegarde qu'il souhaite utiliser.
 		"""
 
 		self.path = filedialog.askopenfilename(title = "Ouvrir le fichier de sauvegarde", filetypes = [("sauvegarde Snaya",".sav"),("tous les fichiers","*")], initialfile = "snaya.sav")
@@ -935,20 +938,21 @@ class Save :
 
 	def check_integrity(self) :
 		"""
+		Fonction vérifiant que le fichier sélectionné par l'utilisateur est bien valide.
 		"""
 
-		try :
+		try : #On essaye d'abord d'ouvrir le fichier et si cela est impossible, on indique que le fichier n'est pas valide
 			self.file = open(self.path, 'r')
 		except Exception :
 			self.integrity = False
 			return 0
 
-		for j in self.file :
+		for j in self.file : #On stocke chaque ligne du fichier dans un élément de la liste saveFile attribut de l'objet
 			self.saveFile.append(j.rstrip('\n'))
 
-		self.file.close()
+		self.file.close() #On ferme le fichier
 
-		for j in self.saveFile :
+		for j in self.saveFile : #On enlève toutes les lignes vides ou contenant un signe "#"
 			if j != "" and "#" not in j :
 				self.save.append(j)
 
@@ -967,7 +971,7 @@ class Save :
 		comptesE = False
 		parametresE = False
 
-		for j in self.save :
+		for j in self.save : #On vérifie que tous les indicateurs de début et de fin de chaque catégorie sont bien présents
 			if "/name_start" in j :
 				nameS = True
 			if "/name_end" in j :
@@ -997,11 +1001,13 @@ class Save :
 			if "/parametres_end" in j :
 				parametresE = True
 
+		#Sinon, on indique que le fichier n'est pas valide
 		if not nameS or not nameE or not cheminsS or not cheminsE or not highscoresS or not highscoresE or not achievementsS or not achievementsE or not skinsS or not skinsE or not comptesS or not comptesE or not parametresS or not parametresE :
 			self.integrity = False
 
 	def use_default(self) :
 		"""
+		Fonction générant un fichier de sauvegarde vide.
 		"""
 
 		self.isFileSelected = False
@@ -1011,6 +1017,7 @@ class Save :
 
 	def proceed(self) :
 		"""
+		Fonction gérant l'ordre dans lequel est traitée la sauvegarde.
 		"""
 
 		self.ranger()
@@ -1018,6 +1025,7 @@ class Save :
 
 	def ranger(self) :
 		"""
+		Fonction rangeant chaque information du fichier de sauvegarde suivant sa catégorie.
 		"""
 
 		nameRead = []
@@ -1036,7 +1044,7 @@ class Save :
 		comptes = False
 		parametres = False
 
-		for j in self.save :
+		for j in self.save : #Chaque ligne se trouvant entre le début et la fin de telle catégorie dans le fichier,
 			if '/name_start' in j :
 				name = True
 			if '/chemins_start' in j :
@@ -1067,7 +1075,7 @@ class Save :
 			if '/parametres_end' in j :
 				parametres = False
 
-			if name == True :
+			if name == True : #est ajoutée à une liste de la catégorie en question,
 				nameRead.append(j)
 			if chemins == True :
 				cheminsRead.append(j)
@@ -1082,7 +1090,7 @@ class Save :
 			if parametres == True :
 				parametresRead.append(j)
 
-		for j in range(len(nameRead)-1) :
+		for j in range(len(nameRead)-1) : #Sauf si celle-ci est vide ou contient un signe "/"
 			if nameRead[j] == '' or '/' in nameRead[j] :
 				nameRead = nameRead[0:j] + nameRead[j+1:]
 		for j in range(len(cheminsRead)-1) :
@@ -1104,6 +1112,7 @@ class Save :
 			if parametresRead[j] == '' or '/' in parametresRead[j] :
 				parametresRead = parametresRead[0:j] + parametresRead[j+1:]
 
+		#On stocke chaque liste dans un attribut de save
 		self.rawName = nameRead
 		self.rawChemins = cheminsRead
 		self.rawHighscores = highscoresRead
@@ -1114,12 +1123,13 @@ class Save :
 
 	def assigner(self) :
 		"""
+		Fonction lisant les informations de chaque liste fournie par la fonction ranger et les stockant des variables diverses suivant leur type.
 		"""
 
 		lecture = False
 		playerName = ""
 
-		for j in self.rawName :
+		for j in self.rawName : #On lit le nom du joueur et le stocke dans l'attribut playerName
 			if 'name' in j and '=' in j :
 				for k in j :
 					if k == '"' :
@@ -1131,7 +1141,7 @@ class Save :
 		lecture = False
 		resourcesPath = ""
 
-		for j in self.rawChemins :
+		for j in self.rawChemins : #On lit le chemin du dossier ressources et le stocke dans l'attribut resourcesPath
 			if 'resources path' in j and '=' in j :
 				for k in j :
 					if k == '"' :
@@ -1143,7 +1153,7 @@ class Save :
 		highscores = {}
 		compteur = 0
 
-		for j in self.rawHighscores :
+		for j in self.rawHighscores : #On stocke les informations de highscores dans un dictionnaire avec comme clé la position de chaque score dans la liste
 			compteur += 1
 			highscores[compteur] = j
 
@@ -1151,7 +1161,7 @@ class Save :
 
 		achievements = {}
 
-		for j in self.rawAchievements :
+		for j in self.rawAchievements : #On stocke le booléen de l'obtention ou non de chaque achievement dans un dictionnaire avec comme clé une string "ach" + le numéro de l'achievement
 			if 'achievement1' in j and '=' in j and 'True' in j :
 				achievements["ach1"] = True
 			elif 'achievement1' in j and '=' in j and 'False' in j :
@@ -1178,7 +1188,7 @@ class Save :
 		lecture = False
 		skins = {}
 
-		for j in self.rawSkins :
+		for j in self.rawSkins : #On stocke le booléen de l'obtention ou non de chaque skin dans un dictionnaire avec comme clé le nom de la skin
 			if 'jaune_vert' in j and '=' in j and 'True' in j :
 				skins["jaune_vert"] = True
 			if 'jaune_vert' in j and '=' in j and 'False' in j :
@@ -1187,7 +1197,7 @@ class Save :
 				skins["bleu_jaune"] = True
 			if 'bleu_jaune' in j and '=' in j and 'False' in j :
 				skins["bleu_jaune"] = False
-			if 'selected skin' in j and '=' in j :
+			if 'selected skin' in j and '=' in j : #On lit le nom de la skin sélectionnée et le stocke dans le dictionnaire avec comme clé "selected skin"
 				texte = ""
 				for k in j :
 					if k == '"' :
@@ -1201,7 +1211,7 @@ class Save :
 		lecture = False
 		comptes = {}
 
-		for j in self.rawComptes :
+		for j in self.rawComptes : #Pour chaque compte, on vient lire sa valeur et on stocke l'entier correspondant dans un dictionnaire avec comme clé le compte en question
 			if 'nombre pommes norm' in j and '=' in j :
 				texte = ""
 				for k in j :
@@ -1254,7 +1264,7 @@ class Save :
 		param = {}
 
 		for j in self.rawParametres :
-			if 'graph mode' in j and '=' in j :
+			if 'graph mode' in j and '=' in j : #On lit la valeur du mode graphique actuel et on la stocke dans un dictionnaire avec comme clé "graph mode"
 				texte = ""
 				for k in j :
 					if k == '"' :
@@ -1263,7 +1273,7 @@ class Save :
 						texte = texte+k
 				texte = texte[1:]
 				param["graph mode"] = texte
-			if 'grille taille' in j and '=' in j :
+			if 'grille taille' in j and '=' in j : #On lit la valeur de la taille actuelle de la grille et on stocke les entiers correspondants dans le dictionnaire avec comme clé "taille grille"
 				texte = ""
 				for k in j :
 					if k == '"' :
@@ -1273,11 +1283,11 @@ class Save :
 				texte = texte[1:]
 				coordX, coordY = texte.split(',')
 				param["taille grille"] = [int(coordX), int(coordY)]
-			if 'bonus' in j and '=' in j and 'True' in j :
+			if 'bonus' in j and '=' in j and 'True' in j : #On stocke le booléen de l'activation ou non des bonus dans le dictionnaire avec comme clé "bonus"
 				param["bonus"] = True
 			elif 'bonus' in j and '=' in j and 'False' in j :
 				param["bonus"] = False
-			if 'vitesse' in j and '=' in j :
+			if 'vitesse' in j and '=' in j : #On lit la valeur de la vitesse sélectionnée et on stocke l'entier correspondant dans le dictionnaire avec comme clé "vitesse"
 				texte = ""
 				for k in j :
 					if k == '"' :
@@ -1291,6 +1301,7 @@ class Save :
 
 	def write_to_file(self, name, resourcesPath, highscores, achievements, skins, comptes, parametres) :
 		"""
+		
 		"""
 
 		try :
