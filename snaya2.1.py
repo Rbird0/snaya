@@ -1685,10 +1685,12 @@ class Parametres :
 
 class Images :
 	"""
+	Classe qui gérera les images. C'est ici que leurs chemins sont définis et qu'elles sont chargées par tkinter.
 	"""
 
 	def __init__(self, root = 0, path = 0, skin = 0) :
 		"""
+		Fonction initialisant différents attributs de la classe en fonction des valeurs données en entrée.
 		"""
 
 		self.images = {}
@@ -1697,6 +1699,7 @@ class Images :
 
 	def init2(self, root, path, skin) :
 		"""
+		Fonction initialisant différents attributs de la classe en fonction des valeurs données en entrée.
 		"""
 
 		self.chemins(path, skin)
@@ -1705,6 +1708,7 @@ class Images :
 
 	def update(self, root, path, skin) :
 		"""
+		Fonction rechargeant les images.
 		"""
 
 		self.chemins(path, skin)
@@ -1713,6 +1717,7 @@ class Images :
 
 	def chemins(self, path, skin) :
 		"""
+		Fonction attribuant les chemins de chaque image suivant le chemin du dossier ressources.
 		"""
 
 		self.paths = {}
@@ -1743,12 +1748,14 @@ class Images :
 
 	def window_icon(self, root) :
 		"""
+		Fonction modifiant la vignette de la fenêtre pour le logo du jeu.
 		"""
 
 		root.iconphoto(root, PhotoImage(file = self.paths['window icon']))
 
 	def dico(self) :
 		"""
+		Fonction faisant charger les images par tkinter et les stockant dans un dictionnaire.
 		"""
 
 		self.images["snake head right"] = PhotoImage(file = self.paths['snake head right'])
@@ -1777,6 +1784,7 @@ class Images :
 
 	def get_images(self) :
 		"""
+		Fonction renvoyant le dictionnaire d'images.
 		"""
 
 		return self.images
@@ -1787,10 +1795,12 @@ class Images :
 
 class Snake :
 	"""
+	Classe gérant le serpent. C'est ici que sera opéré son déplacement, et ici que seront stockées les coordonnées de ses carrés.
 	"""
 
 	def __init__(self) :
 		"""
+		Fonction initialisant la position du serpent sur le tableau.
 		"""
 
 		self.coords = [((2, 0), "east"), ((1, 0), "east"), ((0, 0), "east")]
@@ -1798,9 +1808,10 @@ class Snake :
 
 	def go_north(self, pommes, largeur, hauteur) :
 		"""
+		Fonction gérant les déplacements du serpent lorsque celui-ci va en direction du nord.
 		"""
 
-		suppl = self.coords[-1]
+		suppl = self.coords[-1] #On stocke les coordonnées du carré qui sera ajouté si une pomme est mangée
 		body = self.coords[:-1]
 
 		self.eat = False
@@ -1821,6 +1832,7 @@ class Snake :
 
 	def go_south(self, pommes, largeur, hauteur) :
 		"""
+		Fonction gérant les déplacements du serpent lorsque celui-ci va en direction du sud.
 		"""
 
 		suppl = self.coords[-1]
@@ -1844,6 +1856,7 @@ class Snake :
 
 	def go_west(self, pommes, largeur, hauteur) :
 		"""
+		Fonction gérant les déplacements du serpent lorsque celui-ci va en direction de l'ouest.
 		"""
 
 		suppl = self.coords[-1]
@@ -1867,6 +1880,7 @@ class Snake :
 
 	def go_east(self, pommes, largeur, hauteur) :
 		"""
+		Fonction gérant les déplacements du serpent lorsque celui-ci va en direction de l'est.
 		"""
 
 		suppl = self.coords[-1]
