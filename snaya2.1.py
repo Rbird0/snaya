@@ -595,7 +595,7 @@ class Snaya :
 
 	def afficher_init(self) :
 		"""
-		Fonction qui va afficher les éléments fixes lorsque l'on est en jeu, c'est à dire la grille et la barre en dessous de l'affichage du score.
+		Fonction affichant les éléments fixes lorsque l'on est en jeu, c'est à dire la grille et la barre en dessous de l'affichage du score.
 		"""
 
 		self.gameRender["score line"] = [self.can.create_line(0, 14, 16*self.param.get_parametres()["largeur"]+32, 14, fill = "#E0E0E0")] #On crée une ligne qui se trouve en dessous du score
@@ -693,12 +693,13 @@ class Snaya :
 
 	def deplacer(self) :
 		"""
+		Fonction gérant la manière dont se déplace le serpent.
 		"""
 
-		largeur = self.param.get_largeur()
+		largeur = self.param.get_largeur() #On va chercher les valeurs de la largeur et de la hauteur de la grille dans leurs attributs respectifs, afin d'éviter d'appeler leurs fonctions souvent
 		hauteur = self.param.get_hauteur()
 
-		if self.direction == "west" and self.oldDirection != "east" :
+		if self.direction == "west" and self.oldDirection != "east" : #Suivant la direction actuelle du serpent, on execute la fonction du serpent correspondant
 			self.snake.go_west(self.pommes, largeur, hauteur)
 			self.oldDirection = "west"
 		elif self.direction == "north" and self.oldDirection != "south" :
@@ -721,9 +722,10 @@ class Snaya :
 
 	def nettoyer_aff(self) :
 		"""
+		Fonction effaçant tous les éléments affichés pendant la partie qui sont susceptibles de changer au cours du temps et de la partie.
 		"""
 
-		for j in self.gameRender["score"] :
+		for j in self.gameRender["score"] : #Pour j dans les listes contenant tous les éléments de chaque catégorie, on efface j
 			self.can.delete(j)
 		for j in self.gameRender["tete"] :
 			self.can.delete(j)
@@ -740,13 +742,13 @@ class Snaya :
 
 	def afficher(self) :
 		"""
+		Fonction affichant les différents éléments mouvants lorsque la partie est en cours sous forme d'images.
 		"""
 
-		snake = self.snake.get_coords_and_directions()
+		snake = self.snake.get_coords_and_directions() #On va chercher les coordonnées et les direction du serpent ainsi que les images dans leurs attributs respectifs, afin d'éviter d'appeler leurs fonctions souvent
 		images = self.images.get_images()
 
-
-		if snake[0][1] == "west" :
+		if snake[0][1] == "west" : #On affiche la tête du serpent suivant son orientation
 			self.gameRender["tete"] = self.gameRender["tete"] + [self.can.create_image(snake[0][0][0]*16+18, snake[0][0][1]*16+30, anchor = N, image = images["snake head left"])]
 		elif snake[0][1] == "north" :
 			self.gameRender["tete"] = self.gameRender["tete"] + [self.can.create_image(snake[0][0][0]*16+18, snake[0][0][1]*16+30, anchor = W, image = images["snake head top"])]
@@ -755,49 +757,51 @@ class Snaya :
 		else :
 			self.gameRender["tete"] = self.gameRender["tete"] + [self.can.create_image(snake[0][0][0]*16+18, snake[0][0][1]*16+30, anchor = NW, image = images["snake head bot"])]
 
+		#Pour chaque carré du serpent excepté sa tête, suivant la direction qui lui est associée et celle du carré suivant, on affiche le sprite correspondant
 		tour = 0
 		for j in snake[1:] :
 			direction = j[1]
 			if snake[tour][1] == "east" :
 				if snake[tour+1][1] == "east" :
-					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body horizontal"])] #on dessine le corps du serpent
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body horizontal"])]
 				elif snake[tour+1][1] == "north" :
-					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body firstangle"])] #on dessine le corps du serpent
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body firstangle"])]
 				elif snake[tour+1][1] == "south" :
-					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body thirdangle"])] #on dessine le corps du serpent
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body thirdangle"])]
 				else :
-					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body"])] #on dessine le corps du serpent
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body"])]
 			elif snake[tour][1] == "north" :
 				if snake[tour+1][1] == "east" :
-					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body fthangle"])] #on dessine le corps du serpent
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body fthangle"])]
 				elif snake[tour+1][1] == "north" :
-					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body vertical"])] #on dessine le corps du serpent
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body vertical"])]
 				elif snake[tour+1][1] == "west" :
-					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body thirdangle"])] #on dessine le corps du serpent
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body thirdangle"])]
 				else :
-					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body"])] #on dessine le corps du serpent
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body"])]
 			elif snake[tour][1] == "west" :
 				if snake[tour+1][1] == "south" :
-					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body fthangle"])] #on dessine le corps du serpent
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body fthangle"])]
 				elif snake[tour+1][1] == "north" :
-					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body secangle"])] #on dessine le corps du serpent
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body secangle"])]
 				elif snake[tour+1][1] == "west" :
-					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body horizontal"])] #on dessine le corps du serpent
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body horizontal"])]
 				else :
-					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body"])] #on dessine le corps du serpent
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body"])]
 			elif snake[tour][1] == "south" :
 				if snake[tour+1][1] == "east" :
-					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body secangle"])] #on dessine le corps du serpent
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body secangle"])]
 				elif snake[tour+1][1] == "south" :
-					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body vertical"])] #on dessine le corps du serpent
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body vertical"])]
 				elif snake[tour+1][1] == "west" :
-					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body firstangle"])] #on dessine le corps du serpent
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body firstangle"])]
 				else :
-					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body"])] #on dessine le corps du serpent
+					self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body"])]
 			else :
-				self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body"])] #on dessine le corps du serpent
+				self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_image(j[0][0]*16+18, j[0][1]*16+30, anchor = NW, image = images["snake body"])]
 			tour = tour+1
 
+		#On affiche également les pommes si elles sont présentes
 		self.gameRender["pomme"] = self.gameRender["pomme"] + [self.can.create_image(self.pomme.get_coords()[0]*16+18, self.pomme.get_coords()[1]*16+30, anchor = NW, image = images["apple"])]
 		if self.pommeGold.get_coords() != () :
 			self.gameRender["pomme or"] = self.gameRender["pomme or"] + [self.can.create_image(self.pommeGold.get_coords()[0]*16+18, self.pommeGold.get_coords()[1]*16+30, anchor = NW, image = images["apple gold"])]
@@ -806,18 +810,20 @@ class Snaya :
 
 	def afficher_simple(self) :
 		"""
+		Fonction affichant les différents éléments mouvants lorsque la partie est en cours sous forme de rectangles.
 		"""
 
-		snake = self.snake.get_coords_and_directions()
+		snake = self.snake.get_coords() #On va chercher les coordonnées et les direction du serpent ainsi que celles des pommes dans leurs attributs respectifs, afin d'éviter d'appeler leurs fonctions souvent
 		pomme = self.pomme.get_coords()
 		pommeGold = self.pommeGold.get_coords()
 		pommeSpec = self.pommeSpec.get_coords()
 
-		self.gameRender["tete"] = self.gameRender["tete"] + [self.can.create_rectangle(snake[0][0][0]*16+18, snake[0][0][1]*16+30, (snake[0][0][0]+1)*16+18, (snake[0][0][1]+1)*16+30, outline = "#E0E0E0", fill = "#FFAA00")]
+		self.gameRender["tete"] = self.gameRender["tete"] + [self.can.create_rectangle(snake[0][0]*16+18, snake[0][1]*16+30, (snake[0][0]+1)*16+18, (snake[0][1]+1)*16+30, outline = "#E0E0E0", fill = "#FFAA00")] #On affiche un carré d'une couleur un peu différente de celle du corps pour la tête du serpent
 
-		for j in snake[1:] :
-			self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_rectangle(j[0][0]*16+18, j[0][1]*16+30, (j[0][0]+1)*16+18, (j[0][1]+1)*16+30, outline = "#E0E0E0", fill = "#FF7000")]
+		for j in snake[1:] : #Pour chaque carré du serpent excepté sa tête, on affiche un carré aux coordonnées qui lui sont associées
+			self.gameRender["snake"] = self.gameRender["snake"] + [self.can.create_rectangle(j[0]*16+18, j[1]*16+30, (j[0]+1)*16+18, (j[1]+1)*16+30, outline = "#E0E0E0", fill = "#FF7000")]
 
+		#On affiche également les pommes si elles sont présentes sous forme de carrés de couleurs différentes
 		self.gameRender["pomme"] = self.gameRender["pomme"] + [self.can.create_rectangle(pomme[0]*16+18, pomme[1]*16+30, (pomme[0]+1)*16+18, (pomme[1]+1)*16+30, outline = "#E0E0E0", fill = "#FF0000")]
 		if self.pommeGold.get_coords() != () :
 			self.gameRender["pomme or"] = self.gameRender["pomme or"] + [self.can.create_rectangle(pommeGold[0]*16+18, pommeGold[1]*16+30, (pommeGold[0]+1)*16+18, (pommeGold[1]+1)*16+30, outline = "#E0E0E0", fill = "#FFE600")]
@@ -826,6 +832,7 @@ class Snaya :
 
 	def afficher_pause(self) :
 		"""
+		Fonction affichant un carton lorsque la partie est en pause.
 		"""
 
 		self.gameRender["pause"] = self.gameRender["pause"] + [self.can.create_rectangle(42, 54, 16*self.param.get_parametres()["largeur"]-6, 16*self.param.get_parametres()["hauteur"]+6, stipple = "gray50", fill = "#424242", width = 0)]
@@ -833,38 +840,40 @@ class Snaya :
 
 	def game_over(self) :
 		"""
+		Fonction s'executant à la fin de la partie et gérant l'obtention des différents achievements, la sauvegarde automatique et affichant un carton semblable à celui de la pause.
 		"""
 
-		if self.bonus == True :
+		if self.bonus == True : #Si les bonus sont activés, on fait disparaître les pommes spéciales au cas où l'utilisateur change le paramètre d'activation des bonus d'ici à la prochaine partie
 			self.pommeGold.despawn()
 			self.pommeSpec.despawn()
 
 		self.isOver = True
 
-		self.comptes.plus_one_partie()
+		self.comptes.plus_one_partie() #On incrémente le nombre total de parties et on augmente le compte du score total du score de la partie qui vient de se terminer
 		self.comptes.add_score(self.score)
 
-		if self.comptes.get_comptes()["score total"] >= 100000 and self.skins.get_skins()["bleu_jaune"] != True :
+		if self.comptes.get_comptes()["score total"] >= 100000 and self.skins.get_skins()["bleu_jaune"] != True : #Si le score total est supérieur à 100 000, le joueur obtient la skin secondaire
 			self.skins.unlock_skin("bleu_jaune")
 
-		if self.pommesPartie >= 10 :
+		if self.pommesPartie >= 10 : #Si le joueur a mangées plus de 10 pommes lors de la partie, il obtient le premier achievement
 			self.ach.ach_unlock(1)
 
-		if self.comptes.get_comptes()["nombre pommes"] >= 100 :
+		if self.comptes.get_comptes()["nombre pommes"] >= 100 : #Si le compte total de pommes mangées est supérieur à 100, il obtient le deuxième achievement
 			self.ach.ach_unlock(2)
 
-		if self.comptes.get_comptes()["nombre pommes or"] >= 150 :
+		if self.comptes.get_comptes()["nombre pommes or"] >= 150 : #Si le compte total de pommes dorées mangées est supérieur à 150, il obtient le troisième achievement
 			self.ach.ach_unlock(3)
 
-		if self.comptes.get_comptes()["nombre pommes spec"] >= 100 :
+		if self.comptes.get_comptes()["nombre pommes spec"] >= 100 : #Si le compte total de pommes spéciales mangées est supérieur à 100, il obtient le quatrième achievement
 			self.ach.ach_unlock(4)
 
-		if len(self.grilleParcours) == self.param.get_largeur()*self.param.get_hauteur() :
+		if len(self.grilleParcours) == self.param.get_largeur()*self.param.get_hauteur() : #Si le joueur a parcouru toutes les cases lors de la partie, il obtient le cinquième achievement
 			self.ach.ach_unlock(5)
 
-		if self.save.isFileSelected == True :
+		if self.save.isFileSelected == True : #Si un fichier est sélectionné, la partie est sauvegardée
 			self.save.write_to_file(self.playerName["name"], self.paths.get_path("resources"), self.hs.get_highscores(), self.ach.get_achievements(), self.skins.get_skins(), self.comptes.get_comptes(), self.param.get_parametres())
 
+		#On affiche un carton indiquant que la partie a été perdue
 		self.gameRender["game over"] = self.gameRender["game over"] + [self.can.create_rectangle(42, 54, 16*self.param.get_parametres()["largeur"]-6, 16*self.param.get_parametres()["hauteur"]+6, stipple = "gray50", fill = "#424242", width = 0)]
 		self.gameRender["game over"] = self.gameRender["game over"] + [self.can.create_text(8*self.param.get_parametres()["largeur"]+16, 60, anchor = N, text = "Game Over", font = ("Mayan", 12), fill = "#E0E0E0")]
 		self.gameRender["game over"] = self.gameRender["game over"] + [self.can.create_text(8*self.param.get_parametres()["largeur"]+16, 16*self.param.get_parametres()["hauteur"]-12, anchor = S, text = "Retour au", font = ("Mayan", 12), fill = "#E0E0E0")]
