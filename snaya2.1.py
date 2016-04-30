@@ -1447,10 +1447,12 @@ class Achievements :
 
 class Skins :
 	"""
+	Classe qui gérera les skins. C'est ici qu'elles sont stockées et obtenues.
 	"""
 
 	def __init__(self, save) :
 		"""
+		Fonction initialisant différents attributs de la classe en fonction des valeurs données en entrée.
 		"""
 
 		self.skins = save
@@ -1460,12 +1462,14 @@ class Skins :
 
 	def select_skin(self, skin) :
 		"""
+		Fonction modifiant la valeur de la skin actuellement sélectionnée.
 		"""
 
 		self.skins["selected skin"] = skin
 
 	def unlock_skin(self, skin) :
 		"""
+		Fonction permettant de débloquer la skin passée en entrée.
 		"""
 
 		self.skins[skin] = True
@@ -1473,62 +1477,73 @@ class Skins :
 
 	def get_skins(self) :
 		"""
+		Fonction renvoyant le dictionnaire contenant la liste des skins débloquées, la skin sélectionnée et l'état débloqué ou non de chaque skin.
 		"""
 
 		return self.skins
 
 class Comptes :
 	"""
+	Classe qui gérera les comptes de certains évènements du jeu qui servent à débloquer certains achievements ou à débloquer certaines skins.
 	"""
 
 	def __init__(self, save) :
 		"""
+		Fonction initialisant différents attributs de la classe en fonction des valeurs données en entrée.
 		"""
 
 		self.comptes = save
 
 	def plus_one_pomme(self) :
 		"""
+		Fonction incrémentant le compte du nombre de pommes mangées au total.
 		"""
 
 		self.comptes["nombre pommes"] += 1
 
 	def plus_one_pomme_gold(self) :
 		"""
+		Fonction incrémentant le compte du nombre de pommes dorées mangées au total.
 		"""
 
 		self.comptes["nombre pommes or"] += 1
 
 	def plus_one_pomme_spec(self) :
 		"""
+		Fonction incrémentant le compte du nombre de pommes spéciales mangées au total.
 		"""
 
 		self.comptes["nombre pommes spec"] += 1
 
 	def plus_one_partie(self) :
 		"""
+		Fonction incrémentant le compte du nombre de parties jouées au total.
 		"""
 
 		self.comptes["nombre parties"] += 1
 
 	def add_score(self, score) :
 		"""
+		Fonction augmentant le compte du score total du nombre passé en entier.
 		"""
 
 		self.comptes["score total"] += score
 
 	def get_comptes(self) :
 		"""
+		Fonction renvoyant les différents comptes sous la forme d'un dictionnaire.
 		"""
 
 		return self.comptes
 
 class Parametres :
 	"""
+	Classe qui gérera les paramètres. C'est ici qu'ils sont stockés et modifiés.
 	"""
 
 	def __init__(self, save) :
 		"""
+		Fonction initialisant différents attributs de la classe en fonction des valeurs données en entrée.
 		"""
 
 		self.param = save
@@ -1537,6 +1552,7 @@ class Parametres :
 
 	def speed(self) :
 		"""
+		Fonction modifiant la valeur de l'attente entre deux boucles du jeu en fonction de la vitesse souhaitée par l'utilisateur.
 		"""
 
 		if self.param["vitesse"] < 2 :
@@ -1552,6 +1568,7 @@ class Parametres :
 
 	def largeur_hauteur(self) :
 		"""
+		Fonction récupérant les valeurs de la taille de la grille et les stockant dans des clés indépendantes.
 		"""
 
 		self.param["largeur"] = self.param["taille grille"][0]
@@ -1559,6 +1576,7 @@ class Parametres :
 
 	def switch_graph_mode(self) :
 		"""
+		Fonction "switchant" (inversant) le mode graphique actuel.
 		"""
 
 		if self.param["graph mode"] == "sprite" :
@@ -1568,6 +1586,7 @@ class Parametres :
 
 	def switch_bonus(self) :
 		"""
+		Fonction "switchant" (inversant) l'état activé ou désactivé des bonus.
 		"""
 
 		if self.param["bonus"] == True :
@@ -1577,6 +1596,7 @@ class Parametres :
 
 	def plus_one_largeur(self) :
 		"""
+		Fonction incrémentant la valeur de la largeur de la grille de jeu.
 		"""
 
 		if self.param["largeur"] < 99 :
@@ -1585,6 +1605,7 @@ class Parametres :
 
 	def plus_one_hauteur(self) :
 		"""
+		Fonction incrémentant la valeur de la hauteur de la grille de jeu.
 		"""
 
 		if self.param["hauteur"] < 99 :
@@ -1593,6 +1614,7 @@ class Parametres :
 
 	def minus_one_largeur(self) :
 		"""
+		Fonction décrémentant la valeur de la largeur de la grille de jeu.
 		"""
 
 		if self.param["largeur"] > 10 :
@@ -1601,6 +1623,7 @@ class Parametres :
 
 	def minus_one_hauteur(self) :
 		"""
+		Fonction décrémentant la valeur de la hauteur de la grille de jeu.
 		"""
 
 		if self.param["hauteur"] > 10 :
@@ -1609,6 +1632,7 @@ class Parametres :
 
 	def plus_one_vitesse(self) :
 		"""
+		Fonction incrémentant la valeur de la vitesse du jeu.
 		"""
 
 		if self.param["vitesse"] < 5 :
@@ -1617,6 +1641,7 @@ class Parametres :
 
 	def minus_one_vitesse(self) :
 		"""
+		Fonction décrémentant la valeur de la vitesse du jeu.
 		"""
 
 		if self.param["vitesse"] > 1 :
@@ -1625,30 +1650,35 @@ class Parametres :
 
 	def get_parametres(self) :
 		"""
+		Fonction renvoyant le dictionnaire contenant tous les paramètres.
 		"""
 
 		return self.param
 
 	def get_largeur(self) :
 		"""
+		Fonction renvoyant la largeur de la grille.
 		"""
 
 		return self.param["largeur"]
 
 	def get_hauteur(self) :
 		"""
+		Fonction renvoyant la hauteur de la grille.
 		"""
 
 		return self.param["hauteur"]
 
 	def get_step(self) :
 		"""
+		Fonction renvoyant le temps d'attente avant une nouvelle boucle de jeu.
 		"""
 
 		return self.param["step"]
 
 	def get_graph_mode(self) :
 		"""
+		Fonction renvoyant le mode graphique actuel.
 		"""
 
 		return self.param["graph mode"]
