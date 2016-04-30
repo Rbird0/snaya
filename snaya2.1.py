@@ -606,90 +606,89 @@ class Snaya :
 
 	def move(self) :
 		"""
+		Fonction qui s'appelle automatiquement sous certaines conditions afin de créer la boucle de jeu, et qui va gérer l'ordre dans lequel les différentes opérations sont effectuées.
 		"""
 
-		if self.bonus == True :
+		if self.bonus == True : #Si les bonus sont activés, on crée un dictionnaire qui contiendra les coordonnées des pommes normales, dorées et spéciales
 			self.pommes = {"pomme" : self.pomme.get_coords(), "pomme or" : self.pommeGold.get_coords(), "pomme spec" : self.pommeSpec.get_coords()}
-		else :
+		else : #Sinon, ce dictionnaire contiendra seulement les coordonnées de la pomme normale
 			self.pommes = {"pomme" : self.pomme.get_coords()}
 
-		if self.pause != True :
+		if self.pause != True : #Si le jeu n'est pas en pause, on exécute la commande qui gère les déplacements du serpent
 			self.deplacer()
 
-		snake = self.snake.get_coords_and_directions()
+		snake = self.snake.get_coords_and_directions() #On va chercher les valeurs des coordonnées et directions du serpent, de la largeur et de la hauteur de la grille dans leurs attributs respectifs, afin d'éviter d'appeler leurs fonctions souvent
 		snakeCoords = self.snake.get_coords()
 		largeur = self.param.get_largeur()
 		hauteur = self.param.get_hauteur()
 
-		if snakeCoords[0] not in self.grilleParcours :
+		if snakeCoords[0] not in self.grilleParcours : #Pour l'achievement numéro 5, si le serpent n'est pas déjà passé sur cette case, elle est ajotuée à la liste des cases parcourues
 			self.grilleParcours += [snakeCoords[0]]
 
-		if self.bonus == True :
-			if snake[0][1] != snake[1][1] :
-				self.pommeGold.deplacement()
-				self.pommeSpec.deplacement()
+		if self.bonus == True and snake[0][1] != snake[1][1] : #Si les bonus sont activés et si la direction du serpent a changé, on execute la fonction qui compte le nombre de déplacements et qui gère la disparition des pommes spéciales suivant celui-ci
+			self.pommeGold.deplacement()
+			self.pommeSpec.deplacement()
 
-		if self.pause != True :
-			if self.bonus == True :
-				if self.snake.eat == True :
-					self.score = self.score + 100
-					self.comptes.plus_one_pomme()
-					self.pommesPartie += 1
-					self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
-					if self.pommes["pomme or"] == () :
+		if self.pause != True : #Si le jeu n'est pas en pause,
+			if self.bonus == True : #Si les bonus sont activés,
+				if self.snake.isEat() == True : #Si le serpent a mangée une pomme normale,
+					self.score += 100 #on augmente le score de 100 points,
+					self.comptes.plus_one_pomme() #on incrémente le compteur de pommes total...
+					self.pommesPartie += 1 #... ainsi que celui de la partie en cours,
+					self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur) #et on fait apparaître une nouvelle pomme
+					if self.pommes["pomme or"] == () : #Si il n'y pas encore de pomme d'or sur la grille, on en fait peut-être apparaître une également
 						self.pommeGold.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
-					if self.pommes["pomme spec"] == () :
+					if self.pommes["pomme spec"] == () : #Si il n'y pas encore de pomme spéciale sur la grille, on en fait peut-être apparaître une également
 						self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], largeur, hauteur)
-				if self.snake.goldEat == True :
-					self.score = self.score + 500
-					self.comptes.plus_one_pomme_gold()
-					self.pommeGold.mange()
-					self.pommeGold.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
-					self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
-					if self.pommes["pomme spec"] == () :
+				if self.snake.goldEat == True : #Si le serpent a mangée une pomme dorée,
+					self.score = self.score + 500 #on augmente le score de 500 points,
+					self.comptes.plus_one_pomme_gold() #on incrémente le compteur de pommes dorées total,
+					self.pommeGold.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur) #on fait peut-être apparaître une nouvelle pomme d'or,
+					self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur) #on fait apparaître une nouvelle pomme
+					if self.pommes["pomme spec"] == () : #Si il n'y pas encore de pomme spéciale sur la grille, on en fait peut-être apparaître une également
 						self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], largeur, hauteur)
-				if self.snake.specEat == True :
-					self.score = self.score + 100
-					self.comptes.plus_one_pomme_spec()
-					self.pommeSpec.mange()
-					self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], largeur, hauteur)
-					self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
-					if self.pommes["pomme or"] == () :
+				if self.snake.specEat == True : #Si le serpent a mangée une pomme spéciale,
+					self.score = self.score + 100 #on augmente le score de 100 points,
+					self.comptes.plus_one_pomme_spec() #on incrémente le compteur de pommes spéciales total,
+					self.pommeSpec.mange() #on execute la fonction qui indique à quel moment la pomme spéciale a été mangée
+					self.pommeSpec.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeGold.get_coords()], largeur, hauteur) #on fait peut-être apparaître une nouvelle pomme spéciale,
+					self.pomme.spawn_pomme(snakeCoords + [self.pommeGold.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur) #on fait apparaître une nouvelle pomme
+					if self.pommes["pomme or"] == () : #Si il n'y pas encore de pomme spéciale sur la grille, on en fait peut-être apparaître une également
 						self.pommeGold.choose(snakeCoords + [self.pomme.get_coords()] + [self.pommeSpec.get_coords()], largeur, hauteur)
-			else :
-				if self.snake.eat == True :
-					self.score = self.score + 100
-					self.comptes.plus_one_pomme()
-					self.pommesPartie += 1
-					self.pomme.spawn_pomme(snakeCoords, largeur, hauteur)
+			else : #Sinon,
+				if self.snake.isEat == True : #Si le serpent a mangée une pomme normale,
+					self.score += 100 #on augmente le score de 100 points,
+					self.comptes.plus_one_pomme() #on incrémente le compteur de pommes total...
+					self.pommesPartie += 1 #... ainsi que celui de la partie en cours,
+					self.pomme.spawn_pomme(snakeCoords, largeur, hauteur) #et on fait apparaître une nouvelle pomme
 
-		self.nettoyer_aff()
+		self.nettoyer_aff() #On execute la fonction qui retire tous les éléments de l'affichage afin de le rafraîchir
 
-		self.gameRender["score"] = self.gameRender["score"] + [self.can.create_text(5, 0, text = "Score : " + str(self.score), font = ("Courier", 10), anchor = NW, fill = "#E0E0E0")]
+		self.gameRender["score"] += [self.can.create_text(5, 0, text = "Score : " + str(self.score), font = ("Courier", 10), anchor = NW, fill = "#E0E0E0")] #On affiche le score
 
-		if self.param.get_parametres()["graph mode"] == "sprite" :
-			self.afficher()
-		else :
-			self.afficher_simple()
+		if self.param.get_parametres()["graph mode"] == "sprite" : #Si l'on est en mode sprite,
+			self.afficher() #on affiche les différents éléments sous forme d'images
+		else : #Sinon,
+			self.afficher_simple() #on affiche les différents éléments sous forme de rectangles
 
-		if self.pause == True :
-			self.afficher_pause()
+		if self.pause == True : #Si le jeu est en pause,
+			self.afficher_pause() #on execute la fonction qui affiche l'écran de pause
 
-		if self.snake.isOver() != True :
+		if self.snake.isOver() != True : #Si la partie n'a pas été perdue,
 			isOk = False
-			while isOk != True :
+			while isOk != True : #on attend que le temps entre deux rafraîchissements se soit écoulé (en ajoutant éventuellement celui de la pomme spéciale),
 				self.temps = time.time()*1000
 				if self.bonus == True :
 					if self.temps > self.oldTemps + self.param.get_parametres()["step"] + self.pommeSpec.get_step() :
 						isOk = True
 						self.oldTemps = self.temps
-						self.root.after(10, self.move)
+						self.root.after(10, self.move) #et une fois que c'est le cas, on execute à nouveau cette fonction
 				else :
 					if self.temps > self.oldTemps + self.param.get_parametres()["step"] :
 						isOk = True
 						self.oldTemps = self.temps
 						self.root.after(10, self.move)
-		else :
+		else : #Sinon, on execute la fonction qui gère la perte de la partie
 			self.game_over()
 
 	def deplacer(self) :
@@ -1868,6 +1867,12 @@ class Snake :
 
 		return self.gameOver
 
+	def isEat(self) :
+		"""
+		"""
+
+		return self.eat
+
 class Pomme :
 	"""
 	"""
@@ -1914,12 +1919,6 @@ class PommeRand(Pomme) :
 		self.choose(interdit, largeur, hauteur)
 		self.date = 0
 
-	def mange(self) :
-		"""
-		"""
-
-		self.date = time.time()*1000
-
 	def choose(self, interdit, largeur, hauteur) :
 		"""
 		"""
@@ -1942,6 +1941,12 @@ class PommeRand(Pomme) :
 class PommeSpec(PommeRand) :
 	"""
 	"""
+
+	def mange(self) :
+		"""
+		"""
+
+		self.date = time.time()*1000
 
 	def get_step(self) :
 		"""
