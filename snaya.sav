@@ -2,7 +2,7 @@
 
 /name_start
 
-name = "RBI"
+name = "AAA"
 
 /name_end
 
@@ -11,7 +11,7 @@ name = "RBI"
 
 /chemins_start
 
-resources path = "D:/Lycee/ISN/Projet2.0/resources"
+resources path = ""
 
 /chemins_end
 
@@ -20,16 +20,16 @@ resources path = "D:/Lycee/ISN/Projet2.0/resources"
 
 /highscores_start
 
-9600,"RBI"
-9400,"RBI"
-8600,"RBI"
-5600,"RBI"
-5100,"RBI"
-4900,"RBI"
-4800,"RBI"
-4800,"RBI"
-4400,"RBI"
-4200,"RBI"
+0,"---"
+0,"---"
+0,"---"
+0,"---"
+0,"---"
+0,"---"
+0,"---"
+0,"---"
+0,"---"
+0,"---"
 
 /highscores_end
 
@@ -38,11 +38,11 @@ resources path = "D:/Lycee/ISN/Projet2.0/resources"
 
 /achievements_start
 
-achievement1 = True
-achievement2 = True
-achievement3 = True
+achievement1 = False
+achievement2 = False
+achievement3 = False
 achievement4 = False
-achievement5 = True
+achievement5 = False
 
 /achievements_end
 
@@ -52,7 +52,7 @@ achievement5 = True
 /skins_start
 
 jaune_vert = True
-bleu_jaune = True
+bleu_jaune = False
 selected skin = "jaune_vert"
 
 /skins_end
@@ -62,11 +62,11 @@ selected skin = "jaune_vert"
 
 /comptes_start
 
-nombre pommes norm = "829"
-nombre pommes gold = "192"
-nombre pommes spec = "61"
-score total = "185000"
-nombre parties = "68"
+nombre pommes norm = "0"
+nombre pommes gold = "0"
+nombre pommes spec = "0"
+score total = "0"
+nombre parties = "0"
 
 /comptes_end
 
@@ -75,7 +75,7 @@ nombre parties = "68"
 
 /parametres_start
 
-graph mode = "sprite"
+graph mode = "simple"
 grille taille = "20,20"
 bonus = True
 vitesse = "3"
