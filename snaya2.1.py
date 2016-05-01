@@ -1,6 +1,6 @@
 #CAMELET Alexandre et LECUTIEZ Simon 2015/2016, cours d'ISN - Lycée de la Plaine de l'Ain
 #Snaya, notre version du célèbre jeu Snake.
-#V2.1.0
+#V2.2
 #Ce programme, aussi modeste qu'il soit, est proposé librement. Vous pouvez le redistribuer et/ou le modifier selon les termes de la GNU General Public License telle que publiée par la Free Software Foundation, en version 3 ou plus récente (à votre guise).
 #Vous pouvez trouver les termes de la GNU GPLv3 dans le fichier LICENSE fourni avec le programme, ou à l'adresse http://www.gnu.org/licenses/gpl.html .
 #Rejoignez nous sur la page Github du projet! https://github.com/Rbird0/snaya/
@@ -1814,16 +1814,16 @@ class Snake :
 		suppl = self.coords[-1] #On stocke les coordonnées du carré qui sera ajouté si une pomme est mangée
 		body = self.coords[:-1]
 
-		self.eat = False
+		self.eat = False #On initialise le fait d'avoir mangé une pomme à faux
 		self.goldEat = False
 		self.specEat = False
 
 		tete = self.coords[0]
-		self.coords = [((tete[0][0], tete[0][1]-1), "north")] + body
+		self.coords = [((tete[0][0], tete[0][1]-1), "north")] + body #On retire 1 à la hauteur de la tête précédente pour obtenir la position de la nouvelle et "accroche" le corps
 
 		tete = self.coords[0]
 
-		if tete[0][1] == -1 :
+		if tete[0][1] == -1 : #Si la tête sort du tableau, on la ramène tout en bas
 			self.coords = [((tete[0][0], hauteur-1), tete[1])] + self.coords[1:]
 
 		tete = self.coords[0]
@@ -1835,19 +1835,19 @@ class Snake :
 		Fonction gérant les déplacements du serpent lorsque celui-ci va en direction du sud.
 		"""
 
-		suppl = self.coords[-1]
+		suppl = self.coords[-1] #On stocke les coordonnées du carré qui sera ajouté si une pomme est mangée
 		body = self.coords[:-1]
 
-		self.eat = False
+		self.eat = False #On initialise le fait d'avoir mangé une pomme à faux
 		self.goldEat = False
 		self.specEat = False
 
 		tete = self.coords[0]
-		self.coords = [((tete[0][0], tete[0][1]+1), "south")] + body
+		self.coords = [((tete[0][0], tete[0][1]+1), "south")] + body #On ajoute 1 à la hauteur de la tête précédente pour obtenir la position de la nouvelle et "accroche" le corps
 
 		tete = self.coords[0]
 
-		if tete[0][1] == hauteur :
+		if tete[0][1] == hauteur : #Si la tête sort du tableau, on la ramène tout en haut
 			self.coords = [((tete[0][0], 0), tete[1])] + self.coords[1:]
 
 		tete = self.coords[0]
@@ -1859,19 +1859,19 @@ class Snake :
 		Fonction gérant les déplacements du serpent lorsque celui-ci va en direction de l'ouest.
 		"""
 
-		suppl = self.coords[-1]
+		suppl = self.coords[-1] #On stocke les coordonnées du carré qui sera ajouté si une pomme est mangée
 		body = self.coords[:-1]
 
-		self.eat = False
+		self.eat = False #On initialise le fait d'avoir mangé une pomme à faux
 		self.goldEat = False
 		self.specEat = False
 
 		tete = self.coords[0]
-		self.coords = [((tete[0][0]-1, tete[0][1]), "west")] + body
+		self.coords = [((tete[0][0]-1, tete[0][1]), "west")] + body #On retire 1 à la largeur de la tête précédente pour obtenir la position de la nouvelle et "accroche" le corps
 
 		tete = self.coords[0]
 
-		if tete[0][0] == -1 :
+		if tete[0][0] == -1 : #Si la tête sort du tableau, on la ramène tout à droite
 			self.coords = [((largeur-1, tete[0][1]), tete[1])] + self.coords[1:]
 
 		tete = self.coords[0]
@@ -1883,19 +1883,19 @@ class Snake :
 		Fonction gérant les déplacements du serpent lorsque celui-ci va en direction de l'est.
 		"""
 
-		suppl = self.coords[-1]
+		suppl = self.coords[-1] #On stocke les coordonnées du carré qui sera ajouté si une pomme est mangée
 		body = self.coords[:-1]
 
-		self.eat = False
+		self.eat = False #On initialise le fait d'avoir mangé une pomme à faux
 		self.goldEat = False
 		self.specEat = False
 
 		tete = self.coords[0]
-		self.coords = [((tete[0][0]+1, tete[0][1]), "east")] + body
+		self.coords = [((tete[0][0]+1, tete[0][1]), "east")] + body #On ajoute 1 à la largeur de la tête précédente pour obtenir la position de la nouvelle et "accroche" le corps
 
 		tete = self.coords[0]
 
-		if tete[0][0] == largeur :
+		if tete[0][0] == largeur : #Si la tête sort du tableau, on la ramène tout à gauche
 			self.coords = [((0, tete[0][1]), tete[1])] + self.coords[1:]
 
 		tete = self.coords[0]
@@ -1904,32 +1904,35 @@ class Snake :
 
 	def eating(self, tete, pommes, suppl) :
 		"""
+		Fonction détectant si une pomme a été mangée et agrandissant le serpent si c'est le cas.
 		"""
 
-		for j in pommes :
-			if tete[0] == pommes[j] :
-				self.coords = self.coords + [suppl]
-				if j == "pomme" :
+		for j in pommes : #Pour chaque pomme,
+			if tete[0] == pommes[j] : #si elle est aux même coordonnées que la tête,
+				self.coords = self.coords + [suppl] #on agrandit le serpent,
+				if j == "pomme" : #et on passe le booléen de la pomme en question à vrai
 					self.eat = True
 				if j == "pomme or" :
 					self.goldEat = True
 				if j == "pomme spec" :
 					self.specEat = True
 
-		self.game_over()
+		self.game_over() #Puis on teste si la partie a été perdue
 
 	def game_over(self) :
 		"""
+		Fonction détectant si la partie a été perdue.
 		"""
 
 		coords = []
 		for j in range(len(self.coords)) :
 			coords = coords + [self.coords[j][0]]
-		if coords[0] in coords[1:] :
+		if coords[0] in coords[1:] : #Si les coordonnées de la tête sont identiques à celles d'un autre carré du serpent, la partie est perdue
 			self.gameOver = True
 
 	def get_coords(self) :
 		"""
+		Fonction renvoyant seulement les coordonnées du serpent.
 		"""
 
 		coords = []
@@ -1939,62 +1942,72 @@ class Snake :
 
 	def get_coords_and_directions(self) :
 		"""
+		Fonction renvoyant les coordonnées du serpent et les directions qui y sont associées.
 		"""
 
 		return self.coords
 
 	def isOver(self) :
 		"""
+		Fonction renvoyant vrai si la partie est perdue, faux sinon.
 		"""
 
 		return self.gameOver
 
 	def isEat(self) :
 		"""
+		Fonction renvoyant vrai si une pomme a été mangée, faux sinon.
 		"""
 
 		return self.eat
 
 class Pomme :
 	"""
+	Classe qui gérera les pommes. C'est ici que leurs positions sont stockées et ici qu'on les fait apparaître.
 	"""
 
 	def __init__(self, interdit, largeur, hauteur) :
 		"""
+		Fonction faisant apparaître une pomme dès la construction d'un objet de cette classe.
 		"""
 
 		self.spawn_pomme(interdit, largeur, hauteur)
 
 	def spawn_pomme(self, interdit, largeur, hauteur) :
 		"""
+		Fonction faisant apparaître une pomme à un endroit choisi au hasard.
 		"""
 
 		grid = []
-		for i in range(0, largeur) :
-			for j in range(0, hauteur) :
-				if (i, j) not in interdit :
-					grid = grid + [(i, j)]
-		pos = random.randint(0, len(grid))
+		for i in range(0, largeur) : #Pour i dans largeur,
+			for j in range(0, hauteur) : #Pour j dans hauteur,
+				if (i, j) not in interdit : #Si (i, j) ne fait pas partie des valeurs interdites,
+					grid = grid + [(i, j)] #on l'ajoute à la liste des valeurs autorisées
+		pos = random.randint(0, len(grid)) #On choisit un couple de coordonnées au hasard dans la liste des valeurs autorisées
 		self.coords = grid[pos-1]
 
 	def get_coords(self) :
 		"""
+		Fonction renvoyant les coordonnées de la pomme.
 		"""
 
 		return self.coords
 
 	def despawn(self) :
 		"""
+		Fonction remplaçant les coordonnées de la pomme par un tuple vide.
 		"""
 
 		self.coords = ()
 
 class PommeRand(Pomme) :
 	"""
+	Classe qui gérera les pommes apparaîssant au hasard. C'est ici que sont gérés leurs mécaniques d'apparition et de disparition en fonction du nombre de virages. Cette classe étant dérivée de la classe Pomme, elle possédera tous ses attributs.
 	"""
 
 	def __init__(self, interdit, largeur, hauteur) :
 		"""
+		Fonction initialisant quelques attributs et faisant éventuellement apparaître une pomme dès la construction de l'objet.
 		"""
 
 		self.depl = 0
@@ -2003,16 +2016,18 @@ class PommeRand(Pomme) :
 
 	def choose(self, interdit, largeur, hauteur) :
 		"""
+		Fonction choisissant au hasard si une pomme doit apparaître ou non.
 		"""
 
 		if random.randint(0, 3) == 1 :
 			self.spawn_pomme(interdit, largeur, hauteur)
-			self.depl = 5
+			self.depl = 5 #On initialise le nombre de virages avant la disparition de la pomme à 5
 		else :
 			self.coords = ()
 
 	def deplacement(self) :
 		"""
+		Fonction faisant le décompte du nombre de virages depuis l'apparition de la pomme et la faisant disparaître si celle-ci est à 0.
 		"""
 
 		if self.depl != 0 :
@@ -2022,16 +2037,19 @@ class PommeRand(Pomme) :
 
 class PommeSpec(PommeRand) :
 	"""
+	Classe qui gérera les pommes spéciales. C'est ici que les contraintes de temps qui leurs sont spécifiques sont gérées. Cette classe étant dérivée de la classe PommeRand, elle possédera tous ses attributs.
 	"""
 
 	def mange(self) :
 		"""
+		Fonction stockant la valeur de l'instant où est mangée la pomme.
 		"""
 
 		self.date = time.time()*1000
 
 	def get_step(self) :
 		"""
+		Fonction retournant la valeur de temps qui sera ajoutée à l'attente avant de recommencer un tour de boucle.
 		"""
 
 		if self.temps() <= 5000 :
@@ -2041,20 +2059,21 @@ class PommeSpec(PommeRand) :
 
 	def temps(self) :
 		"""
+		Fonction retournant le temps écoulé depuis que la pomme a été mangée.
 		"""
 
 		return time.time()*1000 - self.date
 #
 
-	#*************** IMPORTATION DES BIBLIOTHEQUES ***************#
+	#*************** IMPORTATION DES BIBLIOTHÈQUES ***************#
 
 
-from tkinter import *
-from tkinter import filedialog
-from tkinter import messagebox
-import random
-import time
+from tkinter import * #On importe tkinter,
+from tkinter import filedialog #ses dialogues de sélection de fichier,
+from tkinter import messagebox #ses dialogues de messages,
+import random #la bibliothèque permettant de faire de l'aléatoire,
+import time #et la bibliothèque permettant d'utiliser le temps
 
 	#*************** PROGRAMME PRINCIPAL ***************#
 
-snaya = Snaya()
+snaya = Snaya() #On crée un objet de classe Snaya
